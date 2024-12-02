@@ -12,6 +12,25 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
     <script type="module">
+      document.addEventListener("DOMContentLoaded", function () {
+  const currentDomain = window.location.hostname;
+  
+  // Check if the domain includes 'netlify.app'
+  if (currentDomain.includes("netlify.app")) {
+    // Replace the body content with your message
+    document.body.innerHTML = `
+      <div style="padding: 20px; text-align: center; color: white; background-color: #333; font-family: Arial, sans-serif;">
+        <p>Hi there! If you are seeing this page, that means you are trying to connect to a Netlify version of StrongDog! We are moving off of Netlify because it is starting to rack up a TON of costs, and so we are moving back to GitHub but with newer links!</p>
+        <p>Here are the new links from the old Netlify ones:</p>
+        <p><a href="https://strongdogxp.github.io" style="color: orange;">strongdogxp.github.io</a></p>
+        <p><a href="https://mathcordxp.github.io" style="color: orange;">mathcordxp.github.io</a></p>
+        <p>If you used to use <strong>stroongdog.netlify.app</strong>, the updated GitHub link is on the Discord in the same place you found the original link.</p>
+        <p><strong>DON'T FORGET TO SET NEW BOOKMARKS!!! THIS PAGE IS GOING DOWN SOON!!!</strong></p>
+      </div>
+    `;
+  }
+});
+
       import games from "./cards-data.js";
       import { siteMapping } from "./site-mapping.js";
 
