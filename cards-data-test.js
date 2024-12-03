@@ -1,6 +1,5 @@
 export default [
       { href: './html/narwhale.io/index.html', imgSrc: 'narwhale.io.png', name: 'narwhale.io' , 'page': 3},
-      { href: './html/minecraft case simulator/index.html', imgSrc: 'minecraft case simulator.jpg', name: 'minecraft case simulator' , 'page': 3},
       { href: './html/lolbeans.io/index.html', imgSrc: 'lolbeans.io.jpg', name: 'lolbeans.io' , 'page': 3},
       { href: './html/jungle td/index.html', imgSrc: 'jungle td.jpg', name: 'jungle td' , 'page': 3},
       { href: './html/jewels blitz 2/index.html', imgSrc: 'jewels blitz 2.jpg', name: 'jewels blitz 2' , 'page': 3},
@@ -19,7 +18,6 @@ export default [
       { href: './html/park out/index.html', imgSrc: 'park out.jpg', name: 'park out' , 'page': 3},
       { href: './html/stickbattle.lol/index.html', imgSrc: 'stickbattle.lol.jpg', name: 'stickbattle.lol' , 'page': 3},
       { href: './html/save the doge/index.html', imgSrc: 'save the doge.jpg', name: 'save the doge' , 'page': 3},
-      { href: './html/roper/index.html', imgSrc: 'roper.jpg', name: 'roper' , 'page': 3},
       { href: './html/only up/index.html', imgSrc: 'only up.jpg', name: 'only up' , 'page': 3},
       { href: './html/snay.io/index.html', imgSrc: 'snay.io.jpg', name: 'snay.io' , 'page': 3},
       { href: './html/small world cup/index.html', imgSrc: 'small world cup.jpg', name: 'small world cup' , 'page': 3},

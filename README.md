@@ -4,12 +4,8 @@
 
 ## Links
 * https://strongdogxp.github.io
-* https://stroongdog.netlify.app
-* https://mathcord.netlify.app
-* https://strongdog.onrender.com
-* https://strongdog.stormkit.dev
+* https://mathcord.github.io
 * https://jman1593.github.io
-* https://strongdog.netlify.app
 * https://strongdog-1.vercel.app
 * https://mathcord.com
 * https://strongdog.com
