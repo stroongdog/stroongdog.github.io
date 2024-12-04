@@ -1,4 +1,13 @@
 export default [
+  { href: './html/free kick classic/index.html', imgSrc: 'free kick classic.jpg', name: 'free kick classic' , 'page': 3},
+  { href: './html/idle restaurants tycoon/index.html', imgSrc: 'idle restaurants tycoon.jpg', name: 'idle restaurants tycoon' , 'page': 3},
+  { href: './html/jewels blitz 2/index.html', imgSrc: 'jewels blitz 2.jpg', name: 'jewels blitz 2' , 'page': 3},
+  { href: './html/infinite soccer/index.html', imgSrc: 'infinite soccer.jpg', name: 'infinite soccer' , 'page': 3},
+  { href: './html/save the doge/index.html', imgSrc: 'save the doge.jpg', name: 'save the doge' , 'page': 3},
+  { href: './html/rise of neon square/index.html', imgSrc: 'rise of neon square.jpg', name: 'rise of neon square' , 'page': 3},
+  { href: './html/b-side/index.html', imgSrc: 'b-side.jpg', name: 'b-side' , 'page': 2},
+  { href: './html/baw/index.html', imgSrc: 'baw.jpg', name: 'baw' , 'page': 2},
+  { href: './html/pixel gun apocalypse 2/index.html', imgSrc: 'pixel gun apocalypse 2.jpg', name: 'pixel gun apocalypse 2' , 'page': 3},
   { href: './html/minecraft case simulator/index.html', imgSrc: 'minecraft case simulator.jpg', name: 'minecraft case simulator' , 'page': 3},
   { href: './html/roper/index.html', imgSrc: 'roper.jpg', name: 'roper' , 'page': 3},
   { href: './html/bit planes/index.html', imgSrc: 'bit planes.jpg', name: 'bit planes' , 'page': 3},

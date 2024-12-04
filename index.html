@@ -20,14 +20,53 @@
     // Replace the body content with your message
     document.body.innerHTML = `
       <div style="padding: 20px; text-align: center; color: white; background-color: #333; font-family: Arial, sans-serif;">
-        <p>Hi there! If you are seeing this page, that means you are trying to connect to a Netlify version of StrongDog! We are moving off of Netlify because it is starting to rack up a TON of costs, and so we are moving back to GitHub but with newer links!</p>
+        <p>Hi there! If you're seeing this, you're trying to connect to a StrongDog version hosted on Netlify. Due to Netlify's extreme costs, we're moving back to GitHub with updated links!</p>
         <p>Here are the new links from the old Netlify ones:</p>
         <p><a href="https://strongdogxp.github.io" style="color: orange;">strongdogxp.github.io</a></p>
         <p><a href="https://mathcordxp.github.io" style="color: orange;">mathcordxp.github.io</a></p>
         <p>If you used to use <strong>stroongdog.netlify.app</strong>, the updated GitHub link is on the Discord in the same place you found the original link.</p>
+        <h2>Use these buttons to copy your save data from this page to transfer it over to another StrongDogXP page:</h2>
+        <h3>Notice: these buttons are down right now, they will be available soon!</h3>
+        <button id="get-polytrack-data" style="background: orange; border-radius: 10px; padding: 0.5em; color: white; border: none;">Retrieve Polytrack Save Data</button>
+        <button id="get-cookie-clicker-data" style="background: orange; border-radius: 10px; padding: 0.5em; color: white; border: none;">Retrieve Cookie Clicker Save Data</button>
         <p><strong>DON'T FORGET TO SET NEW BOOKMARKS!!! THIS PAGE IS GOING DOWN SOON!!!</strong></p>
       </div>
     `;
+    // // The keys that are used to retrieve the records from local storage
+    // const polytrackKeys = [
+    //     "v1_record_445edfa992d0b19b376c8072692f69eafc4afeceb608ba355d44b3cb57a902a0",
+    //     "v1_record_55a26267e4fa6a176ba5898b3e1354d54bbf7c02ed0fd3f37e4e3cee56724a8a",
+    //     "v1_record_60b9020ffd46fa428ce40ab2e610992d4bcd2df68f00005c6b88544ce134f950",
+    //     "v1_record_8b4383a77d1f900b5beff053aee8a1bc47a733778dac54f6ecca0dd6cffeec80",
+    //     "v1_record_ed65907f59ece7a863e9f1ea1e2b50714920899f7d2e42d9b9656bcb8382b66a",
+    //     "v1_record_f67a25877dbbdb5287f9191cda506a254b0ca7a95fde82e34951fe55bb04c172"
+    // ]
+
+    // // Function to parse retrieved content given its key
+    // const getParsedItem = key => JSON.parse(localStorage.getItem(key));
+
+    // function copyText(text) {
+    //   // Make sure document body is focued before attempting to add text to clipboard
+    //   navigator.clipboard.writeText(text)
+    //     .then(() => alert("Your save data was successfully copied to your clipboard!"))
+    //     .catch(err => alert(`Error: failed to copy your save data: ${err}`));
+    // }
+
+    // const getPolytrackDataBtn = document.getElementById("get-polytrack-data");
+    // const getCookieClickerDataBtn = document.getElementById("get-cookie-clicker-data");
+
+    // getPolytrackDataBtn.addEventListener("click", () => {
+    //   // Get polytrack data
+    //   // Create object with correct key-value pairs within as displayed in local storage 
+    //   const polyTrackInfo = JSON.stringify(Object.fromEntries(polytrackKeys.map(key => [key, getParsedItem(key)])));
+    //   copyText(polyTrackInfo);
+    // });
+
+    // getCookieClickerDataBtn.addEventListener("click", () => {
+    //   // Get cookie clicker data
+    //   const cookieClickerInfo = JSON.stringify(localStorage.getItem("CookieClickerGame"));
+    //   copyText(cookieClickerInfo);
+    // });
   }
 });
 
@@ -976,7 +1015,7 @@
       </div>
     </div>
     <div class="updates-text-container">
-      <p class="updates-paragraph-text">Want to become a contributor/game downloader? Join the Discord and message us!</p>
+      <p class="updates-paragraph-text">Want to become a contributor/game downloader? Join the <a href="https://discord.gg/pWjfQ4Sz5c" style="text-decoration: none; color: #aa38e8;">Discord</a> and message us!</p>
     </div>
     <div class="modal" id="popupModal">
       <div class="modal-content">
@@ -986,9 +1025,9 @@
           play games together, request ideas, and have fun!
         </p>
         <p>
-          If you want to help on strongdog, there is a chat where you can get
+          If you want to help on StrongDog, there is a chat where you can get
           help downloading games, and you can upload games YOU download to add
-          to strongdog! (and yes, you will get credit for downloading games)
+          to StrongDog! (And yes, you WILL get credit for downloading games)
         </p>
         <p>
           Ready to join? Click
