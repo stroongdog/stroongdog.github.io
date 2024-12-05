@@ -12,63 +12,140 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
     <script type="module">
+      // Here are the key(s) for each game that'll be saved, each should be an array to make it work.
+
+      // Polytrack keys
+      const polytrackKeys = [
+        "v1_record_445edfa992d0b19b376c8072692f69eafc4afeceb608ba355d44b3cb57a902a0",
+        "v1_record_55a26267e4fa6a176ba5898b3e1354d54bbf7c02ed0fd3f37e4e3cee56724a8a",
+        "v1_record_60b9020ffd46fa428ce40ab2e610992d4bcd2df68f00005c6b88544ce134f950",
+        "v1_record_764e05d5eb827c3b608b288cdffc3dc29be2abcc5d29cf958b029badf1564417",
+        "v1_record_8b4383a77d1f900b5beff053aee8a1bc47a733778dac54f6ecca0dd6cffeec80",
+        "v1_record_ed65907f59ece7a863e9f1ea1e2b50714920899f7d2e42d9b9656bcb8382b66a",
+        "v1_record_f67a25877dbbdb5287f9191cda506a254b0ca7a95fde82e34951fe55bb04c172",
+      ];
+      // Babel tower keys that need to be saved:
+      const babelTowerKeys = [
+        "Tower_id",
+        "W_3_numGiftsAlreadyGiven",
+        "W_3_timeOfNextGift",
+        "save_version",
+        "save_date",
+        "save_data",
+      ];
+      // Idle Shark key
+      const idleSharkKey = ["sharkGameSave"];
+      // Cookie Clicker key
+      const cookieClickerKey = ["CookieClickerGame"];
+
+      // FUNCTIONS //
+
+      // Function to parse retrieved content given its key
+      function getParsedItem(key) {
+        const item = localStorage.getItem(key);
+        try {
+          return JSON.parse(item); // Attempt to parse as JSON
+        } catch (error) {
+          console.warn(`Invalid JSON for key: ${key} Error message: ${error}`);
+          return item; // Return raw string if not JSON
+        }
+      }
+
+      function copyText(text) {
+        // Make sure document body is focued before attempting to add text to clipboard
+        navigator.clipboard
+          .writeText(text)
+          .then(() => showTransferInstructions())
+          .catch(err => alert(`Error: failed to copy your save data: ${err}`));
+      }
+
+      function showTransferInstructions() {
+        alert(
+          "Your save data was successfully copied to your clipboard!\nTo transfer your save data to either strongdogxp.github.io or mathcordxp.github.io, please navigate to the home page of either website and in the red updates box, there will be further instruction.\n\nMAKE SURE to not copy anything to your clipboard before transferring your data!"
+        );
+      }
+
+      function setDataInObject(dataObj) {
+        Object.entries(dataObj).forEach(([key, value]) => {
+          const finalValue = typeof value === "string" ? value : JSON.stringify(value);
+          localStorage.setItem(key, finalValue);
+        });
+      }
+
+      function validateData(dataObj) {
+        // Check if all keys have non-null values
+        return Object.values(dataObj).every(value => value !== null);
+      }
+
+      function getAndBundleDataIntoObj(keysArr) {
+        const dataObj = Object.fromEntries(keysArr.map(key => [key, getParsedItem(key)]));
+        if (!validateData(dataObj))
+          alert(
+            "(If you retrieved Polytrack saves this isn't a problem, please move on)\n\nYour save data will be copied, but some could not be retrieved which may cause problems importing this data. Please ensure all required keys of your game sava data you're trying to transfer are present in localStorage and try again.\n\nIf this issue persists, report the error to the bug report form or message us on Discord."
+          );
+        return JSON.stringify(dataObj);
+      }
+
+      function getDataAndCopy(keysArr) {
+        // Create object with correct key-value pairs within as displayed in local storage
+        const gameData = getAndBundleDataIntoObj(keysArr);
+        if (gameData) copyText(gameData);
+        else return;
+      }
+
+      // When the page loads...
       document.addEventListener("DOMContentLoaded", function () {
-  const currentDomain = window.location.hostname;
-  
-  // Check if the domain includes 'netlify.app'
-  if (currentDomain.includes("netlify.app")) {
-    // Replace the body content with your message
-    document.body.innerHTML = `
-      <div style="padding: 20px; text-align: center; color: white; background-color: #333; font-family: Arial, sans-serif;">
-        <p>Hi there! If you're seeing this, you're trying to connect to a StrongDog version hosted on Netlify. Due to Netlify's extreme costs, we're moving back to GitHub with updated links!</p>
-        <p>Here are the new links from the old Netlify ones:</p>
-        <p><a href="https://strongdogxp.github.io" style="color: orange;">strongdogxp.github.io</a></p>
-        <p><a href="https://mathcordxp.github.io" style="color: orange;">mathcordxp.github.io</a></p>
-        <p>If you used to use <strong>stroongdog.netlify.app</strong>, the updated GitHub link is on the Discord in the same place you found the original link.</p>
-        <h2>Use these buttons to copy your save data from this page to transfer it over to another StrongDogXP page:</h2>
-        <h3>Notice: these buttons are down right now, they will be available soon!</h3>
-        <button id="get-polytrack-data" style="background: orange; border-radius: 10px; padding: 0.5em; color: white; border: none;">Retrieve Polytrack Save Data</button>
-        <button id="get-cookie-clicker-data" style="background: orange; border-radius: 10px; padding: 0.5em; color: white; border: none;">Retrieve Cookie Clicker Save Data</button>
-        <p><strong>DON'T FORGET TO SET NEW BOOKMARKS!!! THIS PAGE IS GOING DOWN SOON!!!</strong></p>
-      </div>
-    `;
-    // // The keys that are used to retrieve the records from local storage
-    // const polytrackKeys = [
-    //     "v1_record_445edfa992d0b19b376c8072692f69eafc4afeceb608ba355d44b3cb57a902a0",
-    //     "v1_record_55a26267e4fa6a176ba5898b3e1354d54bbf7c02ed0fd3f37e4e3cee56724a8a",
-    //     "v1_record_60b9020ffd46fa428ce40ab2e610992d4bcd2df68f00005c6b88544ce134f950",
-    //     "v1_record_8b4383a77d1f900b5beff053aee8a1bc47a733778dac54f6ecca0dd6cffeec80",
-    //     "v1_record_ed65907f59ece7a863e9f1ea1e2b50714920899f7d2e42d9b9656bcb8382b66a",
-    //     "v1_record_f67a25877dbbdb5287f9191cda506a254b0ca7a95fde82e34951fe55bb04c172"
-    // ]
+        if (window.location.hostname.includes("netlify.app")) {
+          // Replace the body content with message
+          document.body.innerHTML = `
+            <div style="padding: 20px; text-align: center; color: white; background-color: #333; font-family: Arial, sans-serif;">
+              <p>Hi there! If you're seeing this, you're trying to connect to a StrongDog version hosted on Netlify. Due to Netlify's extreme costs, we're moving back to GitHub with updated links!</p>
+              <p>Here are the new links that should be used from now on:</p>
+              <p><a href="https://strongdogxp.github.io" style="color: orange;">strongdogxp.github.io</a></p>
+              <p><a href="https://mathcordxp.github.io" style="color: orange;">mathcordxp.github.io</a></p>
+              <p>If you used to use <strong>stroongdog.netlify.app</strong>, the updated GitHub link is on the Discord in the same place you found the original link.</p>
+              <h2>Use these buttons to copy your save data from this page (just strongdog.netlify.app currently) to transfer it over to another StrongDogXP page:</h2>
+              <button id="get-polytrack-data" style="background: orange; border-radius: 10px; padding: 1em; color: black; border: none; cursor: pointer;">Retrieve Polytrack Save Data</button>
+              <button id="get-cookie-clicker-data" style="background: orange; border-radius: 10px; padding: 1em; color: black; border: none; cursor: pointer;">Retrieve Cookie Clicker Save Data</button>
+              <button id="get-babel-tower-data" style="background: orange; border-radius: 10px; padding: 1em; color: black; border: none; cursor: pointer;">Retrieve Babel Tower Save Data</button>
+              <button id="get-idle-shark-data" style="background: orange; border-radius: 10px; padding: 1em; color: black; border: none; cursor: pointer;">Retrieve Idle Shark Save Data</button>
+              <p>If you cannot figure out how to use these buttons or they simply don't work, report an error in the <a href="./about.html" target="_blank" style="color: deepskyblue">bug report form</a> or message us on Discord.</p>
+              <h2><strong>DON'T FORGET TO SET NEW BOOKMARKS! THIS PAGE WILL BE GOING DOWN SOON!</strong></h2>
+            </div>
+          `;
+          // Center the content for a better look
+          document.body.style = "height: 100vh; margin: 0; display: grid; place-items: center;";
 
-    // // Function to parse retrieved content given its key
-    // const getParsedItem = key => JSON.parse(localStorage.getItem(key));
+          const getPolytrackDataBtn = document.getElementById("get-polytrack-data");
+          const getCookieClickerDataBtn = document.getElementById("get-cookie-clicker-data");
+          const getBabelTowerDataBtn = document.getElementById("get-babel-tower-data");
+          const getIdleSharkDataBtn = document.getElementById("get-idle-shark-data");
 
-    // function copyText(text) {
-    //   // Make sure document body is focued before attempting to add text to clipboard
-    //   navigator.clipboard.writeText(text)
-    //     .then(() => alert("Your save data was successfully copied to your clipboard!"))
-    //     .catch(err => alert(`Error: failed to copy your save data: ${err}`));
-    // }
-
-    // const getPolytrackDataBtn = document.getElementById("get-polytrack-data");
-    // const getCookieClickerDataBtn = document.getElementById("get-cookie-clicker-data");
-
-    // getPolytrackDataBtn.addEventListener("click", () => {
-    //   // Get polytrack data
-    //   // Create object with correct key-value pairs within as displayed in local storage 
-    //   const polyTrackInfo = JSON.stringify(Object.fromEntries(polytrackKeys.map(key => [key, getParsedItem(key)])));
-    //   copyText(polyTrackInfo);
-    // });
-
-    // getCookieClickerDataBtn.addEventListener("click", () => {
-    //   // Get cookie clicker data
-    //   const cookieClickerInfo = JSON.stringify(localStorage.getItem("CookieClickerGame"));
-    //   copyText(cookieClickerInfo);
-    // });
-  }
-});
+          // Get polytrack data
+          getPolytrackDataBtn.addEventListener("click", () => getDataAndCopy(polytrackKeys));
+          // Get cookie clicker data
+          getCookieClickerDataBtn.addEventListener("click", () => getDataAndCopy(cookieClickerKey));
+          // Get babel tower data
+          getBabelTowerDataBtn.addEventListener("click", () => getDataAndCopy(babelTowerKeys));
+          // Get idle shark data
+          getIdleSharkDataBtn.addEventListener("click", () => getDataAndCopy(idleSharkKey));
+        } else {
+          // Importing user's save data
+          const importSaveDataBtn = document.getElementById("import-save-data-btn");
+          importSaveDataBtn.addEventListener("click", () => {
+            alert(
+              'After you dismiss this browser alert message, there may be a pop-up asking you to allow this page to "see text copied to the clipboard".\n\nTo be able to transfer your save data and continue, you MUST click ALLOW.'
+            );
+            navigator.clipboard
+              .readText()
+              .then(text => {
+                const parsedData = JSON.parse(text);
+                setDataInObject(parsedData);
+              })
+              .catch(err => alert(`Failed to read clipboard contents, check permissions: ${err}`));
+          });
+        }
+      });
 
       import games from "./cards-data.js";
       import { siteMapping } from "./site-mapping.js";
@@ -112,7 +189,7 @@
           pageNumberToURL[currentPageNumber] = currentSiteKey;
 
           if (currentSitePages) {
-            currentSitePages.forEach((url) => {
+            currentSitePages.forEach(url => {
               const pageNum = getPageNumberFromURL(url);
               pageNumberToURL[pageNum] = url;
             });
@@ -136,9 +213,7 @@
             adjustedImgSrc = `${adjustedBaseURL}/img/${adjustedImgPath}`;
           }
         } else {
-          console.warn(
-            `No site mapping found for current URL: ${window.location.href}`
-          );
+          console.warn(`No site mapping found for current URL: ${window.location.href}`);
 
           // Since no site mapping is found, construct the adjusted URLs here
           if (page !== undefined && page > 1) {
@@ -176,11 +251,7 @@
       // Function to generate card HTML
       function getCardHTML(gameObject) {
         const { href, imgSrc, name, page } = gameObject;
-        const { adjustedHref, adjustedImgSrc } = getAdjustedUrls(
-          href,
-          imgSrc,
-          page
-        );
+        const { adjustedHref, adjustedImgSrc } = getAdjustedUrls(href, imgSrc, page);
 
         // Generate a normalized game ID for matching
         const gameId = normalizeGameName(name);
@@ -210,9 +281,7 @@
         const searchResults = document.getElementById("searchResults");
 
         if (!searchInput || !searchResults) {
-          console.error(
-            "Search input or results container not found in the DOM."
-          );
+          console.error("Search input or results container not found in the DOM.");
           return;
         }
 
@@ -226,19 +295,14 @@
 
         // Hide results when clicking outside the search bar and results
         document.addEventListener("click", function (event) {
-          if (
-            !searchInput.contains(event.target) &&
-            !searchResults.contains(event.target)
-          ) {
+          if (!searchInput.contains(event.target) && !searchResults.contains(event.target)) {
             searchResults.style.display = "none";
           }
         });
 
         function updateSearchResults() {
           const searchText = searchInput.value.toLowerCase();
-          const filteredGames = games
-            .filter((game) => game.name.toLowerCase().includes(searchText))
-            .slice(0, 7); // Limit to top 7 results
+          const filteredGames = games.filter(game => game.name.toLowerCase().includes(searchText)).slice(0, 7); // Limit to top 7 results
 
           searchResults.innerHTML = ""; // Clear previous results
 
@@ -247,13 +311,9 @@
             return;
           }
 
-          filteredGames.forEach((game) => {
+          filteredGames.forEach(game => {
             const { href, imgSrc, name, page } = game;
-            const { adjustedHref, adjustedImgSrc } = getAdjustedUrls(
-              href,
-              imgSrc,
-              page
-            );
+            const { adjustedHref, adjustedImgSrc } = getAdjustedUrls(href, imgSrc, page);
 
             const resultLink = document.createElement("a");
             resultLink.href = adjustedHref;
@@ -269,7 +329,6 @@
         // --- End Updated Search Functionality ---
       });
     </script>
-
     <script>
       const firebaseConfig = {
         apiKey: "AIzaSyBh-VnGiP4qZD0r14gfn9dr77GwtslpTqU",
@@ -304,14 +363,14 @@
         const loadingContainerEl = document.createElement("div");
         loadingContainerEl.className = "loading-container";
         loadingContainerEl.innerHTML = `
-			<div class="bars">
-			  <div class="bar bar-1"></div>
-			  <div class="bar bar-2"></div>
-			  <div class="bar bar-3"></div>
-			  <div class="bar bar-4"></div>
-			  <div class="bar bar-5"></div>
-			</div>
-		  `;
+          <div class="bars">
+            <div class="bar bar-1"></div>
+            <div class="bar bar-2"></div>
+            <div class="bar bar-3"></div>
+            <div class="bar bar-4"></div>
+            <div class="bar bar-5"></div>
+          </div>
+        `;
 
         // Append loadingContainerEl to topGameList
         topGameList.appendChild(loadingContainerEl);
@@ -321,15 +380,13 @@
             // Use the targetUrl from appscript.js
             method: "GET",
           })
-            .then((response) => {
+            .then(response => {
               if (!response.ok) {
-                throw new Error(
-                  "Network response was not ok " + response.statusText
-                );
+                throw new Error("Network response was not ok " + response.statusText);
               }
               return response.json();
             })
-            .then((data) => {
+            .then(data => {
               if (data && data.content) {
                 const parsedData = JSON.parse(data.content);
                 console.log("Parsed data:", parsedData);
@@ -338,7 +395,7 @@
                 console.error("Invalid data format", data);
               }
             })
-            .catch((error) => console.error("Error:", error))
+            .catch(error => console.error("Error:", error))
             .finally(() => {
               loadingContainerEl.style.display = "none";
             });
@@ -351,7 +408,7 @@
           }
           topGameList.innerHTML = "";
 
-          games.slice(1).forEach((game) => {
+          games.slice(1).forEach(game => {
             // Skip the first entry as it is the header
             const gameName = game[0];
             const matchingCard = findMatchingCard(gameName);
@@ -372,9 +429,7 @@
               return card;
             }
           }
-          console.warn(
-            `Card not found for game: ${gameName} (ID: ${formattedGameName})`
-          );
+          console.warn(`Card not found for game: ${gameName} (ID: ${formattedGameName})`);
           return null;
         }
 
@@ -1004,35 +1059,38 @@
       <a href="index.html" class="logo">StrongDog<span class="xp">XP</span></a>
 
       <div class="search-container">
-        <input
-          type="text"
-          class="search-bar"
-          placeholder="Search for games..."
-          id="searchInput"
-          autocomplete="off"
-        />
+        <input type="text" class="search-bar" placeholder="Search for games..." id="searchInput" autocomplete="off" />
         <div class="search-results" id="searchResults"></div>
       </div>
     </div>
     <div class="updates-text-container">
-      <p class="updates-paragraph-text">Want to become a contributor/game downloader? Join the <a href="https://discord.gg/pWjfQ4Sz5c" style="text-decoration: none; color: #aa38e8;">Discord</a> and message us!</p>
+      <p class="updates-paragraph-text">
+        If you want to transfer your save data from popular games like Polytrack, Cookie Clicker and more that were on
+        Netlify pages, head over to the
+        <a href="https://strongdog.netlify.app" style="color: deepskyblue;">Netlify</a> hosted page to recieve more
+        information. If you need to import your save data, click the button below:
+        <button
+          id="import-save-data-btn"
+          style="background: orange; border-radius: 10px; padding: 1em; color: black; border: none; cursor: pointer; margin-inline: auto; display: block;"
+        >
+          <strong>Import Save Data</strong>
+        </button>
+      </p>
     </div>
     <div class="modal" id="popupModal">
       <div class="modal-content">
         <span class="modal-close" id="closeModal">&times;</span>
         <p>
-          The strongdog discord server is a place for strongdog users to chill,
-          play games together, request ideas, and have fun!
+          The strongdog discord server is a place for strongdog users to chill, play games together, request ideas, and
+          have fun!
         </p>
         <p>
-          If you want to help on StrongDog, there is a chat where you can get
-          help downloading games, and you can upload games YOU download to add
-          to StrongDog! (And yes, you WILL get credit for downloading games)
+          If you want to help on StrongDog, there is a chat where you can get help downloading games, and you can upload
+          games YOU download to add to StrongDog! (And yes, you WILL get credit for downloading games)
         </p>
         <p>
           Ready to join? Click
-          <a href="https://discord.gg/pWjfQ4Sz5c" target="_blank">here</a> to
-          join the Discord server!
+          <a href="https://discord.gg/pWjfQ4Sz5c" target="_blank">here</a> to join the Discord server!
         </p>
       </div>
     </div>
@@ -1049,95 +1107,42 @@
         <div class="credits-item">
           <div class="credits-role">CEO</div>
           <div class="credits-names">
-            <a
-              href="https://github.com/jman1593"
-              target="_blank"
-              class="credits-link"
-              >Joshua Pettit</a
-            >
+            <a href="https://github.com/jman1593" target="_blank" class="credits-link">Joshua Pettit</a>
           </div>
         </div>
         <div class="credits-item">
           <div class="credits-role">Developers</div>
           <div class="credits-names">
-            <a
-              href="https://github.com/JamesMeadows4"
-              target="_blank"
-              class="credits-link"
-              >James Meadows</a
-            >
+            <a href="https://github.com/JamesMeadows4" target="_blank" class="credits-link">James Meadows</a>
             <span>|</span>
-            <a
-              href="https://github.com/jman1593"
-              target="_blank"
-              class="credits-link"
-              >Joshua Pettit</a
+            <a href="https://github.com/jman1593" target="_blank" class="credits-link">Joshua Pettit</a>
             >
-          >
           </div>
         </div>
         <div class="credits-item">
           <div class="credits-role">Game Downloaders</div>
           <div class="credits-names">
-            <a
-              href="https://github.com/jman1593"
-              target="_blank"
-              class="credits-link"
-              >Joshua Pettit</a
-            >
+            <a href="https://github.com/jman1593" target="_blank" class="credits-link">Joshua Pettit</a>
           </div>
           <span>|</span>
-          <a
-          href="https://maxwellstevenson.com"
-          target="_blank"
-          class="credits-link"
-          >Maxwell Stevenson</a>
+          <a href="https://maxwellstevenson.com" target="_blank" class="credits-link">Maxwell Stevenson</a>
         </div>
         <div class="credits-item">
           <div class="credits-role">Other Links</div>
           <div class="credits-names">
-            <a
-            href="https://strongdogxp.github.io"
-            target="_blank"
-            class="credits-link"
-            >strongdogxp.github.io</a
-          >
-          <span>|</span>
-            <a
-              href="https://mathcord.netlify.app"
-              target="_blank"
-              class="credits-link"
-              >mathcord.netlify.app</a
-            >
+            <a href="https://strongdogxp.github.io" target="_blank" class="credits-link">strongdogxp.github.io</a>
             <span>|</span>
-            <a
-              href="https://jman1593.github.io"
-              target="_blank"
-              class="credits-link"
-              >jman1593.github.io</a
-            >
+            <a href="https://mathcord.netlify.app" target="_blank" class="credits-link">mathcord.netlify.app</a>
             <span>|</span>
-            <a
-              href="https://strongdog.netlify.app"
-              target="_blank"
-              class="credits-link"
-              >strongdog.netlify.app</a
-            >
+            <a href="https://jman1593.github.io" target="_blank" class="credits-link">jman1593.github.io</a>
             <span>|</span>
-            <a
-              href="https://strongdog-1.vercel.app"
-              target="_blank"
-              class="credits-link"
-              >strongdog-1.vercel.app</a
-            >
+            <a href="https://strongdog.netlify.app" target="_blank" class="credits-link">strongdog.netlify.app</a>
             <span>|</span>
-            <a href="https://mathcord.com" target="_blank" class="credits-link"
-              >mathcord.com</a
-            >
+            <a href="https://strongdog-1.vercel.app" target="_blank" class="credits-link">strongdog-1.vercel.app</a>
             <span>|</span>
-            <a href="https://strongdog.com" target="_blank" class="credits-link"
-              >strongdog.com</a
-            >
+            <a href="https://mathcord.com" target="_blank" class="credits-link">mathcord.com</a>
+            <span>|</span>
+            <a href="https://strongdog.com" target="_blank" class="credits-link">strongdog.com</a>
           </div>
         </div>
         <div class="credits-item">
@@ -1161,9 +1166,7 @@
         <a href="favs.html" class="option-link">Favorites</a>
         <a href="#" id="randomGame" class="option-link">Random Game</a>
         <a href="#" id="blockLanschool" class="option-link">Block Lanschool</a>
-        <a href="about.html" class="option-link"
-          >About / Report Bugs / Request Games</a
-        >
+        <a href="about.html" class="option-link">About / Report Bugs / Request Games</a>
         <a href="https://discord.gg/pWjfQ4Sz5c" class="option-link"
           >Discord Server<span class="new-feature-tag">new</span></a
         >
@@ -1203,23 +1206,19 @@
         });
 
         // Check authentication state
-        auth.onAuthStateChanged(async (user) => {
+        auth.onAuthStateChanged(async user => {
           let userDetailsContainer;
 
           if (user) {
             // User is signed in, fetch their profile picture and username
 
             // Clone the user-details-container
-            const originalUserDetailsContainer = document.querySelector(
-              ".user-details-container"
-            );
+            const originalUserDetailsContainer = document.querySelector(".user-details-container");
             userDetailsContainer = originalUserDetailsContainer.cloneNode(true);
 
             // Get elements inside userDetailsContainer
-            const profilePictureElement =
-              userDetailsContainer.querySelector(".profile-picture");
-            const usernameElement =
-              userDetailsContainer.querySelector(".username-text");
+            const profilePictureElement = userDetailsContainer.querySelector(".profile-picture");
+            const usernameElement = userDetailsContainer.querySelector(".username-text");
 
             // Set profile picture
             if (user.photoURL) {
@@ -1241,12 +1240,9 @@
             }
 
             // Make profile picture clickable and direct to settings page
-            profilePictureElement.parentElement.addEventListener(
-              "click",
-              () => {
-                window.location.href = "settings.html";
-              }
-            );
+            profilePictureElement.parentElement.addEventListener("click", () => {
+              window.location.href = "settings.html";
+            });
 
             // Insert the userDetailsContainer at the top of the slideMenu
             slideMenu.insertBefore(userDetailsContainer, categories);
@@ -1268,16 +1264,14 @@
                   // Sign-out successful.
                   window.location.reload();
                 })
-                .catch((error) => {
+                .catch(error => {
                   // An error happened.
                   console.error("Error signing out:", error);
                 });
             });
 
             // Insert the "Log Out" link above the "Favorites" link
-            const favoritesLink = categories.querySelector(
-              'a[href="favs.html"]'
-            );
+            const favoritesLink = categories.querySelector('a[href="favs.html"]');
             categories.insertBefore(logoutLink, favoritesLink);
 
             try {
@@ -1322,7 +1316,7 @@
                 const accessData = accessDoc.data();
                 console.log();
 
-                if (accessData.admin === true) {
+                if (accessData.admin) {
                   const testGamesLink = document.createElement("a");
                   testGamesLink.href = "admin.html";
                   testGamesLink.className = "option-link";
@@ -1399,19 +1393,15 @@
           }
 
           // Add event listeners to the relevant buttons in the sliding menu
-          categories
-            .querySelector("#randomGame")
-            .addEventListener("click", function (e) {
-              e.preventDefault();
-              handleRandomGameClick();
-            });
+          categories.querySelector("#randomGame").addEventListener("click", function (e) {
+            e.preventDefault();
+            handleRandomGameClick();
+          });
 
-          categories
-            .querySelector("#blockLanschool")
-            .addEventListener("click", function (e) {
-              e.preventDefault();
-              handleBlockLanschoolClick();
-            });
+          categories.querySelector("#blockLanschool").addEventListener("click", function (e) {
+            e.preventDefault();
+            handleBlockLanschoolClick();
+          });
 
           function handleRandomGameClick() {
             if (games.length > 0) {
@@ -1469,9 +1459,7 @@
         const searchResults = document.getElementById("searchResults");
 
         if (!searchInput || !searchResults) {
-          console.error(
-            "Search input or results container not found in the DOM."
-          );
+          console.error("Search input or results container not found in the DOM.");
           return;
         }
 
@@ -1485,19 +1473,14 @@
 
         // Hide results when clicking outside the search bar and results
         document.addEventListener("click", function (event) {
-          if (
-            !searchInput.contains(event.target) &&
-            !searchResults.contains(event.target)
-          ) {
+          if (!searchInput.contains(event.target) && !searchResults.contains(event.target)) {
             searchResults.style.display = "none";
           }
         });
 
         function updateSearchResults() {
           const searchText = searchInput.value.toLowerCase();
-          const filteredGames = games
-            .filter((game) => game.name.toLowerCase().includes(searchText))
-            .slice(0, 7); // Limit to top 7 results
+          const filteredGames = games.filter(game => game.name.toLowerCase().includes(searchText)).slice(0, 7); // Limit to top 7 results
 
           searchResults.innerHTML = ""; // Clear previous results
 
@@ -1517,13 +1500,9 @@
             }
           }
 
-          if (!matchedKey) {
-            console.warn(
-              `No site mapping found for current URL: ${currentURL}`
-            );
-          }
+          if (!matchedKey) console.warn(`No site mapping found for current URL: ${currentURL}`);
 
-          filteredGames.forEach((game) => {
+          filteredGames.forEach(game => {
             const { href, imgSrc, name, page } = game;
             let adjustedHref = href;
             let adjustedImgSrc = `./img/${imgSrc}`; // Default img src
@@ -1543,18 +1522,16 @@
                 const adjustedImgPath = imgSrc.replace(/^\.\//, "");
                 adjustedImgSrc = `${pageBaseURL}/img/${adjustedImgPath}`;
               } else {
-                console.warn(
-                  `No site mapping found for page ${page} on hostname: ${matchedKey}`
-                );
+                console.warn(`No site mapping found for page ${page} on hostname: ${matchedKey}`);
               }
             }
 
             const resultLink = document.createElement("a");
             resultLink.href = adjustedHref;
             resultLink.innerHTML = `
-          <img src="${adjustedImgSrc}" alt="${name}">
-          <span>${name}</span>
-        `;
+              <img src="${adjustedImgSrc}" alt="${name}">
+              <span>${name}</span>
+            `;
             searchResults.appendChild(resultLink);
           });
 
@@ -1621,11 +1598,9 @@
     });
   </script>
   <script>
-    document
-      .getElementById("secretLink")
-      .addEventListener("click", function () {
-        window.location.href = "secret-menu.html";
-      });
+    document.getElementById("secretLink").addEventListener("click", function () {
+      window.location.href = "secret-menu.html";
+    });
   </script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
