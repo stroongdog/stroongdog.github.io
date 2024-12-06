@@ -134,7 +134,7 @@ export default [
 	{ href: "./html/n-gon/index.html", imgSrc: "n-gon.png", name: "n-gon" , "page": 2},
 	{ href: "./html/gunnight/index.html", imgSrc: "gunnight.jfif", name: "gunnight" , "page": 2},
 	{ href: "./html/freefall tournament/index.html", imgSrc: "freefall tournament.jfif", name: "freefall tournament" , "page": 2},
-	{ href: "./html/fighter aircraft piolet/index.html", imgSrc: "fighter aircraft piolet.jfif", name: "fighter aircraft piolet" , "page": 2},
+	{ href: "./html/fighter aircraft piolet/index.html", imgSrc: "fighter aircraft piolet.jfif", name: "fighter aircraft pilet" , "page": 2},
 	{ href: "./html/die in the dungeon/index.html", imgSrc: "die in the dungeon.png", name: "die in the dungeon" , "page": 2},
 	{ href: "./html/cannon basketball 4/index.html", imgSrc: "cannon basketball.jfif", name: "cannon basketball 4" , "page": 2},
 	{ href: "./html/burrito bison/index.html", imgSrc: "burrito bison.jfif", name: "burrito bison" , "page": 2},
