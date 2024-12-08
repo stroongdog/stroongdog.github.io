@@ -1,4 +1,6 @@
 export default [
+      { href: './html/big tower tiny square 2/index.html', imgSrc: 'big tower tiny square 2.jpg', name: 'big tower tiny square 2' , 'page': 3},
+      { href: './html/big flappy tower tiny square/index.html', imgSrc: 'big flappy tower tiny square.jpg', name: 'big flappy tower tiny square' , 'page': 3},
       { href: './html/narwhale.io/index.html', imgSrc: 'narwhale.io.png', name: 'narwhale.io' , 'page': 3},
       { href: './html/lolbeans.io/index.html', imgSrc: 'lolbeans.io.jpg', name: 'lolbeans.io' , 'page': 3},
       { href: './html/jungle td/index.html', imgSrc: 'jungle td.jpg', name: 'jungle td' , 'page': 3},

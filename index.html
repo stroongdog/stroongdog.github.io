@@ -1340,40 +1340,6 @@
             } catch (error) {
               console.error();
             }
-            try {
-              const accessDocRef = db.collection("access").doc(user.uid);
-              const accessDoc = await accessDocRef.get();
-
-              if (accessDoc.exists) {
-                const accessData = accessDoc.data();
-                console.log();
-
-                if (accessData.admin) {
-                  const testGamesLink = document.createElement("a");
-                  testGamesLink.href = "admin.html";
-                  testGamesLink.className = "option-link";
-                  testGamesLink.textContent = "Admin Panel";
-                  testGamesLink.style.backgroundColor = "#bd0000";
-                  testGamesLink.style.color = "white";
-                  testGamesLink.style.marginTop = "10px";
-
-                  testGamesLink.addEventListener("mouseover", function () {
-                    testGamesLink.style.backgroundColor = "#ff0000";
-                  });
-                  testGamesLink.addEventListener("mouseout", function () {
-                    testGamesLink.style.backgroundColor = "#bd0000";
-                  });
-
-                  categories.insertBefore(testGamesLink, favoritesLink);
-                } else {
-                  console.log();
-                }
-              } else {
-                console.log();
-              }
-            } catch (error) {
-              console.error();
-            }
           } else {
             // User is not signed in, display "Not logged in" and a "Log In" button
 
