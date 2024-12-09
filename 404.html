@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
+    <title>404 - Page Not Found</title>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        height: 100%;
+        width: 100%;
+        background: linear-gradient(135deg, #2a2a2a, #1f1f1f);
+        color: #fff;
+        overflow: hidden; /* Prevent scrolling */
+      }
+
+      header {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        display: inline-block;
+        font-size: 1.5em;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      header .logo-text {
+        color: #ffffff;
+      }
+
+      header .logo-text .xp {
+        color: orange;
+      }
+
+      header:hover .logo-text {
+        text-decoration: underline;
+      }
+
+      .container {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        text-align: center;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+
+      h1 {
+        font-size: 3em;
+        margin-bottom: 0.5em;
+        text-shadow: 0 0 10px rgba(255,255,255,0.2);
+      }
+
+      p {
+        font-size: 1.2em;
+        line-height: 1.4;
+        max-width: 500px;
+        margin: 0 auto 2em;
+      }
+
+      .btn-container {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      a.btn {
+        text-decoration: none;
+        color: #fff;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 1em;
+        font-weight: bold;
+        background: rgba(255,255,255,0.1);
+        border: 2px solid transparent;
+        transition: background 0.3s ease, border 0.3s ease, color 0.3s ease;
+      }
+
+      a.btn:hover {
+        background: orange;
+        color: black;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 600px) {
+        header .logo-text {
+          font-size: 1.2em;
+        }
+        h1 {
+          font-size: 2.2em;
+        }
+        p {
+          font-size: 1.1em;
+          margin: 0 auto 1.5em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header onclick="window.location.href='index.html'">
+      <div class="logo-text">StrongDog<span class="xp">XP</span></div>
+    </header>
+
+    <div class="container">
+      <h1>Oops!</h1>
+      <p>
+        The page you're looking for doesn't seem to exist. It may have been moved, deleted, or perhaps you mistyped the URL. 
+        If you believe this is an error, feel free to report it.
+      </p>
+      <div class="btn-container">
+        <a class="btn" href="about.html">Report the Issue</a>
+      </div>
+    </div>
+  </body>
+</html>
