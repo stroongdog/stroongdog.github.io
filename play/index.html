@@ -154,7 +154,6 @@
   </head>
   <body>
     <div class="header">
-      <!-- Changed this to go back one directory -->
       <a href="../index.html" class="header-logo">
         <span>StrongDog</span>
         <span>XP</span>
@@ -168,7 +167,6 @@
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1609993827735056"
           crossorigin="anonymous"
         ></script>
-        <!-- in game ads -->
         <ins
           class="adsbygoogle"
           style="display: inline-block; width: 120px; height: 300px"
@@ -186,7 +184,6 @@
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1609993827735056"
           crossorigin="anonymous"
         ></script>
-        <!-- in game ads -->
         <ins
           class="adsbygoogle"
           style="display: inline-block; width: 120px; height: 300px"
@@ -213,13 +210,10 @@
 
     <div class="cards-section">
       <h2>Recommended Games</h2>
-      <div class="card-container" id="cardContainer">
-        <!-- Cards will be loaded here -->
-      </div>
+      <div class="card-container" id="cardContainer"></div>
     </div>
 
     <script type="module">
-      // Changed imports to go back one directory
       import games from "../cards-data.js";
       import { siteMapping } from "../site-mapping.js";
 
@@ -247,9 +241,8 @@
 
         function getBaseURLForPage(page) {
           const currentKey = getCurrentKeyHostOnly();
-          // Instead of "./", return "../"
           if (!page || page === 1) {
-            return "../"; 
+            return "../";
           }
 
           const arr = siteMapping[currentKey];
@@ -288,7 +281,6 @@
             .replace(/\.html$/, "");
           if (!cleanHref.endsWith("/")) cleanHref += "/";
 
-          // Paths to try in order:
           const pathsToTry = [
             cleanHref + "game/index.html",
             cleanHref + "game/base.html",
@@ -304,7 +296,6 @@
             }
           }
 
-          // If no paths were found, fallback to adjusted original
           return adjustHrefPath(originalHref, page);
         }
 
@@ -315,6 +306,21 @@
           gameContainer.appendChild(iframe);
           gameTitleElement.textContent = title;
           document.title = title + " - StrongDog XP";
+
+          // Attach onload to the iframe to ensure the game is fully loaded before counting a view
+          iframe.onload = function() {
+            // Now record the view once the iframe content has loaded
+            fetch(
+              "https://script.google.com/macros/s/AKfycbx1xYwL2QqkOQHyeCWIVSMVLP_XXts5zpb0M-vbvlRl1MpRYYcv4NI-i8OaGc0YP0wpsg/exec?title=" +
+                encodeURIComponent(title),
+              {
+                method: "GET",
+              }
+            )
+              .then((response) => response.text())
+              .then((result) => console.log("[DEBUG] View recorded:", result))
+              .catch((error) => console.error("[DEBUG] Error recording view:", error));
+          };
         }
 
         let selectedGame = null;
@@ -327,7 +333,6 @@
         document.title = "Loading... - StrongDog XP";
 
         if (!selectedGame) {
-          // Adjusted 404 path going up one directory
           embedGame("../404.html", "Not Found");
         } else {
           const page = selectedGame.page;
@@ -345,7 +350,6 @@
 
           function toggleFavorite() {
             let favorites = JSON.parse(localStorage.getItem("favorites") || "{}");
-            // Adjusted image path
             const imagePath = "../img/" + selectedGame.name + ".jpg";
 
             if (favorites[selectedGame.name]) {
@@ -386,19 +390,6 @@
             }
           });
 
-          window.onload = function () {
-            fetch(
-              "https://script.google.com/macros/s/AKfycbx1xYwL2QqkOQHyeCWIVSMVLP_XXts5zpb0M-vbvlRl1MpRYYcv4NI-i8OaGc0YP0wpsg/exec?title=" +
-                encodeURIComponent(selectedGame ? selectedGame.name : "Not Found"),
-              {
-                method: "GET",
-              }
-            )
-              .then((response) => response.text())
-              .then((result) => console.log("[DEBUG] Google Script response:", result))
-              .catch((error) => console.error("[DEBUG] Google Script error:", error));
-          };
-
           const cardContainer = document.getElementById("cardContainer");
 
           function adjustImgPath(path, page) {
@@ -424,13 +415,12 @@
             .slice(0, 10);
 
           randomGames.forEach((game) => {
-            const { href, imgSrc, name, page } = game;
-            const adjustedHref = adjustHrefPath(href, page);
-            const adjustedImgSrc = adjustImgPath(imgSrc, page);
+            const { imgSrc, name, id } = game;
+            const adjustedImgSrc = adjustImgPath(imgSrc, game.page);
 
             const card = document.createElement("a");
             card.className = "card";
-            card.href = adjustedHref + `?id=${game.id}`;
+            card.href = `../play/?id=${id}`;
 
             const img = document.createElement("img");
             img.src = adjustedImgSrc;
