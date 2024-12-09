@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Loading... - StrongDog XP</title>
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #2e2e2e;
+        color: #e0e0e0;
+      }
+
+      .header {
+        background-color: #3c3c3c;
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 3px solid #ff8c00;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      }
+
+      .header-logo {
+        text-decoration: none;
+        font-size: 36px;
+        font-weight: bold;
+        transition: color 0.3s;
+      }
+
+      .header-logo span:nth-child(1) {
+        color: #ffffff;
+      }
+
+      .header-logo span:nth-child(2) {
+        color: #ff8c00;
+      }
+
+      .header-logo:hover span:nth-child(1) {
+        color: #e0e0e0;
+      }
+
+      .content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 40px;
+      }
+
+      .ad {
+        width: 120px;
+        height: 300px;
+        background-color: #4a4a4a;
+        margin: 0 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+      }
+
+      .game-container {
+        flex-shrink: 0;
+        width: 85%;
+        height: 700px;
+        margin: 20px auto;
+        background-color: #3a3a3a;
+        position: relative;
+        overflow: hidden;
+        border-radius: 20px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
+      }
+
+      .game-container iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        display: block;
+        border-radius: 20px;
+      }
+
+      .game-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #3a3a3a;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 30px auto;
+        width: 85%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+      }
+
+      .fullscreen-button {
+        padding: 10px 20px;
+        background-color: #ff8c00;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+        font-weight: bold;
+      }
+
+      .fullscreen-button:hover {
+        background-color: #ff6a00;
+      }
+
+      .cards-section {
+        background-color: #3a3a3a;
+        padding: 50px;
+        text-align: center;
+        border-radius: 20px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
+        margin: 40px;
+      }
+
+      .card-container {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 30px;
+      }
+
+      .card {
+        display: block;
+        width: 200px;
+        text-align: center;
+        background-color: #4a4a4a;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.8);
+        overflow: hidden;
+        text-decoration: none;
+        color: #e0e0e0;
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+
+      .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 1);
+      }
+
+      .card img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+      }
+
+      .card figcaption {
+        padding: 15px;
+        font-size: 16px;
+        color: #ff8c00;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <a href="./index.html" class="header-logo">
+        <span>StrongDog</span>
+        <span>XP</span>
+      </a>
+    </div>
+
+    <div class="content">
+      <div class="ad ad-left">
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1609993827735056"
+          crossorigin="anonymous"
+        ></script>
+        <!-- in game ads -->
+        <ins
+          class="adsbygoogle"
+          style="display: inline-block; width: 120px; height: 300px"
+          data-ad-client="ca-pub-1609993827735056"
+          data-ad-slot="3552085788"
+        ></ins>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </div>
+      <div class="game-container" id="gameContainer"></div>
+      <div class="ad ad-right">
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1609993827735056"
+          crossorigin="anonymous"
+        ></script>
+        <!-- in game ads -->
+        <ins
+          class="adsbygoogle"
+          style="display: inline-block; width: 120px; height: 300px"
+          data-ad-client="ca-pub-1609993827735056"
+          data-ad-slot="3552085788"
+        ></ins>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </div>
+    </div>
+
+    <div class="game-bar">
+      <span id="gameTitle">Loading...</span>
+      <span
+        id="favoriteIcon"
+        class="favorite-icon"
+        style="cursor: pointer; font-size: 24px"
+      >&#9734;</span>
+      <button id="fullscreenButton" class="fullscreen-button">
+        Fullscreen
+      </button>
+    </div>
+
+    <div class="cards-section">
+      <h2>Recommended Games</h2>
+      <div class="card-container" id="cardContainer">
+        <!-- Cards will be loaded here -->
+      </div>
+    </div>
+
+    <script type="module">
+      import games from "./cards-data.js";
+      import { siteMapping } from "./site-mapping.js";
+
+      document.addEventListener("DOMContentLoaded", async function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const gameId = urlParams.get("id");
+        const gameContainer = document.getElementById("gameContainer");
+        const gameTitleElement = document.getElementById("gameTitle");
+        const favoriteIcon = document.getElementById("favoriteIcon");
+        const fullscreenButton = document.getElementById("fullscreenButton");
+
+        console.log("[DEBUG] URL gameId:", gameId);
+
+        async function fileExists(url) {
+          console.log("[DEBUG] Checking file:", url);
+          try {
+            const response = await fetch(url, { method: "HEAD" });
+            console.log("[DEBUG] fileExists response:", url, response.ok);
+            return response.ok;
+          } catch (e) {
+            console.error("[DEBUG] fileExists error:", e);
+            return false;
+          }
+        }
+
+        function getCurrentKeyHostOnly() {
+          const host = window.location.host;
+          console.log("[DEBUG] Current key for siteMapping (host only):", host);
+          return host;
+        }
+
+        function getBaseURLForPage(page) {
+          const currentKey = getCurrentKeyHostOnly();
+          if (!page || page === 1) {
+            console.log("[DEBUG] page not defined or =1, using local './'");
+            return "./";
+          }
+
+          const arr = siteMapping[currentKey];
+          if (!arr) {
+            console.warn("[DEBUG] No siteMapping entry found for key:", currentKey, "Using './'");
+            return "./";
+          }
+          const index = page - 2;
+          if (arr[index]) {
+            console.log("[DEBUG] Found site-mapping base for page", page, ":", arr[index]);
+            return arr[index];
+          } else {
+            console.warn("[DEBUG] No mapping for page", page, "at key:", currentKey, "fallback to './'");
+            return "./";
+          }
+        }
+
+        async function findPlayableFile(basePath) {
+          console.log("[DEBUG] findPlayableFile for basePath:", basePath);
+          const possiblePaths = [
+            basePath + "game/index.html",
+            basePath + "game/base.html",
+            basePath + "gamereal/index.html",
+            basePath + "gamereal/base.html",
+            basePath + "index.html",
+            basePath + "base.html"
+          ];
+
+          console.log("[DEBUG] Checking possible paths:", possiblePaths);
+
+          for (const p of possiblePaths) {
+            if (await fileExists(p)) {
+              return p;
+            }
+          }
+          return null;
+        }
+
+        // If no playable file found in the directories, use the original href directly.
+        // If that fails too, we can't do anything else. But you stated it WILL work, so no 404 in that scenario.
+        async function getEmbedPath(adjustedHref, originalHref) {
+          console.log("[DEBUG] Original href from cards-data.js:", originalHref);
+          let cleanHref = adjustedHref.replace(/^\.\//, "");
+
+          let basePath = cleanHref
+            .replace(/index\.html$/, "")
+            .replace(/base\.html$/, "")
+            .replace(/\.html$/, "");
+
+          if (!basePath.endsWith("/")) {
+            basePath += "/";
+          }
+
+          console.log("[DEBUG] Base path for playable check:", basePath);
+
+          let playableFile = await findPlayableFile(basePath);
+          if (playableFile) {
+            return playableFile;
+          }
+
+          console.log("[DEBUG] No playable file found in main paths, now trying original href directly:", originalHref);
+
+          // Use the original href from cards-data.js directly
+          // This one WILL work according to your requirement
+          return originalHref;
+        }
+
+        function embedGame(gamePath, title) {
+          console.log("[DEBUG] Embedding game:", gamePath, "Title:", title);
+          var iframe = document.createElement("iframe");
+          iframe.src = gamePath;
+          gameContainer.innerHTML = "";
+          gameContainer.appendChild(iframe);
+          gameTitleElement.textContent = title;
+          document.title = title + " - StrongDog XP";
+        }
+
+        let selectedGame = null;
+        if (gameId) {
+          const idNum = parseInt(gameId, 10);
+          selectedGame = games.find(g => g.id === idNum);
+        }
+
+        let title = "Loading...";
+        gameTitleElement.textContent = "Loading...";
+        document.title = "Loading... - StrongDog XP";
+
+        if (!selectedGame) {
+          console.log("[DEBUG] No selected game found for id:", gameId);
+          // No fallback since we have no original href at all
+          embedGame("./404.html", "Not Found");
+        } else {
+          console.log("[DEBUG] Selected game:", selectedGame);
+          title = selectedGame.name;
+
+          const page = selectedGame.page; 
+          const baseURL = getBaseURLForPage(page);
+          let adjustedHref = selectedGame.href.replace(/^\.\//, "");
+          if (!baseURL.endsWith("/")) {
+            adjustedHref = baseURL + "/" + adjustedHref;
+          } else {
+            adjustedHref = baseURL + adjustedHref;
+          }
+
+          console.log("[DEBUG] Final adjusted HREF for embedding:", adjustedHref);
+
+          const embedPath = await getEmbedPath(adjustedHref, selectedGame.href);
+          embedGame(embedPath, title);
+
+          // Favorite logic
+          function toggleFavorite() {
+            let favorites = JSON.parse(localStorage.getItem("favorites") || "{}");
+            const imagePath = "./img/" + title + ".jpg";
+
+            if (favorites[title]) {
+              delete favorites[title];
+            } else {
+              favorites[title] = {
+                path: selectedGame ? selectedGame.href : "",
+                image: imagePath,
+              };
+            }
+
+            localStorage.setItem("favorites", JSON.stringify(favorites));
+            updateFavoriteIcon(favorites, title);
+          }
+
+          function updateFavoriteIcon(favorites, title) {
+            if (favorites[title]) {
+              favoriteIcon.innerHTML = "&#9733;";
+            } else {
+              favoriteIcon.innerHTML = "&#9734;";
+            }
+          }
+
+          const favorites = JSON.parse(localStorage.getItem("favorites") || "{}");
+          updateFavoriteIcon(favorites, title);
+
+          favoriteIcon.addEventListener("click", function () {
+            toggleFavorite();
+          });
+
+          // Fullscreen logic
+          fullscreenButton.addEventListener("click", function () {
+            if (gameContainer.requestFullscreen) {
+              gameContainer.requestFullscreen();
+            } else if (gameContainer.webkitRequestFullscreen) {
+              gameContainer.webkitRequestFullscreen();
+            } else if (gameContainer.msRequestFullscreen) {
+              gameContainer.msRequestFullscreen();
+            }
+          });
+
+          // Logging to Google Script
+          window.onload = function () {
+            fetch(
+              "https://script.google.com/macros/s/AKfycbx1xYwL2QqkOQHyeCWIVSMVLP_XXts5zpb0M-vbvlRl1MpRYYcv4NI-i8OaGc0YP0wpsg/exec?title=" +
+                encodeURIComponent(title),
+              {
+                method: "GET",
+              }
+            )
+              .then((response) => response.text())
+              .then((result) => console.log("[DEBUG] Google Script response:", result))
+              .catch((error) => console.error("[DEBUG] Google Script error:", error));
+          };
+        }
+
+        // Recommended Games
+        const cardContainer = document.getElementById("cardContainer");
+
+        function adjustHrefPath(path, page) {
+          console.log("[DEBUG] adjustHrefPath input:", path, "page:", page);
+          path = path.replace(/^\.\//, "").replace(/^\//, "");
+          const baseURL = getBaseURLForPage(page);
+
+          let finalPath;
+          if (baseURL === "./") {
+            finalPath = "./" + path;
+          } else {
+            if (!baseURL.endsWith("/")) {
+              finalPath = baseURL + "/" + path;
+            } else {
+              finalPath = baseURL + path;
+            }
+          }
+
+          console.log("[DEBUG] adjustHrefPath finalPath:", finalPath);
+          return finalPath;
+        }
+
+        function adjustImgPath(path, page) {
+          console.log("[DEBUG] adjustImgPath input:", path, "page:", page);
+          path = path.replace(/^\.\//, "").replace(/^\//, "").replace(/^img\//, "");
+          const baseURL = getBaseURLForPage(page);
+
+          let finalImgPath;
+          if (baseURL === "./") {
+            finalImgPath = "./img/" + path;
+          } else {
+            if (!baseURL.endsWith("/")) {
+              finalImgPath = baseURL + "/img/" + path;
+            } else {
+              finalImgPath = baseURL + "img/" + path;
+            }
+          }
+
+          console.log("[DEBUG] adjustImgPath finalPath:", finalImgPath);
+          return finalImgPath;
+        }
+
+        function getCardHTML(gameObject) {
+          const { href, imgSrc, name, page } = gameObject;
+          const adjustedHref = adjustHrefPath(href, page);
+          const adjustedImgSrc = adjustImgPath(imgSrc, page);
+
+          console.log("[DEBUG] Creating card for game:", name, "href:", adjustedHref);
+
+          const card = document.createElement("a");
+          card.className = "card";
+          card.href = adjustedHref + `?id=${gameObject.id}`;
+
+          const img = document.createElement("img");
+          img.src = adjustedImgSrc;
+          img.alt = name;
+          card.appendChild(img);
+
+          const figcaption = document.createElement("figcaption");
+          figcaption.textContent = name;
+          card.appendChild(figcaption);
+
+          return card;
+        }
+
+        const randomGames = games.slice().sort(() => 0.5 - Math.random()).slice(0, 10);
+        console.log("[DEBUG] Random recommended games:", randomGames.map(g => g.name));
+        randomGames.forEach((game) => {
+          const card = getCardHTML(game);
+          cardContainer.appendChild(card);
+        });
+      });
+    </script>
+  </body>
+</html>
