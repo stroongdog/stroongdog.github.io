@@ -154,7 +154,8 @@
   </head>
   <body>
     <div class="header">
-      <a href="./index.html" class="header-logo">
+      <!-- Changed this to go back one directory -->
+      <a href="../index.html" class="header-logo">
         <span>StrongDog</span>
         <span>XP</span>
       </a>
@@ -218,8 +219,9 @@
     </div>
 
     <script type="module">
-      import games from "./cards-data.js";
-      import { siteMapping } from "./site-mapping.js";
+      // Changed imports to go back one directory
+      import games from "../cards-data.js";
+      import { siteMapping } from "../site-mapping.js";
 
       document.addEventListener("DOMContentLoaded", async function () {
         const urlParams = new URLSearchParams(window.location.search);
@@ -245,19 +247,20 @@
 
         function getBaseURLForPage(page) {
           const currentKey = getCurrentKeyHostOnly();
+          // Instead of "./", return "../"
           if (!page || page === 1) {
-            return "./";
+            return "../"; 
           }
 
           const arr = siteMapping[currentKey];
           if (!arr) {
-            return "./";
+            return "../";
           }
           const index = page - 2;
           if (arr[index]) {
-            return arr[index];
+            return arr[index].replace(/^\.\/$/, "../");
           } else {
-            return "./";
+            return "../";
           }
         }
 
@@ -266,8 +269,8 @@
           const baseURL = getBaseURLForPage(page);
 
           let finalPath;
-          if (baseURL === "./") {
-            finalPath = "./" + path;
+          if (baseURL === "../") {
+            finalPath = "../" + path;
           } else {
             if (!baseURL.endsWith("/")) {
               finalPath = baseURL + "/" + path;
@@ -324,7 +327,8 @@
         document.title = "Loading... - StrongDog XP";
 
         if (!selectedGame) {
-          embedGame("./404.html", "Not Found");
+          // Adjusted 404 path going up one directory
+          embedGame("../404.html", "Not Found");
         } else {
           const page = selectedGame.page;
           const baseURL = getBaseURLForPage(page);
@@ -341,7 +345,8 @@
 
           function toggleFavorite() {
             let favorites = JSON.parse(localStorage.getItem("favorites") || "{}");
-            const imagePath = "./img/" + selectedGame.name + ".jpg";
+            // Adjusted image path
+            const imagePath = "../img/" + selectedGame.name + ".jpg";
 
             if (favorites[selectedGame.name]) {
               delete favorites[selectedGame.name];
@@ -401,8 +406,8 @@
             const baseURL = getBaseURLForPage(page);
 
             let finalImgPath;
-            if (baseURL === "./") {
-              finalImgPath = "./img/" + path;
+            if (baseURL === "../") {
+              finalImgPath = "../img/" + path;
             } else {
               if (!baseURL.endsWith("/")) {
                 finalImgPath = baseURL + "/img/" + path;
