@@ -15,10 +15,20 @@
         background-color: #3c3c3c;
         padding: 20px;
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
         border-bottom: 3px solid #ff8c00;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        position: relative;
+      }
+
+      .menu-icon {
+        position: absolute;
+        left: 20px;
+        font-size: 2rem;
+        cursor: pointer;
+        color: white;
+        z-index: 1001;
       }
 
       .header-logo {
@@ -38,6 +48,167 @@
 
       .header-logo:hover span:nth-child(1) {
         color: #e0e0e0;
+      }
+
+      .slide-menu {
+        position: fixed;
+        top: 0;
+        height: 100%;
+        width: 350px;
+        background-color: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(10px);
+        color: white;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+        z-index: 1003;
+        transition: transform 0.4s ease;
+        overflow-y: auto;
+        transform: translateX(-100%);
+      }
+
+      .profile-picture-container {
+        border-radius: 50%;
+        width: 100px;
+        aspect-ratio: 1;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+      }
+
+      .profile-picture-container:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
+      }
+
+      .profile-picture {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .user-details-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-block: 20px;
+        gap: 10px;
+      }
+
+      .profile-top-container {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .username-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .username-text {
+        font-size: 1.5rem;
+        color: white;
+      }
+
+      .categories {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .categories > a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 20px;
+        text-decoration: none;
+        color: white;
+        transition: all 0.3s ease;
+        margin-left: 20px;
+        margin-right: 20px;
+        text-align: center;
+        font-size: 1.1rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .categories > a::after {
+        content: "";
+        background: rgba(255, 255, 255, 0.1);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        width: 0;
+        height: 0;
+        transition: 0.4s ease-out;
+      }
+
+      .categories > a:hover::after {
+        width: 400px;
+        height: 400px;
+      }
+
+      .categories > a:hover {
+        transform: scale(0.95);
+      }
+
+      span.new-feature-tag {
+        background: orange;
+        border-radius: 100vw;
+        padding: 0.2rem 0.4rem;
+        margin-left: 1rem;
+        font-size: 0.6rem;
+        color: black;
+        text-transform: uppercase;
+      }
+
+      .xp-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 10px auto;
+        width: 80%;
+      }
+
+      .xp-level-text {
+        color: white;
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+      }
+
+      .xp-bar {
+        position: relative;
+        width: 100%;
+        height: 20px;
+        background: black;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      .xp-bar-fill {
+        height: 100%;
+        background: linear-gradient(to right, #47fced, #0af);
+        width: 0%;
+        transition: width 0.5s ease;
+      }
+
+      .xp-bar-text {
+        position: absolute;
+        width: 100%;
+        text-align: center;
+        color: white;
+        font-size: 0.8rem;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
       }
 
       .content {
@@ -153,11 +324,40 @@
     </style>
   </head>
   <body>
+    <div
+      id="secretLink"
+      title="Secret Menu"
+      style="
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 10px;
+        height: 10px;
+        cursor: pointer;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      "
+    ></div>
+
     <div class="header">
+      <div class="menu-icon" id="menuIcon">&#9776;</div>
       <a href="../index.html" class="header-logo">
         <span>StrongDog</span>
         <span>XP</span>
       </a>
+    </div>
+
+    <div class="slide-menu" id="slideMenu">
+      <div class="categories">
+        <a href="../favs.html" class="option-link">Favorites</a>
+        <a href="../about.html" class="option-link">About / Report Bugs / Request Games</a>
+        <a href="https://discord.gg/pWjfQ4Sz5c" class="option-link"
+          >Discord Server<span class="new-feature-tag">new</span></a
+        >
+      </div>
     </div>
 
     <div class="content">
@@ -202,6 +402,7 @@
         id="favoriteIcon"
         class="favorite-icon"
         style="cursor: pointer; font-size: 24px"
+        title="Favorite this game"
       >&#9734;</span>
       <button id="fullscreenButton" class="fullscreen-button">
         Fullscreen
@@ -212,6 +413,48 @@
       <h2>Recommended Games</h2>
       <div class="card-container" id="cardContainer"></div>
     </div>
+
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1609993827735056"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyBh-VnGiP4qZD0r14gfn9dr77GwtslpTqU",
+        authDomain: "strongdog-auth.firebaseapp.com",
+        databaseURL: "https://strongdog-auth-default-rtdb.firebaseio.com",
+        projectId: "strongdog-auth",
+        storageBucket: "strongdog-auth.appspot.com",
+        messagingSenderId: "936276282572",
+        appId: "1:936276282572:web:a802b7f609381ff9428669",
+        measurementId: "G-0YLTCV2MMS",
+      };
+
+      firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth();
+      const db = firebase.firestore();
+      const rtdb = firebase.database();
+
+      function getLevelAndProgressFromXP(xp) {
+        let level = 1;
+        let xpNeeded = 50;
+        const multiplier = 1.2;
+
+        while (xp >= xpNeeded) {
+          xp -= xpNeeded;
+          xpNeeded = Math.round(xpNeeded * multiplier);
+          level++;
+        }
+        return { level, currentXP: xp, xpNeededForNext: xpNeeded };
+      }
+    </script>
+
+    <script src="../appscript.js"></script>
 
     <script type="module">
       import games from "../cards-data.js";
@@ -307,9 +550,7 @@
           gameTitleElement.textContent = title;
           document.title = title + " - StrongDog XP";
 
-          // Attach onload to the iframe to ensure the game is fully loaded before counting a view
           iframe.onload = function() {
-            // Now record the view once the iframe content has loaded
             fetch(
               "https://script.google.com/macros/s/AKfycbx1xYwL2QqkOQHyeCWIVSMVLP_XXts5zpb0M-vbvlRl1MpRYYcv4NI-i8OaGc0YP0wpsg/exec?title=" +
                 encodeURIComponent(title),
@@ -348,34 +589,72 @@
           const embedPath = await getEmbedPath(adjustedHref, selectedGame.href, page);
           embedGame(embedPath, selectedGame.name);
 
-          function toggleFavorite() {
-            let favorites = JSON.parse(localStorage.getItem("favorites") || "{}");
-            const imagePath = "../img/" + selectedGame.name + ".jpg";
+          // Initialize favorites
+          let userFavorites = new Set();
 
-            if (favorites[selectedGame.name]) {
-              delete favorites[selectedGame.name];
+          // Function to update the favorite icon based on current favorite status
+          function updateFavoriteIcon() {
+            if (userFavorites.has(selectedGame.id)) {
+              favoriteIcon.innerHTML = "&#9733;"; // Filled star
+              favoriteIcon.style.color = "gold";
             } else {
-              favorites[selectedGame.name] = {
-                path: selectedGame.href,
-                image: imagePath,
-              };
-            }
-
-            localStorage.setItem("favorites", JSON.stringify(favorites));
-            updateFavoriteIcon(favorites, selectedGame.name);
-          }
-
-          function updateFavoriteIcon(favorites, title) {
-            if (favorites[title]) {
-              favoriteIcon.innerHTML = "&#9733;";
-            } else {
-              favoriteIcon.innerHTML = "&#9734;";
+              favoriteIcon.innerHTML = "&#9734;"; // Empty star
+              favoriteIcon.style.color = "white";
             }
           }
 
-          const favorites = JSON.parse(localStorage.getItem("favorites") || "{}");
-          updateFavoriteIcon(favorites, selectedGame.name);
+          // Function to toggle favorite status
+          async function toggleFavorite() {
+            const user = auth.currentUser;
+            if (!user) {
+              alert("Please sign in to favorite a game!");
+              return;
+            }
 
+            const favRef = db.collection("favs").doc(user.uid);
+            if (userFavorites.has(selectedGame.id)) {
+              // Remove from favorites
+              await favRef.update({
+                [selectedGame.id]: firebase.firestore.FieldValue.delete()
+              });
+              userFavorites.delete(selectedGame.id);
+            } else {
+              // Add to favorites
+              await favRef.set(
+                {
+                  [selectedGame.id]: true
+                },
+                { merge: true }
+              );
+              userFavorites.add(selectedGame.id);
+            }
+            updateFavoriteIcon();
+          }
+
+          // Function to load favorites from Firestore
+          async function loadFavorites() {
+            const user = auth.currentUser;
+            if (user) {
+              const favDoc = await db.collection("favs").doc(user.uid).get();
+              if (favDoc.exists) {
+                const data = favDoc.data();
+                userFavorites = new Set(Object.keys(data).map(id => parseInt(id, 10)));
+              } else {
+                userFavorites = new Set();
+              }
+              updateFavoriteIcon();
+            } else {
+              userFavorites = new Set();
+              updateFavoriteIcon();
+            }
+          }
+
+          // Listen for authentication state changes to load favorites accordingly
+          auth.onAuthStateChanged(user => {
+            loadFavorites();
+          });
+
+          // Event listener for favorite icon click
           favoriteIcon.addEventListener("click", function () {
             toggleFavorite();
           });
@@ -434,6 +713,219 @@
             cardContainer.appendChild(card);
           });
         }
+
+        let lastMouseMoveTime = Date.now();
+        document.addEventListener("mousemove", () => {
+          lastMouseMoveTime = Date.now();
+        });
+
+        auth.onAuthStateChanged(user => {
+          if(user) {
+            // Add XP every minute if user is active, and also add 1 point each time XP is added
+            setInterval(() => {
+              if(Date.now() - lastMouseMoveTime <= 3 * 60 * 1000) {
+                const xpRef = rtdb.ref(`xp/${user.uid}`);
+                xpRef.transaction(currentXP => (currentXP || 0) + 10);
+
+                const pointsRef = rtdb.ref(`points/${user.uid}`);
+                pointsRef.transaction(currentPoints => (currentPoints || 0) + 1);
+              }
+            }, 60 * 1000);
+          }
+        });
+      });
+    </script>
+
+    <script>
+      // Sidebar open/close logic and user info
+      document.addEventListener("DOMContentLoaded", function () {
+        const menuIcon = document.getElementById("menuIcon");
+        const slideMenu = document.getElementById("slideMenu");
+        const categories = document.querySelector(".categories");
+
+        menuIcon.addEventListener("click", function (event) {
+          event.stopPropagation();
+          if (slideMenu.style.transform === "translateX(0%)") {
+            slideMenu.style.transform = "translateX(-100%)";
+          } else {
+            slideMenu.style.transform = "translateX(0%)";
+          }
+        });
+
+        window.addEventListener("click", function (event) {
+          if (event.target !== menuIcon && !slideMenu.contains(event.target)) {
+            slideMenu.style.transform = "translateX(-100%)";
+          }
+        });
+
+        auth.onAuthStateChanged(async user => {
+          const userDetailsContainer = document.createElement("div");
+          userDetailsContainer.className = "user-details-container";
+
+          const profileTopContainer = document.createElement("div");
+          profileTopContainer.className = "profile-top-container";
+
+          const profilePictureContainer = document.createElement("div");
+          profilePictureContainer.className = "profile-picture-container";
+          const profilePictureElement = document.createElement("img");
+          profilePictureElement.className = "profile-picture";
+          profilePictureContainer.appendChild(profilePictureElement);
+
+          const usernameContainer = document.createElement("div");
+          usernameContainer.className = "username-container";
+          const usernameElement = document.createElement("p");
+          usernameElement.className = "username-text";
+          usernameContainer.appendChild(usernameElement);
+
+          profileTopContainer.appendChild(profilePictureContainer);
+          profileTopContainer.appendChild(usernameContainer);
+
+          userDetailsContainer.appendChild(profileTopContainer);
+
+          const xpContainer = document.createElement("div");
+          xpContainer.className = "xp-container";
+          const xpLevelText = document.createElement("div");
+          xpLevelText.className = "xp-level-text";
+          const xpBar = document.createElement("div");
+          xpBar.className = "xp-bar";
+          const xpBarFill = document.createElement("div");
+          xpBarFill.className = "xp-bar-fill";
+          const xpBarText = document.createElement("div");
+          xpBarText.className = "xp-bar-text";
+          xpBar.appendChild(xpBarFill);
+          xpBar.appendChild(xpBarText);
+          xpContainer.appendChild(xpLevelText);
+          xpContainer.appendChild(xpBar);
+
+          if (user) {
+            if (user.photoURL) {
+              profilePictureElement.src = user.photoURL;
+            } else {
+              profilePictureElement.src = "../img/default-avatar.png";
+            }
+
+            const userId = user.uid;
+            const userDocRef = db.collection("usernames").doc(userId);
+            const userDoc = await userDocRef.get();
+
+            if (userDoc.exists) {
+              const userData = userDoc.data();
+              usernameElement.textContent = userData.username || "Username";
+            } else {
+              usernameElement.textContent = user.displayName || "Username";
+            }
+
+            // Listen for XP changes in real-time
+            const xpRef = rtdb.ref(`xp/${userId}`);
+            xpRef.on('value', snapshot => {
+              let totalXP = snapshot.exists() ? snapshot.val() : 0;
+              const { level, currentXP, xpNeededForNext } = getLevelAndProgressFromXP(totalXP);
+
+              xpLevelText.textContent = `Level ${level}`;
+
+              const fillPercent = (currentXP / xpNeededForNext) * 100;
+              xpBarFill.style.width = `${fillPercent}%`;
+              xpBarText.textContent = `${currentXP}/${xpNeededForNext}`;
+            });
+
+            userDetailsContainer.appendChild(xpContainer);
+
+            profilePictureContainer.addEventListener("click", () => {
+              window.location.href = "../settings.html";
+            });
+
+            slideMenu.insertBefore(userDetailsContainer, categories);
+
+            const logoutLink = document.createElement("a");
+            logoutLink.href = "#";
+            logoutLink.className = "option-link";
+            logoutLink.textContent = "Log Out";
+            logoutLink.style.backgroundColor = "#dc3545";
+            logoutLink.style.color = "white";
+
+            logoutLink.addEventListener("click", function (e) {
+              e.preventDefault();
+              auth
+                .signOut()
+                .then(() => {
+                  window.location.reload();
+                })
+                .catch(error => {
+                  console.error("Error signing out:", error);
+                });
+            });
+
+            const favsLink = categories.querySelector('a[href="../favs.html"]');
+            categories.insertBefore(logoutLink, favsLink);
+
+            try {
+              const accessDocRef = db.collection("access").doc(user.uid);
+              accessDocRef.get().then(accessDoc => {
+                if (accessDoc.exists) {
+                  const accessData = accessDoc.data();
+                  if (accessData.tester === true) {
+                    const testGamesLink = document.createElement("a");
+                    testGamesLink.href = "../test.html";
+                    testGamesLink.className = "option-link";
+                    testGamesLink.textContent = "Test Games";
+                    testGamesLink.style.backgroundColor = "#28a745";
+                    testGamesLink.style.color = "white";
+                    testGamesLink.style.marginTop = "10px";
+
+                    testGamesLink.addEventListener("mouseover", function () {
+                      testGamesLink.style.backgroundColor = "#218838";
+                    });
+                    testGamesLink.addEventListener("mouseout", function () {
+                      testGamesLink.style.backgroundColor = "#28a745";
+                    });
+
+                    categories.insertBefore(testGamesLink, favsLink);
+                  }
+                }
+              });
+            } catch (error) {
+              console.error(error);
+            }
+
+          } else {
+            const notLoggedInContainer = document.createElement("div");
+            notLoggedInContainer.className = "username-container";
+
+            const notLoggedInText = document.createElement("p");
+            notLoggedInText.className = "username-text";
+            notLoggedInText.textContent = "Not logged in";
+
+            notLoggedInContainer.appendChild(notLoggedInText);
+
+            const loginButton = document.createElement("button");
+            loginButton.textContent = "Log In";
+            loginButton.style.backgroundColor = "#007bff";
+            loginButton.style.color = "white";
+            loginButton.style.border = "none";
+            loginButton.style.padding = "10px 20px";
+            loginButton.style.fontSize = "16px";
+            loginButton.style.borderRadius = "5px";
+            loginButton.style.cursor = "pointer";
+            loginButton.style.marginTop = "5px";
+
+            loginButton.addEventListener("click", function () {
+              window.location.href = "../login.html";
+            });
+
+            userDetailsContainer.style.display = "flex";
+            userDetailsContainer.style.flexDirection = "column";
+            userDetailsContainer.style.alignItems = "center";
+            userDetailsContainer.style.paddingBlock = "20px";
+
+            userDetailsContainer.appendChild(notLoggedInContainer);
+            userDetailsContainer.appendChild(loginButton);
+            slideMenu.insertBefore(userDetailsContainer, categories);
+          }
+        });
+
+        document.getElementById("secretLink").addEventListener("click", function () {
+          window.location.href = "../secret-menu.html";
+        });
       });
     </script>
   </body>

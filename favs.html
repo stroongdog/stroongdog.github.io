@@ -1,522 +1,349 @@
 <!DOCTYPE html>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1609993827735056"
-     crossorigin="anonymous"></script>
 <html>
 <head>
-    <link rel="icon" type="image/x-icon" href="/img/favicon.ico"> 
-    <title>StrongDog XP Favorites</title>
-    <style> 
+    <title>Favorites - StrongDog XP</title>
+    <style>
         body {
-        font-family: Arial, sans-serif; 
-        margin: 0;
-        padding: 0;
-        background-color: #2e2e2e; /* Dark grey background */
-    }
-    .navbar {
-        background-color: #333;
-        color: white;
-        padding: 10px 20px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
+            font-family: Arial, sans-serif;
+            background-color: #2e2e2e;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 0;
+        }
 
-	.categories {
-    display: flex;
-    gap: 20px; /* Spacing between categories */
-}
+        .header {
+            background-color: #3c3c3c;
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 3px solid #ff8c00;
+        }
 
-.categories a:hover {
-    background-color: #565656; /* Light grey background on hover */
-    transform: scale(1.05); /* Slight increase in size */
-}
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+        }
 
-.categories a {
-    text-decoration: none;
-    color: white;
-    transition: all 0.3s ease;
-    padding: 5px 10px; /* Padding for touch area */
-    border-radius: 5px; /* Rounded corners */
-}
-
-    .navbar .logo {
-        color: white;
-        font-weight: bold;
-    }
-    .navbar .logo .xp {
-        color: orange;
-    }
-    .navbar a, .navbar a:visited, .navbar .logo span {
-        text-decoration: none;
-        margin-right: 20px;
-    }
-    .search-bar {
-        padding: 5px;
-        font-size: 1em;
-        border-radius: 5px;
-        border: none;
-		width: 100%;
-    }
-    .games-grid {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-start;
-        padding: 10px;
-		justify-content: center;
-    }
-    .card {
-        background-color: #fff;
-    border-radius: 10px;
-    margin: 5px; /* Reduced margin */
-    width: 120px;
-    height: 120px;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    position: relative;
-		overflow: hidden;
-        position: relative;
-    }
-    .card:hover {
-        transform: scale(1.05);
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.29);
-    }
-    .card img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.3s ease;
-    }
-    .card:hover img {
-        transform: scale(1.02); /* subtle zoom on the image */
-    }
-    .card figcaption {
-        position: absolute;
-        bottom: -30px; /* start hidden */
-        left: 0;
-        width: 100%;
-        background-color: rgb(74, 74, 74);
-        color: white;
-        text-align: center;
-        padding: 5px;
-        transition: bottom 0.5s ease; /* smoother and slower */
-        overflow: hidden;
-    }
-    .card:hover figcaption {
-        bottom: 0; /* slide up on hover */
-    }
-	.card::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%);
-    transform: rotate(30deg) translate(-50%, -50%);
-    transition: transform 0.5s, opacity 0.5s;
-    opacity: 0;
-    pointer-events: none; /* This ensures the shine doesn't interfere with clicking the card */
-}
-
-.card:hover::before {
-    transform: rotate(30deg) translate(100%, -50%);
-    opacity: 1;
-}
-
-.search-results {
-	position: absolute;
-        right: 20px;
-        top: 60px;
-        background-color: white;
-        color: black;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        width: 250px; /* Adjusted for image display */
-        display: none;
-        z-index: 1000;
-        transform-origin: left; /* Anchor the transformation to the left */
-        transition: transform 0.3s ease, background-color 0.3s ease;
-        border-radius: 5px; /* Rounded corners for the search results box */
-        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-
-.search-results a {
-	display: flex;
-        align-items: center;
-        text-decoration: none;
-        color: black;
-        border-bottom: 1px solid #eee;
-        padding: 5px;
-        transition: all 0.3s ease;
-}
-
-.search-results img {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    margin-right: 10px;
-    border-radius: 5px;
-}
-
-.search-results a:last-child {
-    border-bottom: none;
-}
-
-.news {
-    max-width: 800px; /* Set a maximum width */
-    margin: 0 auto; /* Center align */
-    padding: 20px;
-    background-color: #444; /* Slightly darker background */
-    color: white;
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* Subtle shadow */
-}
-
-.news a {
-    display: block; /* Make each item take its own line */
-    margin: 5px 0; /* Spacing between items */
-    color: #ccc; /* Lighter text color */
-    text-decoration: none; /* Remove underline */
-}
-
-.news-title {
-    color: orange; /* Color to match your theme */
-    font-weight: bold;
-}
-
-.news-content {
-    color: #ddd; /* Slightly lighter color for content */
-}
-
-/* Styling for the All Games label */
-h2 {
-    text-align: center;
-    color: white;
-    margin: 20px 0; /* Spacing above and below */
-    font-size: 1.5em; /* Larger font size */
-}
-
-.card figcaption {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: rgba(95,95,95,0.8); /* Non-transparent background */
-    color: white;
-    text-align: center;
-    padding: 5px;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-    transform: translateY(100%); /* Start off-screen */
-    opacity: 0;
-}
-
-.card:hover figcaption {
-    height: 30px; /* Show text on hover */
-    background-color: rgb(95, 95, 95); /* Non-transparent background on hover */
-	transform: translateY(0); /* Slide up to visible */
-    opacity: 1;
-}
+        .logo .xp {
+            color: #ff8c00;
+        }
 
         .cards {
             display: flex;
-            justify-content: center;
             flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
             padding: 20px;
         }
 
         .card {
-            display: inline-block;
-            margin: 10px;
-            border: 1px solid #ccc;
+            background-color: #444;
             border-radius: 10px;
-            background-color: white;
-            text-decoration: none;
-            width: 120px;
-            height: 120px;
-            position: relative;
+            width: 150px;
+            text-align: center;
             overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
         }
 
         .card img {
             width: 100%;
-            height: 100%;
+            height: 100px;
             object-fit: cover;
         }
 
+        .card figcaption {
+            padding: 10px;
+            font-size: 14px;
+            color: #ff8c00;
+        }
+
+        .no-favorites {
+            color: white;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .popup {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            z-index: 1001; /* Ensure it's above the overlay */
+            max-width: 90%;
+            width: 300px;
+            text-align: center;
+        }
+
+        .popup button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #ff8c00;
+            border: none;
+            color: white;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .popup button:hover {
+            background-color: #ff6a00;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        /* Flexbox centering for popup */
+        .popup-container {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+        }
+
+        .popup-container.active {
+            display: flex;
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            border: 8px solid #f3f3f3; /* Light grey */
+            border-top: 8px solid #ff8c00; /* Orange */
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 2s linear infinite;
+            margin: 40px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
     </style>
 </head>
 <body>
-    <div class="navbar">
-        <a href="index.html" class="logo">StrongDog<span class="xp">XP</span></a>
-        <div class="categories">
-            <a href="new.html">New</a>
-            <a href="favs.html">Favs</a>
-            <a href="all.html">All</a>
-            <a href="#" id="randomGame">Random Game</a>
-            <a href="#" id="blockLanschool">Block Lanschool</a>
-        </div>
-    
-        <div class="search-container">
-            <input type="text" class="search-bar" placeholder="Search games..." id="searchInput">
-            <div class="search-results" id="searchResults"></div>
-        </div>
+    <div class="header">
+        <a href="index.html" class="logo">
+            StrongDog<span class="xp">XP</span>
+        </a>
     </div>
-
     <div class="cards" id="favoritesCards">
-        <!-- Dynamically populated favorite games will go here -->
+        <!-- Favorite games will be dynamically populated here -->
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-    // Handle Search Functionality
-    const searchInput = document.querySelector('.search-bar');
-    const searchResults = document.getElementById('searchResults');
-    const cards = Array.from(document.querySelectorAll('.card'));
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
 
-    searchInput.addEventListener('input', function() {
-        const searchText = searchInput.value.toLowerCase();
-        const filteredCards = cards.filter(card => 
-            !card.classList.contains('ad-card') &&  
-            card.textContent.toLowerCase().includes(searchText)
-        ).slice(0, 7);
+    <!-- Popup Container -->
+    <div class="popup-container" id="popupContainer">
+        <div class="popup" id="popup">
+            <p>You need to sign in to use favorites.</p>
+            <button id="okButton">OK</button>
+        </div>
+    </div>
 
-        searchResults.innerHTML = '';
-        if (searchText) {
-            searchResults.style.display = 'block';
-            filteredCards.forEach(card => {
-                const gameTitle = card.querySelector('figcaption').textContent;
-                const gameImage = card.querySelector('img').src;
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
 
-                const resultLink = document.createElement('a');
-                resultLink.href = card.getAttribute('href');
-                resultLink.innerHTML = `<img src="${gameImage}" alt="${gameTitle}"><span>${gameTitle}</span>`;
-                searchResults.appendChild(resultLink);
-            });
-        } else {
-            searchResults.style.display = 'none';
-        }
-    });
+    <!-- Import site-mapping.js and cards-data.js -->
+    <script type="module">
+        import games from './cards-data.js';
+        import { siteMapping } from './site-mapping.js';
 
-    // Handle Click outside the search results
-    document.addEventListener('click', function(event) {
-        if (!searchInput.contains(event.target) && !searchResults.contains(event.target)) {
-            searchResults.style.display = 'none';
-        }
-    });
-
-    // Random Game Functionality
-    var randomGameButton = document.getElementById('randomGame');
-    randomGameButton.addEventListener('click', function(e) {
-        e.preventDefault();
-        var nonAdCards = cards.filter(card => !card.classList.contains('ad-card'));
-        if (nonAdCards.length > 0) {
-            var randomIndex = Math.floor(Math.random() * nonAdCards.length);
-            var randomCardHref = nonAdCards[randomIndex].getAttribute('href');
-            window.location.href = randomCardHref;
-        }
-    });
-
-    // Block Lanschool Button
-    var blockLanschoolButton = document.getElementById('blockLanschool');
-    var url = "https://jman1593.github.io";
-    var win;
-
-    blockLanschoolButton.addEventListener('click', function() {
-        if (win) {
-            win.focus();
-        } else {
-            win = window.open('', '', 'width=600,height=400');
-            win.document.body.style.margin = '0';
-            win.document.body.style.height = '100vh';
-            var iframe = win.document.createElement('iframe');
-            iframe.style.border = 'none';
-            iframe.style.width = '100%';
-            iframe.style.height = '100%';
-            iframe.src = url;
-            win.document.body.appendChild(iframe);
-        }
-    });
-
-    // Image Detection for Favorites
-    function findImageForGame(gameFolderName, callback) {
-        const extensions = ['.jpg', '.jpeg', '.png', '.gif'];
-        const basePath = './img/';
-
-        extensions.forEach(ext => {
-            const imagePath = basePath + gameFolderName + ext;
-            const img = new Image();
-            img.onload = function() {
-                callback(imagePath);
-            };
-            img.onerror = function() {};
-            img.src = imagePath;
-        });
-    }
-});
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Search functionality
-            const searchInput = document.querySelector('.search-bar');
-            const searchResults = document.getElementById('searchResults');
-            let favorites = JSON.parse(localStorage.getItem('favorites') || '{}');
-            let cards = Object.keys(favorites).map(title => {
-                return {
-                    title: title,
-                    path: favorites[title].path,
-                    image: favorites[title].image
-                };
-            });
-        
-            searchInput.addEventListener('input', function() {
-                const searchText = searchInput.value.toLowerCase();
-                const filteredCards = cards.filter(card =>
-                    card.title.toLowerCase().includes(searchText)
-                );
-        
-                searchResults.innerHTML = '';
-                if (searchText) {
-                    searchResults.style.display = 'block';
-                    filteredCards.forEach(card => {
-                        const resultLink = document.createElement('a');
-                        resultLink.href = card.path;
-                        resultLink.innerHTML = `<img src="${card.image}" alt="${card.title}"><span>${card.title}</span>`;
-                        searchResults.appendChild(resultLink);
-                    });
-                } else {
-                    searchResults.style.display = 'none';
-                }
-            });
-        
-            // Click outside the search results hides them
-            document.addEventListener('click', function(event) {
-                if (!searchInput.contains(event.target) && !searchResults.contains(event.target)) {
-                    searchResults.style.display = 'none';
-                }
-            });
-        
-            // Random game functionality
-            const randomGameButton = document.getElementById('randomGame');
-            randomGameButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                if (cards.length > 0) {
-                    const randomIndex = Math.floor(Math.random() * cards.length);
-                    const randomCard = cards[randomIndex];
-                    window.location.href = randomCard.path;
-                }
-            });
-        });     
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-    let favorites = JSON.parse(localStorage.getItem('favorites') || '{}');
-    let cardsContainer = document.querySelector('.cards'); // Ensure you have a container with class 'cards'
-
-    for (let gameTitle in favorites) {
-        let game = favorites[gameTitle];
-        checkImageAndCreateCard(gameTitle, game.path, cardsContainer);
-    }
-});
-
-function checkImageAndCreateCard(gameTitle, gamePath, container) {
-    const extensions = ['.jpg', '.png', '.gif', '.jpeg', '.tiff', '.webp']; // List of possible image extensions
-    const basePath = './img/' + gameTitle.toLowerCase().replace(/\s+/g, '-'); // Assuming image name is derived from game title
-    let found = false;
-
-    extensions.forEach(ext => {
-        let img = new Image();
-        img.src = basePath + ext;
-        img.onload = function() {
-            if (!found) {
-                // If the image loads successfully, create the card
-                createCard(gameTitle, gamePath, img.src, container);
-                found = true;
-            }
+        // Firebase configuration (replace with your actual config)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBh-VnGiP4qZD0r14gfn9dr77GwtslpTqU",
+            authDomain: "strongdog-auth.firebaseapp.com",
+            databaseURL: "https://strongdog-auth-default-rtdb.firebaseio.com",
+            projectId: "strongdog-auth",
+            storageBucket: "strongdog-auth.appspot.com",
+            messagingSenderId: "936276282572",
+            appId: "1:936276282572:web:a802b7f609381ff9428669",
+            measurementId: "G-0YLTCV2MMS",
         };
-    });
 
-    // Fallback for no image found
-    setTimeout(() => {
-        if (!found) {
-            createCard(gameTitle, gamePath, './img/favicon.png', container); // Replace with your default image path
-        }
-    }, 1000); // Delay for checking the images
-}
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const rtdb = firebase.database();
 
-function createCard(gameTitle, gamePath, imagePath, container) {
-    let card = document.createElement('a');
-    card.href = gamePath;
-    card.className = 'card';
-    card.innerHTML = `
-        <img src="${imagePath}" alt="${gameTitle}">
-        <figcaption>${gameTitle}</figcaption>
-    `;
-    container.appendChild(card);
-}
-    </script>
+        const favoritesCards = document.getElementById('favoritesCards');
+        const popup = document.getElementById('popup');
+        const overlay = document.getElementById('overlay');
+        const popupContainer = document.getElementById('popupContainer');
+        const okButton = document.getElementById('okButton');
 
-    <script>
-        const clickableTitles = document.querySelectorAll('.clickable-title');
-    clickableTitles.forEach(title => {
-        title.addEventListener('click', function() {
-            window.location.href = 'index.html'; // Redirect to the homepage
-        });
-    });
-    </script>
+        // Function to get adjusted URLs based on siteMapping and page number
+        function getAdjustedUrls(game) {
+            const currentURL = window.location.href;
+            let matchedKey = null;
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-        var randomGameButton = document.getElementById('randomGame');
-        var cards = document.querySelectorAll('.cards .card');
-
-        randomGameButton.addEventListener('click', function(e) {
-            e.preventDefault(); // Prevent the default anchor behavior
-            if (cards.length > 0) {
-                var randomIndex = Math.floor(Math.random() * cards.length);
-                var randomCardHref = cards[randomIndex].getAttribute('href');
-                window.location.href = randomCardHref; // Redirect to the random game's URL
+            // Sort keys by length descending to match the most specific first
+            const sortedKeys = Object.keys(siteMapping).sort((a, b) => b.length - a.length);
+            for (const key of sortedKeys) {
+                if (currentURL.includes(key)) {
+                    matchedKey = key;
+                    break;
+                }
             }
+
+            let adjustedHref = game.href;
+            let adjustedImgSrc = `./img/${game.imgSrc}`;
+
+            if (matchedKey && game.page !== undefined && game.page > 1) {
+                const targetPages = siteMapping[matchedKey];
+                if (targetPages && (game.page - 2) < targetPages.length) {
+                    const targetBaseURL = targetPages[game.page - 2];
+                    adjustedHref = `${targetBaseURL}/${game.href.replace(/^\.\//, "")}`;
+                    adjustedImgSrc = `${targetBaseURL}/img/${game.imgSrc}`;
+                } else {
+                    console.warn(`No site mapping found for page ${game.page} on hostname: ${matchedKey}`);
+                }
+            } else if (game.page === undefined || game.page === 1) {
+                // Default to current site
+                adjustedHref = game.href;
+                adjustedImgSrc = `./img/${game.imgSrc}`;
+            }
+
+            return { adjustedHref, adjustedImgSrc };
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Display a loading spinner initially
+            const loadingSpinner = document.createElement('div');
+            loadingSpinner.className = 'loading-spinner';
+            favoritesCards.appendChild(loadingSpinner);
+
+            // Listen for auth state changes
+            auth.onAuthStateChanged(function(user) {
+                if (user) {
+                    // User is signed in
+                    fetchFavorites(user.uid);
+                } else {
+                    // No user is signed in
+                    showPopup();
+                    favoritesCards.innerHTML = ''; // Clear any loading spinners or content
+                }
+            });
         });
-	document.addEventListener('DOMContentLoaded', function() {
-		const searchInput = document.querySelector('.search-bar');
-		const searchResults = document.getElementById('searchResults');
-		const cards = Array.from(document.querySelectorAll('.card'));
 
-		searchInput.addEventListener('input', function() {
-			const searchText = searchInput.value.toLowerCase();
-			const filteredCards = cards.filter(card =>
-				card.textContent.toLowerCase().includes(searchText)
-			).slice(0, 7); // Top 5 results
+        // Function to fetch favorites from Firestore
+        async function fetchFavorites(userId) {
+            try {
+                const favDoc = await db.collection('favs').doc(userId).get();
+                if (favDoc.exists) {
+                    const favoritesData = favDoc.data(); // { "1": true, "2": true, ... }
+                    console.log("Favorites data retrieved:", favoritesData);
+                    displayFavorites(favoritesData);
+                } else {
+                    console.log("No favorites found for user.");
+                    favoritesCards.innerHTML = '<p class="no-favorites">No favorites yet!</p>';
+                }
+            } catch (error) {
+                console.error("Error fetching favorites:", error);
+                favoritesCards.innerHTML = '<p class="no-favorites">Error loading favorites.</p>';
+            }
+        }
 
-			searchResults.innerHTML = '';
-			if (searchText) {
-				searchResults.style.display = 'block';
-				filteredCards.forEach(card => {
-					const gameTitle = card.querySelector('figcaption').textContent;
-					const gameImage = card.querySelector('img').src;
+        // Function to display favorites
+        function displayFavorites(favorites) {
+            favoritesCards.innerHTML = ''; // Clear loading spinner or previous content
+            if (favorites && Object.keys(favorites).length > 0) {
+                let hasFavorites = false;
+                Object.keys(favorites).forEach(gameId => {
+                    if (favorites[gameId]) { // Ensure it's marked as favorite
+                        const game = games.find(g => g.id === parseInt(gameId, 10));
+                        if (game) {
+                            hasFavorites = true;
 
-					const resultLink = document.createElement('a');
-					resultLink.href = card.getAttribute('href');
-					resultLink.innerHTML = `<img src="${gameImage}" alt="${gameTitle}"><span>${gameTitle}</span>`;
-					searchResults.appendChild(resultLink);
-				});
-			} else {
-				searchResults.style.display = 'none';
-			}
-		});
+                            // Adjust image path based on siteMapping and game.page
+                            const { adjustedHref, adjustedImgSrc } = getAdjustedUrls(game);
 
-		document.addEventListener('click', function(event) {
-			if (!searchInput.contains(event.target) && !searchResults.contains(event.target)) {
-				searchResults.style.display = 'none';
-			}
-		});
-	});
-});
+                            // Set the link to ./play/?id=gameid
+                            const playHref = `./play/?id=${game.id}`;
+
+                            const card = document.createElement('a');
+                            card.href = playHref; // Updated href to point to ./play/?id=gameid
+                            card.className = 'card';
+
+                            card.innerHTML = `
+                                <img src="${adjustedImgSrc}" alt="${game.name}" onerror="this.onerror=null; this.src='./img/default-avatar.png';">
+                                <figcaption>${game.name}</figcaption>
+                            `;
+
+                            favoritesCards.appendChild(card);
+                        } else {
+                            console.warn(`Game with ID ${gameId} not found in games data.`);
+                        }
+                    }
+                });
+                if (!hasFavorites) {
+                    favoritesCards.innerHTML = '<p class="no-favorites">No favorites yet!</p>';
+                }
+            } else {
+                favoritesCards.innerHTML = '<p class="no-favorites">No favorites yet!</p>';
+            }
+        }
+
+        // Function to show the popup
+        function showPopup() {
+            popupContainer.classList.add('active');
+            overlay.style.display = 'block';
+        }
+
+        // Function to hide the popup
+        function hidePopup() {
+            popupContainer.classList.remove('active');
+            overlay.style.display = 'none';
+        }
+
+        // Function to redirect to home
+        function redirectToHome() {
+            window.location.href = 'index.html';
+        }
+
+        // Event listener for the OK button
+        okButton.addEventListener('click', function () {
+            hidePopup();
+            redirectToHome();
+        });
+
+        // Optional: Close popup when clicking outside of it
+        overlay.addEventListener('click', function () {
+            hidePopup();
+            redirectToHome();
+        });
     </script>
 </body>
 </html>

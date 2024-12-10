@@ -6,15 +6,13 @@
 ></script>
 <html lang="en">
   <head>
-    <!-- Include Firebase SDKs -->
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
     <script type="module">
-      // Here are the key(s) for each game that'll be saved, each should be an array to make it work.
-
-      // Polytrack keys
+      // Keys for various games
       const polytrackKeys = [
         "v1_record_445edfa992d0b19b376c8072692f69eafc4afeceb608ba355d44b3cb57a902a0",
         "v1_record_55a26267e4fa6a176ba5898b3e1354d54bbf7c02ed0fd3f37e4e3cee56724a8a",
@@ -24,7 +22,6 @@
         "v1_record_ed65907f59ece7a863e9f1ea1e2b50714920899f7d2e42d9b9656bcb8382b66a",
         "v1_record_f67a25877dbbdb5287f9191cda506a254b0ca7a95fde82e34951fe55bb04c172",
       ];
-      // Babel tower keys that need to be saved:
       const babelTowerKeys = [
         "Tower_id",
         "W_3_numGiftsAlreadyGiven",
@@ -33,11 +30,8 @@
         "save_date",
         "save_data",
       ];
-      // Idle Shark key
       const idleSharkKey = ["sharkGameSave"];
-      // Cookie Clicker key
       const cookieClickerKey = ["CookieClickerGame"];
-      // Bad egg key
       const badEggKeys = [
         "vms--u",
         "vms--logger-settings",
@@ -46,25 +40,23 @@
         "vms--vm-abd",
       ];
 
-      // FUNCTIONS //
-
-      // Function to parse retrieved content given its key
       function getParsedItem(key) {
         const item = localStorage.getItem(key);
         try {
-          return JSON.parse(item); // Attempt to parse as JSON
+          return JSON.parse(item);
         } catch (error) {
-          console.warn(`Invalid JSON for key: ${key} Error message: ${error}`);
-          return item; // Return raw string if not JSON
+          console.warn(`Invalid JSON for key: ${key} Error: ${error}`);
+          return item;
         }
       }
 
       function copyText(text) {
-        // Make sure document body is focued before attempting to add text to clipboard
         navigator.clipboard
           .writeText(text)
           .then(() => showTransferInstructions())
-          .catch(err => alert(`Error: failed to copy your save data: ${err}`));
+          .catch((err) =>
+            alert(`Error: failed to copy your save data: ${err}`)
+          );
       }
 
       function showTransferInstructions() {
@@ -76,37 +68,35 @@
       function setDataInObject(dataObj) {
         Object.entries(dataObj).forEach(([key, value]) => {
           if (value !== null) {
-            const finalValue = typeof value === "string" ? value : JSON.stringify(value);
+            const finalValue =
+              typeof value === "string" ? value : JSON.stringify(value);
             localStorage.setItem(key, finalValue);
           }
         });
       }
 
       function validateData(dataObj) {
-        // Check if all keys have non-null values
-        return Object.values(dataObj).every(value => value !== null);
+        return Object.values(dataObj).every((value) => value !== null);
       }
 
       function getAndBundleDataIntoObj(keysArr) {
-        const dataObj = Object.fromEntries(keysArr.map(key => [key, getParsedItem(key)]));
+        const dataObj = Object.fromEntries(
+          keysArr.map((key) => [key, getParsedItem(key)])
+        );
         if (!validateData(dataObj))
           alert(
-            "(If you retrieved Polytrack saves this isn't a problem, please move on)\n\nYour save data will be copied, but some could not be retrieved which may cause problems importing this data. Please ensure all required keys of your game sava data you're trying to transfer are present in localStorage and try again.\n\nIf this issue persists, report the error to the bug report form or message us on Discord."
+            "(If you retrieved Polytrack saves this isn't a problem, please move on)\n\nYour save data will be copied, but some could not be retrieved which may cause problems importing this data. Please ensure all required keys of your game save data are present in localStorage and try again.\n\nIf this issue persists, report the error to the bug report form or message us on Discord."
           );
         return JSON.stringify(dataObj);
       }
 
       function getDataAndCopy(keysArr) {
-        // Create object with correct key-value pairs within as displayed in local storage
         const gameData = getAndBundleDataIntoObj(keysArr);
         if (gameData) copyText(gameData);
-        else return;
       }
 
-      // When the page loads...
       document.addEventListener("DOMContentLoaded", function () {
         if (window.location.hostname.includes("netlify.app")) {
-          // Replace the body content with message
           document.body.innerHTML = `
             <div style="padding: 20px; text-align: center; color: white; background-color: #333; font-family: Arial, sans-serif;">
               <p>Hi there! If you're seeing this, you're trying to connect to a StrongDog version hosted on Netlify. Due to Netlify's extreme costs, we're moving back to GitHub with updated links!</p>
@@ -124,28 +114,41 @@
               <h2><strong>DON'T FORGET TO SET NEW BOOKMARKS! THIS PAGE WILL BE GOING DOWN SOON!</strong></h2>
             </div>
           `;
-          // Center the content for a better look
-          document.body.style = "height: 100vh; margin: 0; display: grid; place-items: center;";
+          document.body.style =
+            "height: 100vh; margin: 0; display: grid; place-items: center;";
 
-          const getPolytrackDataBtn = document.getElementById("get-polytrack-data");
-          const getCookieClickerDataBtn = document.getElementById("get-cookie-clicker-data");
+          const getPolytrackDataBtn =
+            document.getElementById("get-polytrack-data");
+          const getCookieClickerDataBtn = document.getElementById(
+            "get-cookie-clicker-data"
+          );
           const getBadEggDataBtn = document.getElementById("get-bad-egg-data");
-          const getBabelTowerDataBtn = document.getElementById("get-babel-tower-data");
-          const getIdleSharkDataBtn = document.getElementById("get-idle-shark-data");
+          const getBabelTowerDataBtn = document.getElementById(
+            "get-babel-tower-data"
+          );
+          const getIdleSharkDataBtn = document.getElementById(
+            "get-idle-shark-data"
+          );
 
-          // Get polytrack data
-          getPolytrackDataBtn.addEventListener("click", () => getDataAndCopy(polytrackKeys));
-          // Get cookie clicker data
-          getCookieClickerDataBtn.addEventListener("click", () => getDataAndCopy(cookieClickerKey));
-          // Get bad egg data
-          getBadEggDataBtn.addEventListener("click", () => getDataAndCopy(badEggKeys));
-          // Get babel tower data
-          getBabelTowerDataBtn.addEventListener("click", () => getDataAndCopy(babelTowerKeys));
-          // Get idle shark data
-          getIdleSharkDataBtn.addEventListener("click", () => getDataAndCopy(idleSharkKey));
+          getPolytrackDataBtn.addEventListener("click", () =>
+            getDataAndCopy(polytrackKeys)
+          );
+          getCookieClickerDataBtn.addEventListener("click", () =>
+            getDataAndCopy(cookieClickerKey)
+          );
+          getBadEggDataBtn.addEventListener("click", () =>
+            getDataAndCopy(badEggKeys)
+          );
+          getBabelTowerDataBtn.addEventListener("click", () =>
+            getDataAndCopy(babelTowerKeys)
+          );
+          getIdleSharkDataBtn.addEventListener("click", () =>
+            getDataAndCopy(idleSharkKey)
+          );
         } else {
-          // Importing user's save data
-          const importSaveDataBtn = document.getElementById("import-save-data-btn");
+          const importSaveDataBtn = document.getElementById(
+            "import-save-data-btn"
+          );
           importSaveDataBtn.addEventListener("click", () => {
             const confirmMessage = confirm(
               `IMPORTANT: note that by confirming this message, you will REWRITE ALL current save data (only on this page) for the game you chose to transfer the data from. If you have records on this page that you don't want to be overridden by records on the site you're transferring data from, cancel this message.\n\nAfter you dismiss this browser alert message, there may be a pop-up asking you to allow this page to "see text copied to the clipboard".\n\nTo be able to transfer your save data and continue, you MUST click ALLOW.`
@@ -153,9 +156,11 @@
             if (!confirmMessage) return;
             navigator.clipboard
               .readText()
-              .then(text => {
+              .then((text) => {
                 if (!text) {
-                  throw new Error("Clipboard is empty. Please copy the data to the clipboard and try again.");
+                  throw new Error(
+                    "Clipboard is empty. Please copy the data to the clipboard and try again."
+                  );
                 }
 
                 let parsedData;
@@ -168,13 +173,19 @@
                 }
 
                 if (typeof parsedData !== "object") {
-                  throw new Error("Invalid data format. The clipboard content must be a JSON object.");
+                  throw new Error(
+                    "Invalid data format. The clipboard content must be a JSON object."
+                  );
                 }
 
                 setDataInObject(parsedData);
-                alert("Your data was successfully transferred! If there are any issues, please contact support.");
+                alert(
+                  "Your data was successfully transferred! If there are any issues, please contact support."
+                );
               })
-              .catch(err => alert(`Failed to read clipboard contents: ${err}`));
+              .catch((err) =>
+                alert(`Failed to read clipboard contents: ${err}`)
+              );
           });
         }
       });
@@ -182,7 +193,6 @@
       import games from "./cards-data.js";
       import { siteMapping } from "./site-mapping.js";
 
-      // Helper function to normalize game names
       function normalizeGameName(name) {
         return name
           .toLowerCase()
@@ -190,14 +200,10 @@
           .replace(/[^a-z0-9]/g, "");
       }
 
-      // Function to get the current site key from the URL
       function getCurrentSiteKey() {
         const currentURL = window.location.href;
         const keys = Object.keys(siteMapping);
-
-        // Sort keys by length in descending order to match the most specific URL first
         keys.sort((a, b) => b.length - a.length);
-
         for (const key of keys) {
           if (currentURL.includes(key)) {
             return key;
@@ -208,54 +214,39 @@
 
       function getAdjustedUrls(href, imgSrc, page) {
         let adjustedHref = href;
-        let adjustedImgSrc = `./img/${imgSrc}`; // Default img src
-
+        let adjustedImgSrc = `./img/${imgSrc}`;
         const currentSiteKey = getCurrentSiteKey();
 
         if (currentSiteKey) {
           const currentSitePages = siteMapping[currentSiteKey];
-
-          // Build a mapping from page number to base URL
           const pageNumberToURL = {};
           let currentPageNumber = getPageNumberFromURL(currentSiteKey);
           pageNumberToURL[currentPageNumber] = currentSiteKey;
 
           if (currentSitePages) {
-            currentSitePages.forEach(url => {
+            currentSitePages.forEach((url) => {
               const pageNum = getPageNumberFromURL(url);
               pageNumberToURL[pageNum] = url;
             });
           }
 
-          // Check if page is defined and not equal to currentPageNumber
           if (page !== undefined && page !== currentPageNumber) {
             let adjustedBaseURL = pageNumberToURL[page];
-
             if (!adjustedBaseURL) {
-              // No base URL found, so construct one using the current site's base URL
               const currentOrigin = window.location.origin;
               adjustedBaseURL = `${currentOrigin}/strongdog${page}`;
             }
-
-            // Remove leading './' from href and imgSrc if present
             const adjustedGameHref = href.replace(/^\.\//, "");
             adjustedHref = `${adjustedBaseURL}/${adjustedGameHref}`;
-
             const adjustedImgPath = imgSrc.replace(/^\.\//, "");
             adjustedImgSrc = `${adjustedBaseURL}/img/${adjustedImgPath}`;
           }
         } else {
-          console.warn(`No site mapping found for current URL: ${window.location.href}`);
-
-          // Since no site mapping is found, construct the adjusted URLs here
           if (page !== undefined && page > 1) {
             const currentOrigin = window.location.origin;
             const adjustedBaseURL = `${currentOrigin}/strongdog${page}`;
-
-            // Remove leading './' from href and imgSrc if present
             const adjustedGameHref = href.replace(/^\.\//, "");
             adjustedHref = `${adjustedBaseURL}/${adjustedGameHref}`;
-
             const adjustedImgPath = imgSrc.replace(/^\.\//, "");
             adjustedImgSrc = `${adjustedBaseURL}/img/${adjustedImgPath}`;
           }
@@ -264,39 +255,35 @@
         return { adjustedHref, adjustedImgSrc };
       }
 
-      // Function to extract the page number from a URL or key
       function getPageNumberFromURL(url) {
         const regex = /(strongdog|mathcord|stroongdog)(\d*)/;
         const match = url.match(regex);
         if (match) {
           const pageNum = match[2];
-          if (pageNum === "") {
-            return 1;
-          } else {
-            return parseInt(pageNum, 10);
-          }
+          return pageNum === "" ? 1 : parseInt(pageNum, 10);
         } else {
-          return 1; // Default to page 1 if not found
+          return 1;
         }
       }
 
-      // Function to generate card HTML
       function getCardHTML(gameObject) {
-        const { href, imgSrc, name, page } = gameObject;
-        const { adjustedHref, adjustedImgSrc } = getAdjustedUrls(href, imgSrc, page);
+    const { href, imgSrc, name, page } = gameObject;
+    const { adjustedHref, adjustedImgSrc } = getAdjustedUrls(
+      href,
+      imgSrc,
+      page
+    ); // Use original logic for image paths
+    const gameLink = `./play/?id=${gameObject.id}`; // Adjusted to use game ID
+    const normalizedName = normalizeGameName(name); // Normalize the game name
+    return `
+    <a href="${gameLink}" class="card" data-game-id="${normalizedName}" data-page="${page}">
+        <img src="${adjustedImgSrc}" alt="${name}">
+        <figcaption>${name}</figcaption>
+    </a>
+`;
+}
 
-        // Generate a normalized game ID for matching
-        const gameId = normalizeGameName(name);
 
-        return `
-          <a href="${adjustedHref}" class="card" data-game-id="${gameId}" data-page="${page}">
-            <img src="${adjustedImgSrc}">
-            <figcaption>${name}</figcaption>
-          </a>
-        `;
-      }
-
-      // Generate the cards
       let cardsHTMLArr = [];
       for (let i = 0; i < games.length; ++i) {
         cardsHTMLArr.push(getCardHTML(games[i]));
@@ -304,61 +291,62 @@
 
       const cardsHTMLStr = cardsHTMLArr.join("");
 
-      // Insert the cards into the DOM once the content is loaded
       document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("allGameList").innerHTML = cardsHTMLStr;
 
-        // --- Begin Updated Search Functionality ---
         const searchInput = document.querySelector(".search-bar");
         const searchResults = document.getElementById("searchResults");
 
         if (!searchInput || !searchResults) {
-          console.error("Search input or results container not found in the DOM.");
+          console.error(
+            "Search input or results container not found in the DOM."
+          );
           return;
         }
 
-        // Show results when the search bar is focused
         searchInput.addEventListener("focus", function () {
-          updateSearchResults(); // Display initial results if any
+          updateSearchResults();
         });
 
-        // Update the search results based on the input
         searchInput.addEventListener("input", updateSearchResults);
 
-        // Hide results when clicking outside the search bar and results
         document.addEventListener("click", function (event) {
-          if (!searchInput.contains(event.target) && !searchResults.contains(event.target)) {
+          if (
+            !searchInput.contains(event.target) &&
+            !searchResults.contains(event.target)
+          ) {
             searchResults.style.display = "none";
           }
         });
 
         function updateSearchResults() {
           const searchText = searchInput.value.toLowerCase();
-          const filteredGames = games.filter(game => game.name.toLowerCase().includes(searchText)).slice(0, 7); // Limit to top 7 results
+          const filteredGames = games
+            .filter((game) => game.name.toLowerCase().includes(searchText))
+            .slice(0, 7);
 
-          searchResults.innerHTML = ""; // Clear previous results
-
+          searchResults.innerHTML = "";
           if (filteredGames.length === 0) {
             searchResults.style.display = "none";
             return;
           }
 
-          filteredGames.forEach(game => {
-            const { href, imgSrc, name, page } = game;
-            const { adjustedHref, adjustedImgSrc } = getAdjustedUrls(href, imgSrc, page);
+          filteredGames.forEach((game) => {
+            const { id, imgSrc, name } = game;
+            const adjustedHref = `./play/?id=${id}`;
+            const adjustedImgSrc = `./img/${imgSrc}`;
 
             const resultLink = document.createElement("a");
             resultLink.href = adjustedHref;
             resultLink.innerHTML = `
-              <img src="${adjustedImgSrc}" alt="${name}">
-              <span>${name}</span>
-            `;
+            <img src="${adjustedImgSrc}" alt="${name}">
+            <span>${name}</span>
+        `;
             searchResults.appendChild(resultLink);
           });
 
-          searchResults.style.display = "block"; // Show results
+          searchResults.style.display = "block";
         }
-        // --- End Updated Search Functionality ---
       });
     </script>
     <script>
@@ -373,21 +361,36 @@
         measurementId: "G-0YLTCV2MMS",
       };
 
-      // Initialize Firebase
       firebase.initializeApp(firebaseConfig);
-
-      // Initialize Firebase Authentication and Firestore
       const auth = firebase.auth();
       const db = firebase.firestore();
+      const rtdb = firebase.database(); // Add this to access Realtime DB
     </script>
     <script src="appscript.js"></script>
     <script>
-      // Define normalizeGameName function
       function normalizeGameName(name) {
         return name
           .toLowerCase()
           .replace(/\s+/g, "")
           .replace(/[^a-z0-9]/g, "");
+      }
+
+      // Function to determine level and progress from total XP
+      function getLevelAndProgressFromXP(xp) {
+        let level = 1;
+        let xpNeeded = 50; // XP needed to reach next level from current
+        const multiplier = 1.2;
+
+        // Deduct xp to find current level
+        while (xp >= xpNeeded) {
+          xp -= xpNeeded;
+          xpNeeded = Math.round(xpNeeded * multiplier);
+          level++;
+        }
+
+        // xp is now how far into this level they are
+        // xpNeeded is how much more they need for the next level
+        return { level, currentXP: xp, xpNeededForNext: xpNeeded };
       }
 
       document.addEventListener("DOMContentLoaded", function () {
@@ -404,21 +407,21 @@
           </div>
         `;
 
-        // Append loadingContainerEl to topGameList
         topGameList.appendChild(loadingContainerEl);
 
         function fetchTopGames() {
           fetch(targetUrl, {
-            // Use the targetUrl from appscript.js
             method: "GET",
           })
-            .then(response => {
+            .then((response) => {
               if (!response.ok) {
-                throw new Error("Network response was not ok " + response.statusText);
+                throw new Error(
+                  "Network response was not ok " + response.statusText
+                );
               }
               return response.json();
             })
-            .then(data => {
+            .then((data) => {
               if (data && data.content) {
                 const parsedData = JSON.parse(data.content);
                 console.log("Parsed data:", parsedData);
@@ -427,47 +430,51 @@
                 console.error("Invalid data format", data);
               }
             })
-            .catch(error => console.error("Error:", error))
+            .catch((error) => console.error("Error:", error))
             .finally(() => {
               loadingContainerEl.style.display = "none";
             });
         }
-
         function displayTopGames(games) {
-          if (!topGameList) {
-            console.error("Required element not found.");
-            return;
-          }
-          topGameList.innerHTML = "";
+    const topGameList = document.getElementById("topGameList");
+    if (!topGameList) {
+        console.error("Required element not found.");
+        return;
+    }
 
-          games.slice(1).forEach(game => {
-            // Skip the first entry as it is the header
-            const gameName = game[0];
-            const matchingCard = findMatchingCard(gameName);
-            if (matchingCard) {
-              topGameList.appendChild(matchingCard.cloneNode(true));
-            } else {
-              console.warn(`No matching card found for game: ${gameName}`);
-            }
-          });
+    topGameList.innerHTML = ""; // Clear existing content
+
+    games.slice(1).forEach((game) => {
+        const gameName = game[0]; // Get game name from Top 10 data
+        const matchingCard = findMatchingCard(gameName); // Find the matching card
+        if (matchingCard) {
+            topGameList.appendChild(matchingCard.cloneNode(true)); // Append a clone of the card
+        } else {
+            console.warn(`No matching card found for game: ${gameName}`);
         }
+    });
+}
 
         function findMatchingCard(gameName) {
-          const formattedGameName = normalizeGameName(gameName);
-          const cards = document.querySelectorAll("#allGameList .card");
-          for (let card of cards) {
-            const cardGameId = card.getAttribute("data-game-id");
-            if (cardGameId === formattedGameName) {
-              return card;
-            }
-          }
-          console.warn(`Card not found for game: ${gameName} (ID: ${formattedGameName})`);
-          return null;
+    const formattedGameName = normalizeGameName(gameName); // Normalize the gameName from Top 10
+    const cards = document.querySelectorAll("#allGameList .card"); // Select all cards
+    
+    for (let card of cards) {
+        const cardGameId = card.getAttribute("data-game-id"); // Get the data-game-id from the card
+        if (cardGameId === formattedGameName) {
+            return card; // Return the matching card
         }
+    }
+    
+    console.warn(
+        `Card not found for game: ${gameName} (Normalized ID: ${formattedGameName})`
+    );
+    return null;
+}
 
-        // Immediately invoked function to run fetchTopGames as soon as possible
+
         (function () {
-          loadingContainerEl.style.display = "flex"; // Show spinner
+          loadingContainerEl.style.display = "flex";
           fetchTopGames();
         })();
       });
@@ -482,7 +489,6 @@
         margin: 0;
         padding: 0;
         background-color: #2e2e2e;
-        /* Dark grey background */
       }
 
       .navbar {
@@ -493,28 +499,23 @@
         align-items: center;
         position: relative;
         justify-content: space-between;
-        /* Keep items spread out */
       }
 
       .logo {
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
-        /* Center the logo horizontally */
         color: white;
         font-weight: bold;
       }
 
-      /* Style for the menu icon */
       .menu-icon {
         font-size: 2rem;
         cursor: pointer;
         margin-left: 20px;
-        /* Position the icon to the left */
         color: white;
         position: relative;
         z-index: 1001;
-        /* Ensure it stays on top when clicking */
       }
 
       .slide-menu {
@@ -524,23 +525,12 @@
         width: 350px;
         background-color: rgba(0, 0, 0, 0.4);
         backdrop-filter: blur(10px);
-        /* You can adjust to preferred blurring */
         color: white;
         box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
         z-index: 1003;
-        /* Ensure it covers the menu icon when it slides in */
         transition: transform 0.4s ease;
-        /* Smooth slide-in animation */
         overflow-y: auto;
         transform: translateX(-100%);
-        /* Start off-screen completely */
-      }
-
-      .profile-picture {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        /* Keeps the aspect-ratio of image normal - no distortions */
       }
 
       .profile-picture-container {
@@ -552,14 +542,33 @@
         justify-content: center;
         align-items: center;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+      }
+
+      .profile-picture-container:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
+      }
+
+      .profile-picture {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
       }
 
       .user-details-container {
         display: flex;
-        width: 100%;
-        justify-content: center;
-        gap: 20px;
-        padding-block: 40px;
+        flex-direction: column;
+        align-items: center;
+        padding-block: 20px;
+        gap: 10px;
+      }
+
+      .profile-top-container {
+        display: flex;
+        align-items: center;
+        gap: 15px;
       }
 
       .username-container {
@@ -570,6 +579,7 @@
 
       .username-text {
         font-size: 1.5rem;
+        color: white;
       }
 
       .categories {
@@ -578,7 +588,6 @@
         gap: 10px;
       }
 
-      /* Styling for links in the slide menu */
       .categories > a {
         display: flex;
         justify-content: center;
@@ -600,7 +609,6 @@
       .categories > a::after {
         content: "";
         background: rgba(255, 255, 255, 0.1);
-        /* You can change the color to your liking */
         position: absolute;
         top: 50%;
         left: 50%;
@@ -609,7 +617,6 @@
         width: 0;
         height: 0;
         transition: 0.4s ease-out;
-        /* z-index: -1; */
       }
 
       .categories > a:hover::after {
@@ -621,14 +628,11 @@
         transform: scale(0.95);
       }
 
-      /* Styling for the "new" tags */
       span.new-feature-tag {
         background: orange;
         border-radius: 100vw;
-        /* Completely rounded edges */
         padding: 0.2rem 0.4rem;
         margin-left: 1rem;
-        /* Separate the tag from the left text */
         font-size: 0.6rem;
         color: black;
         text-transform: uppercase;
@@ -678,7 +682,6 @@
         background-color: #fff;
         border-radius: 10px;
         margin: 5px;
-        /* Reduced margin */
         width: 120px;
         height: 120px;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -701,51 +704,31 @@
 
       .card:hover img {
         transform: scale(1.02);
-        /* subtle zoom on the image */
       }
 
       .card figcaption {
         position: absolute;
-        bottom: -30px;
-        /* start hidden */
+        bottom: 0;
         left: 0;
         width: 100%;
-        background-color: rgb(74, 74, 74);
-        color: white;
-        text-align: center;
-        padding: 5px;
-        transition: bottom 0.5s ease;
-        /* smoother and slower */
-        overflow: hidden;
+        background-color: rgba(95, 95, 95, 0.8);
+        color: black;
+        padding: 5px 0;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+        transform: translateY(100%);
+        opacity: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-shadow: 0 0 2px white;
+        font-weight: 550;
+        border-radius: 10px;
       }
 
       .card:hover figcaption {
-        bottom: 0;
-        /* slide up on hover */
-      }
-
-      .card::before {
-        content: "";
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: linear-gradient(
-          to right,
-          rgba(255, 255, 255, 0) 0%,
-          rgba(255, 255, 255, 0.3) 50%,
-          rgba(255, 255, 255, 0) 100%
-        );
-        transform: rotate(30deg) translate(-50%, -50%);
-        transition: transform 0.5s, opacity 0.5s;
-        opacity: 0;
-        pointer-events: none;
-        /* This ensures the shine doesn't interfere with clicking the card */
-      }
-
-      .card:hover::before {
-        transform: rotate(30deg) translate(100%, -50%);
+        height: 30px;
+        background-color: rgba(95, 95, 95, 0.8);
+        transform: translateY(0);
         opacity: 1;
       }
 
@@ -757,14 +740,10 @@
         color: black;
         border: 1px solid #ccc;
         width: 250px;
-        /* Adjusted for image display */
         display: none;
         z-index: 1000;
         transform-origin: left;
-        /* Anchor the transformation to the left */
-        transition: transform 0.3s ease, background-color 0.3s ease;
         border-radius: 5px;
-        /* Rounded corners for the search results box */
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
       }
 
@@ -794,25 +773,20 @@
         margin: 20px auto;
         padding: 20px;
         background-color: #444444;
-        /* Light grey background */
         border-radius: 8px;
         max-width: 800px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        /* Subtle shadow for depth */
       }
 
       .news {
         color: #ffffff;
-        /* Dark text for readability */
       }
 
       .credits-title {
         font-size: 1.5em;
         margin-bottom: 15px;
         color: #ffffff;
-        /* Darker title color */
         border-bottom: 2px solid #ddd;
-        /* Subtle bottom border */
         padding-bottom: 5px;
       }
 
@@ -825,7 +799,6 @@
       .credits-role {
         font-weight: bold;
         color: #ffffff;
-        /* Slightly lighter for role text */
       }
 
       .credits-names {
@@ -833,15 +806,12 @@
         flex-wrap: wrap;
         gap: 8px;
         align-items: center;
-        /* Center-aligns items vertically */
       }
 
       .credits-link {
         color: #0073e6;
-        /* Blue link color */
         text-decoration: none;
         font-weight: bold;
-        /* Bold links for emphasis */
       }
 
       .credits-link:hover {
@@ -850,63 +820,13 @@
 
       .credits-names span {
         color: #c4c4c4;
-        /* Slightly lighter for plain text */
       }
 
-      /* Additional CSS for better spacing and style */
-      .credits-item:last-child .credits-names {
-        gap: 16px;
-      }
-
-      .credits-item:last-child .credits-link {
-        color: #00b3b3;
-        /* Different link color for Other Links */
-      }
-
-      .credits-item:last-child .credits-link:hover {
-        text-decoration: underline;
-        color: #00cccc;
-        /* Hover color for Other Links */
-      }
-
-      /* Styling for the All  label */
       h2 {
         text-align: center;
         color: white;
         margin: 20px 0;
-        /* Spacing above and below */
         font-size: 1.5em;
-        /* Larger font size */
-      }
-
-      .card figcaption {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background-color: rgba(95, 95, 95, 0.8);
-        color: black;
-        padding: 5px 0;
-        transition: transform 0.3s ease, opacity 0.3s ease;
-        transform: translateY(100%);
-        /* Start off-screen */
-        opacity: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-shadow: 0 0 2px white;
-        font-weight: 550;
-        border-radius: 10px;
-      }
-
-      .card:hover figcaption {
-        height: 30px;
-        /* Show text on hover */
-        background-color: rgba(95, 95, 95, 0.8);
-        /* Non-transparent background on hover */
-        transform: translateY(0);
-        /* Slide up to visible */
-        opacity: 1;
       }
 
       .pagination {
@@ -1011,7 +931,6 @@
 
       #topGameList {
         position: relative;
-        /* Make sure topGameList is relatively positioned */
       }
 
       .modal {
@@ -1056,6 +975,47 @@
         text-decoration: underline;
         cursor: pointer;
       }
+
+      .xp-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 10px auto;
+        width: 80%;
+      }
+
+      .xp-level-text {
+        color: white;
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+      }
+
+      .xp-bar {
+        position: relative;
+        width: 100%;
+        height: 20px;
+        background: black;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      .xp-bar-fill {
+        height: 100%;
+        background: linear-gradient(to right, #47fced, #0af);
+        width: 0%;
+        transition: width 0.5s ease;
+      }
+
+      .xp-bar-text {
+        position: absolute;
+        width: 100%;
+        text-align: center;
+        color: white;
+        font-size: 0.8rem;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+      }
     </style>
   </head>
   <body>
@@ -1073,11 +1033,10 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        z-index: 1000; /* Ensure it is on top */
+        z-index: 1000;
       "
     ></div>
     <script>
-      // Ensure the secretLink event listener is set up after the element is loaded
       window.addEventListener("load", function () {
         const secretLink = document.getElementById("secretLink");
         secretLink.addEventListener("click", function () {
@@ -1091,19 +1050,38 @@
       <a href="index.html" class="logo">StrongDog<span class="xp">XP</span></a>
 
       <div class="search-container">
-        <input type="text" class="search-bar" placeholder="Search for games..." id="searchInput" autocomplete="off" />
+        <input
+          type="text"
+          class="search-bar"
+          placeholder="Search for games..."
+          id="searchInput"
+          autocomplete="off"
+        />
         <div class="search-results" id="searchResults"></div>
       </div>
     </div>
     <div class="updates-text-container">
       <p class="updates-paragraph-text">
-        If you want to transfer your save data from popular games like Polytrack, Cookie Clicker and more that were on
-        Netlify pages, head over to the
-        <a href="https://strongdog.netlify.app" style="color: deepskyblue;">Netlify</a> hosted page to recieve more
-        information. If you need to import your save data, click the button below:
+        If you want to transfer your save data from popular games like
+        Polytrack, Cookie Clicker and more that were on Netlify pages, head over
+        to the
+        <a href="https://strongdog.netlify.app" style="color: deepskyblue"
+          >Netlify</a
+        >
+        hosted page to recieve more information. If you need to import your save
+        data, click the button below:
         <button
           id="import-save-data-btn"
-          style="background: orange; border-radius: 10px; padding: 1em; color: black; border: none; cursor: pointer; margin-inline: auto; display: block;"
+          style="
+            background: orange;
+            border-radius: 10px;
+            padding: 1em;
+            color: black;
+            border: none;
+            cursor: pointer;
+            margin-inline: auto;
+            display: block;
+          "
         >
           <strong>Import Save Data</strong>
         </button>
@@ -1113,16 +1091,18 @@
       <div class="modal-content">
         <span class="modal-close" id="closeModal">&times;</span>
         <p>
-          The strongdog discord server is a place for strongdog users to chill, play games together, request ideas, and
-          have fun!
+          The strongdog discord server is a place for strongdog users to chill,
+          play games together, request ideas, and have fun!
         </p>
         <p>
-          If you want to help on StrongDog, there is a chat where you can get help downloading games, and you can upload
-          games YOU download to add to StrongDog! (And yes, you WILL get credit for downloading games)
+          If you want to help on StrongDog, there is a chat where you can get
+          help downloading games, and you can upload games YOU download to add
+          to StrongDog! (And yes, you WILL get credit for downloading games)
         </p>
         <p>
           Ready to join? Click
-          <a href="https://discord.gg/pWjfQ4Sz5c" target="_blank">here</a> to join the Discord server!
+          <a href="https://discord.gg/pWjfQ4Sz5c" target="_blank">here</a> to
+          join the Discord server!
         </p>
       </div>
     </div>
@@ -1139,42 +1119,96 @@
         <div class="credits-item">
           <div class="credits-role">CEO</div>
           <div class="credits-names">
-            <a href="https://github.com/jman1593" target="_blank" class="credits-link">Joshua Pettit</a>
+            <a
+              href="https://github.com/jman1593"
+              target="_blank"
+              class="credits-link"
+              >Joshua Pettit</a
+            >
           </div>
         </div>
         <div class="credits-item">
           <div class="credits-role">Developers</div>
           <div class="credits-names">
-            <a href="https://github.com/JamesMeadows4" target="_blank" class="credits-link">James Meadows</a>
+            <a
+              href="https://github.com/JamesMeadows4"
+              target="_blank"
+              class="credits-link"
+              >James Meadows</a
+            >
             <span>|</span>
-            <a href="https://github.com/jman1593" target="_blank" class="credits-link">Joshua Pettit</a>
+            <a
+              href="https://github.com/jman1593"
+              target="_blank"
+              class="credits-link"
+              >Joshua Pettit</a
+            >
             >
           </div>
         </div>
         <div class="credits-item">
           <div class="credits-role">Game Downloaders</div>
           <div class="credits-names">
-            <a href="https://github.com/jman1593" target="_blank" class="credits-link">Joshua Pettit</a>
+            <a
+              href="https://github.com/jman1593"
+              target="_blank"
+              class="credits-link"
+              >Joshua Pettit</a
+            >
           </div>
           <span>|</span>
-          <a href="https://maxwellstevenson.com" target="_blank" class="credits-link">Maxwell Stevenson</a>
+          <a
+            href="https://maxwellstevenson.com"
+            target="_blank"
+            class="credits-link"
+            >Maxwell Stevenson</a
+          >
         </div>
         <div class="credits-item">
           <div class="credits-role">Other Links</div>
           <div class="credits-names">
-            <a href="https://strongdogxp.github.io" target="_blank" class="credits-link">strongdogxp.github.io</a>
+            <a
+              href="https://strongdogxp.github.io"
+              target="_blank"
+              class="credits-link"
+              >strongdogxp.github.io</a
+            >
             <span>|</span>
-            <a href="https://mathcord.netlify.app" target="_blank" class="credits-link">mathcord.netlify.app</a>
+            <a
+              href="https://mathcord.netlify.app"
+              target="_blank"
+              class="credits-link"
+              >mathcord.netlify.app</a
+            >
             <span>|</span>
-            <a href="https://jman1593.github.io" target="_blank" class="credits-link">jman1593.github.io</a>
+            <a
+              href="https://jman1593.github.io"
+              target="_blank"
+              class="credits-link"
+              >jman1593.github.io</a
+            >
             <span>|</span>
-            <a href="https://strongdog.netlify.app" target="_blank" class="credits-link">strongdog.netlify.app</a>
+            <a
+              href="https://strongdog.netlify.app"
+              target="_blank"
+              class="credits-link"
+              >strongdog.netlify.app</a
+            >
             <span>|</span>
-            <a href="https://strongdog-1.vercel.app" target="_blank" class="credits-link">strongdog-1.vercel.app</a>
+            <a
+              href="https://strongdog-1.vercel.app"
+              target="_blank"
+              class="credits-link"
+              >strongdog-1.vercel.app</a
+            >
             <span>|</span>
-            <a href="https://mathcord.com" target="_blank" class="credits-link">mathcord.com</a>
+            <a href="https://mathcord.com" target="_blank" class="credits-link"
+              >mathcord.com</a
+            >
             <span>|</span>
-            <a href="https://strongdog.com" target="_blank" class="credits-link">strongdog.com</a>
+            <a href="https://strongdog.com" target="_blank" class="credits-link"
+              >strongdog.com</a
+            >
           </div>
         </div>
         <div class="credits-item">
@@ -1183,22 +1217,13 @@
       </div>
     </div>
     <div class="slide-menu" id="slideMenu">
-      <div class="user-details-container">
-        <div class="profile-picture-container">
-          <a href="settings.html">
-            <img class="profile-picture" src="img/default-avatar.png" />
-          </a>
-        </div>
-        <div class="username-container">
-          <p class="username-text">Your Username</p>
-        </div>
-      </div>
-      <!-- Categories / options -->
       <div class="categories">
         <a href="favs.html" class="option-link">Favorites</a>
         <a href="#" id="randomGame" class="option-link">Random Game</a>
         <a href="#" id="blockLanschool" class="option-link">Block Lanschool</a>
-        <a href="about.html" class="option-link">About / Report Bugs / Request Games</a>
+        <a href="about.html" class="option-link"
+          >About / Report Bugs / Request Games</a
+        >
         <a href="https://discord.gg/pWjfQ4Sz5c" class="option-link"
           >Discord Server<span class="new-feature-tag">new</span></a
         >
@@ -1209,57 +1234,55 @@
 
       document.addEventListener("DOMContentLoaded", function () {
         const menuIcon = document.getElementById("menuIcon");
-        const slideMenu = document.createElement("div");
-        slideMenu.className = "slide-menu";
+        const slideMenu = document.querySelector(".slide-menu");
+        const categories = document.querySelector(".categories");
 
-        // Clone the categories
-        const originalCategories = document.querySelector(".categories");
-        const categories = originalCategories.cloneNode(true);
-
-        // Append the categories to the slideMenu
-        slideMenu.appendChild(categories);
-        document.body.appendChild(slideMenu);
-
-        // Add click event to toggle the sliding menu
         menuIcon.addEventListener("click", function (event) {
-          event.stopPropagation(); // Prevent click event from bubbling up
+          event.stopPropagation();
           if (slideMenu.style.transform === "translateX(0%)") {
-            slideMenu.style.transform = "translateX(-100%)"; // Hide menu by sliding out
+            slideMenu.style.transform = "translateX(-100%)";
           } else {
-            slideMenu.style.transform = "translateX(0%)"; // Show menu by sliding in
+            slideMenu.style.transform = "translateX(0%)";
           }
         });
 
-        // Close the menu when clicking outside of it
         window.addEventListener("click", function (event) {
           if (event.target !== menuIcon && !slideMenu.contains(event.target)) {
-            slideMenu.style.transform = "translateX(-100%)"; // Hide menu
+            slideMenu.style.transform = "translateX(-100%)";
           }
         });
 
-        // Check authentication state
-        auth.onAuthStateChanged(async user => {
-          let userDetailsContainer;
-
+        auth.onAuthStateChanged(async (user) => {
           if (user) {
-            // User is signed in, fetch their profile picture and username
+            const userDetailsContainer = document.createElement("div");
+            userDetailsContainer.className = "user-details-container";
 
-            // Clone the user-details-container
-            const originalUserDetailsContainer = document.querySelector(".user-details-container");
-            userDetailsContainer = originalUserDetailsContainer.cloneNode(true);
+            const profileTopContainer = document.createElement("div");
+            profileTopContainer.className = "profile-top-container";
 
-            // Get elements inside userDetailsContainer
-            const profilePictureElement = userDetailsContainer.querySelector(".profile-picture");
-            const usernameElement = userDetailsContainer.querySelector(".username-text");
+            const profilePictureContainer = document.createElement("div");
+            profilePictureContainer.className = "profile-picture-container";
+            const profilePictureElement = document.createElement("img");
+            profilePictureElement.className = "profile-picture";
+            profilePictureContainer.appendChild(profilePictureElement);
 
-            // Set profile picture
+            const usernameContainer = document.createElement("div");
+            usernameContainer.className = "username-container";
+            const usernameElement = document.createElement("p");
+            usernameElement.className = "username-text";
+            usernameContainer.appendChild(usernameElement);
+
+            profileTopContainer.appendChild(profilePictureContainer);
+            profileTopContainer.appendChild(usernameContainer);
+
+            userDetailsContainer.appendChild(profileTopContainer);
+
             if (user.photoURL) {
               profilePictureElement.src = user.photoURL;
             } else {
-              profilePictureElement.src = "img/default-avatar.png"; // Fallback to default image
+              profilePictureElement.src = "img/default-avatar.png";
             }
 
-            // Set username
             const userId = user.uid;
             const userDocRef = db.collection("usernames").doc(userId);
             const userDoc = await userDocRef.get();
@@ -1271,98 +1294,121 @@
               usernameElement.textContent = user.displayName || "Username";
             }
 
-            // Make profile picture clickable and direct to settings page
-            profilePictureElement.parentElement.addEventListener("click", () => {
-              window.location.href = "settings.html";
-            });
-
-            // Insert the userDetailsContainer at the top of the slideMenu
-            slideMenu.insertBefore(userDetailsContainer, categories);
-
-            // Create the "Log Out" button as a menu item
-            const logoutLink = document.createElement("a");
-            logoutLink.href = "#";
-            logoutLink.className = "option-link";
-            logoutLink.textContent = "Log Out";
-            logoutLink.style.backgroundColor = "#dc3545"; // Red color for the button
-            logoutLink.style.color = "white";
-
-            // Add click event to the "Log Out" link
-            logoutLink.addEventListener("click", function (e) {
-              e.preventDefault();
-              auth
-                .signOut()
-                .then(() => {
-                  // Sign-out successful.
-                  window.location.reload();
-                })
-                .catch(error => {
-                  // An error happened.
-                  console.error("Error signing out:", error);
-                });
-            });
-
-            // Insert the "Log Out" link above the "Favorites" link
-            const favoritesLink = categories.querySelector('a[href="favs.html"]');
-            categories.insertBefore(logoutLink, favoritesLink);
-
-            try {
-              const accessDocRef = db.collection("access").doc(user.uid);
-              const accessDoc = await accessDocRef.get();
-
-              if (accessDoc.exists) {
-                const accessData = accessDoc.data();
-                console.log();
-
-                if (accessData.tester === true) {
-                  const testGamesLink = document.createElement("a");
-                  testGamesLink.href = "test.html";
-                  testGamesLink.className = "option-link";
-                  testGamesLink.textContent = "Test Games";
-                  testGamesLink.style.backgroundColor = "#28a745";
-                  testGamesLink.style.color = "white";
-                  testGamesLink.style.marginTop = "10px";
-
-                  testGamesLink.addEventListener("mouseover", function () {
-                    testGamesLink.style.backgroundColor = "#218838";
-                  });
-                  testGamesLink.addEventListener("mouseout", function () {
-                    testGamesLink.style.backgroundColor = "#28a745";
-                  });
-
-                  categories.insertBefore(testGamesLink, favoritesLink);
-                } else {
-                  console.log();
-                }
+            // Fetch total XP from Realtime Database
+            const xpRef = rtdb.ref(`xp/${userId}`);
+            xpRef.once("value", (snapshot) => {
+              let totalXP = 0;
+              if (snapshot.exists()) {
+                totalXP = snapshot.val();
               } else {
-                console.log();
+                totalXP = 0;
               }
-            } catch (error) {
-              console.error();
-            }
-          } else {
-            // User is not signed in, display "Not logged in" and a "Log In" button
 
-            // Create a new userDetailsContainer
-            userDetailsContainer = document.createElement("div");
+              // Calculate level and progress
+              const { level, currentXP, xpNeededForNext } =
+                getLevelAndProgressFromXP(totalXP);
+
+              const xpContainer = document.createElement("div");
+              xpContainer.className = "xp-container";
+
+              const xpLevelText = document.createElement("div");
+              xpLevelText.className = "xp-level-text";
+              xpLevelText.textContent = `Level ${level}`;
+
+              const xpBar = document.createElement("div");
+              xpBar.className = "xp-bar";
+
+              const xpBarFill = document.createElement("div");
+              xpBarFill.className = "xp-bar-fill";
+              const fillPercent = (currentXP / xpNeededForNext) * 100;
+              xpBarFill.style.width = `${fillPercent}%`;
+
+              const xpBarText = document.createElement("div");
+              xpBarText.className = "xp-bar-text";
+              xpBarText.textContent = `${currentXP}/${xpNeededForNext}`;
+
+              xpBar.appendChild(xpBarFill);
+              xpBar.appendChild(xpBarText);
+              xpContainer.appendChild(xpLevelText);
+              xpContainer.appendChild(xpBar);
+
+              userDetailsContainer.appendChild(xpContainer);
+
+              profilePictureContainer.addEventListener("click", () => {
+                window.location.href = "settings.html";
+              });
+
+              slideMenu.insertBefore(userDetailsContainer, categories);
+
+              const logoutLink = document.createElement("a");
+              logoutLink.href = "#";
+              logoutLink.className = "option-link";
+              logoutLink.textContent = "Log Out";
+              logoutLink.style.backgroundColor = "#dc3545";
+              logoutLink.style.color = "white";
+
+              logoutLink.addEventListener("click", function (e) {
+                e.preventDefault();
+                auth
+                  .signOut()
+                  .then(() => {
+                    window.location.reload();
+                  })
+                  .catch((error) => {
+                    console.error("Error signing out:", error);
+                  });
+              });
+
+              const favoritesLink = categories.querySelector(
+                'a[href="favs.html"]'
+              );
+              categories.insertBefore(logoutLink, favoritesLink);
+
+              try {
+                const accessDocRef = db.collection("access").doc(user.uid);
+                accessDocRef.get().then((accessDoc) => {
+                  if (accessDoc.exists) {
+                    const accessData = accessDoc.data();
+                    if (accessData.tester === true) {
+                      const testGamesLink = document.createElement("a");
+                      testGamesLink.href = "test.html";
+                      testGamesLink.className = "option-link";
+                      testGamesLink.textContent = "Test Games";
+                      testGamesLink.style.backgroundColor = "#28a745";
+                      testGamesLink.style.color = "white";
+                      testGamesLink.style.marginTop = "10px";
+
+                      testGamesLink.addEventListener("mouseover", function () {
+                        testGamesLink.style.backgroundColor = "#218838";
+                      });
+                      testGamesLink.addEventListener("mouseout", function () {
+                        testGamesLink.style.backgroundColor = "#28a745";
+                      });
+
+                      categories.insertBefore(testGamesLink, favoritesLink);
+                    }
+                  }
+                });
+              } catch (error) {
+                console.error();
+              }
+            }); // end xpRef.once
+          } else {
+            const userDetailsContainer = document.createElement("div");
             userDetailsContainer.className = "user-details-container";
 
-            // Create a container for the text
             const notLoggedInContainer = document.createElement("div");
             notLoggedInContainer.className = "username-container";
 
-            // Create the "Not logged in" text
             const notLoggedInText = document.createElement("p");
             notLoggedInText.className = "username-text";
             notLoggedInText.textContent = "Not logged in";
 
-            // Append the text to the container
             notLoggedInContainer.appendChild(notLoggedInText);
 
-            // Create the "Log In" button
             const loginButton = document.createElement("button");
             loginButton.textContent = "Log In";
-            loginButton.style.backgroundColor = "#007bff"; // Blue color
+            loginButton.style.backgroundColor = "#007bff";
             loginButton.style.color = "white";
             loginButton.style.border = "none";
             loginButton.style.padding = "10px 20px";
@@ -1371,35 +1417,33 @@
             loginButton.style.cursor = "pointer";
             loginButton.style.marginTop = "5px";
 
-            // Add click event to the "Log In" button
             loginButton.addEventListener("click", function () {
               window.location.href = "login.html";
             });
 
-            // Center the content
             userDetailsContainer.style.display = "flex";
             userDetailsContainer.style.flexDirection = "column";
             userDetailsContainer.style.alignItems = "center";
-            userDetailsContainer.style.paddingBlock = "40px"; // Ensure consistent padding
+            userDetailsContainer.style.paddingBlock = "20px";
 
-            // Append the text and button to the userDetailsContainer
             userDetailsContainer.appendChild(notLoggedInContainer);
             userDetailsContainer.appendChild(loginButton);
-
-            // Insert the userDetailsContainer at the top of the slideMenu
             slideMenu.insertBefore(userDetailsContainer, categories);
           }
 
-          // Add event listeners to the relevant buttons in the sliding menu
-          categories.querySelector("#randomGame").addEventListener("click", function (e) {
-            e.preventDefault();
-            handleRandomGameClick();
-          });
+          categories
+            .querySelector("#randomGame")
+            .addEventListener("click", function (e) {
+              e.preventDefault();
+              handleRandomGameClick();
+            });
 
-          categories.querySelector("#blockLanschool").addEventListener("click", function (e) {
-            e.preventDefault();
-            handleBlockLanschoolClick();
-          });
+          categories
+            .querySelector("#blockLanschool")
+            .addEventListener("click", function (e) {
+              e.preventDefault();
+              handleBlockLanschoolClick();
+            });
 
           function handleRandomGameClick() {
             if (games.length > 0) {
@@ -1433,13 +1477,17 @@
         const modal = document.getElementById("popupModal");
         const closeModal = document.getElementById("closeModal");
 
-        discordLink.addEventListener("click", function () {
-          modal.style.display = "flex";
-        });
+        if (discordLink) {
+          discordLink.addEventListener("click", function () {
+            modal.style.display = "flex";
+          });
+        }
 
-        closeModal.addEventListener("click", function () {
-          modal.style.display = "none";
-        });
+        if (closeModal) {
+          closeModal.addEventListener("click", function () {
+            modal.style.display = "none";
+          });
+        }
 
         window.addEventListener("click", function (event) {
           if (event.target === modal) {
@@ -1457,31 +1505,29 @@
         const searchResults = document.getElementById("searchResults");
 
         if (!searchInput || !searchResults) {
-          console.error("Search input or results container not found in the DOM.");
+          console.error("Search input or results container not found.");
           return;
         }
 
-        // Show results when the search bar is focused
-        searchInput.addEventListener("focus", function () {
-          updateSearchResults(); // Display initial results if any
-        });
-
-        // Update the search results based on the input
+        searchInput.addEventListener("focus", updateSearchResults);
         searchInput.addEventListener("input", updateSearchResults);
 
-        // Hide results when clicking outside the search bar and results
         document.addEventListener("click", function (event) {
-          if (!searchInput.contains(event.target) && !searchResults.contains(event.target)) {
+          if (
+            !searchInput.contains(event.target) &&
+            !searchResults.contains(event.target)
+          ) {
             searchResults.style.display = "none";
           }
         });
 
         function updateSearchResults() {
           const searchText = searchInput.value.toLowerCase();
-          const filteredGames = games.filter(game => game.name.toLowerCase().includes(searchText)).slice(0, 7); // Limit to top 7 results
+          const filteredGames = games
+            .filter((game) => game.name.toLowerCase().includes(searchText))
+            .slice(0, 7);
 
-          searchResults.innerHTML = ""; // Clear previous results
-
+          searchResults.innerHTML = "";
           if (filteredGames.length === 0) {
             searchResults.style.display = "none";
             return;
@@ -1490,7 +1536,6 @@
           const currentURL = window.location.href;
           let matchedKey = null;
 
-          // Find the matching key based on the current URL
           for (const key in siteMapping) {
             if (currentURL.includes(key)) {
               matchedKey = key;
@@ -1498,42 +1543,42 @@
             }
           }
 
-          if (!matchedKey) console.warn(`No site mapping found for current URL: ${currentURL}`);
+          if (!matchedKey) {
+            console.warn(
+              `No site mapping found for current URL: ${currentURL}`
+            );
+          }
 
-          filteredGames.forEach(game => {
-            const { href, imgSrc, name, page } = game;
-            let adjustedHref = href;
-            let adjustedImgSrc = `./img/${imgSrc}`; // Default img src
+          filteredGames.forEach((game) => {
+            const { id, imgSrc, name, page } = game;
+            const adjustedHref = `./play/?id=${id}`; // Only updated the href to use the game ID
+            let adjustedImgSrc = `./img/${imgSrc}`;
 
             if (page >= 2 && matchedKey) {
-              // Handle pages 2 and above
-              const pageIndex = page - 2; // Indexing starts at 0
+              const pageIndex = page - 2;
               const pageBaseURLs = siteMapping[matchedKey];
 
               if (pageBaseURLs && pageIndex < pageBaseURLs.length) {
                 const pageBaseURL = pageBaseURLs[pageIndex];
-
-                // Remove leading './' from href and imgSrc if present
-                const adjustedGameHref = href.replace(/^\.\//, "");
-                adjustedHref = `${pageBaseURL}/${adjustedGameHref}`;
-
                 const adjustedImgPath = imgSrc.replace(/^\.\//, "");
                 adjustedImgSrc = `${pageBaseURL}/img/${adjustedImgPath}`;
               } else {
-                console.warn(`No site mapping found for page ${page} on hostname: ${matchedKey}`);
+                console.warn(
+                  `No site mapping found for page ${page} on hostname: ${matchedKey}`
+                );
               }
             }
 
             const resultLink = document.createElement("a");
-            resultLink.href = adjustedHref;
+            resultLink.href = adjustedHref; // Use the new ID-based path
             resultLink.innerHTML = `
-              <img src="${adjustedImgSrc}" alt="${name}">
-              <span>${name}</span>
-            `;
+            <img src="${adjustedImgSrc}" alt="${name}">
+            <span>${name}</span>
+        `;
             searchResults.appendChild(resultLink);
           });
 
-          searchResults.style.display = "block"; // Show results
+          searchResults.style.display = "block";
         }
       });
     </script>
@@ -1544,7 +1589,6 @@
       const page2Link = document.getElementById("page2-link");
       const hostname = window.location.hostname;
 
-      // Configuration object mapping hostnames to link values
       const linkMap = {
         "jman1593.github.io": { page1: "/#", page2: "/strongdog2/index.html" },
         "strongdog-1.vercel.app": {
@@ -1585,20 +1629,21 @@
         },
       };
 
-      // Find matching hostname and set hrefs accordingly
       for (const key in linkMap) {
         if (hostname.includes(key)) {
           page1Link.href = linkMap[key].page1;
           page2Link.href = linkMap[key].page2;
-          break; // stop once a match is found
+          break;
         }
       }
     });
   </script>
   <script>
-    document.getElementById("secretLink").addEventListener("click", function () {
-      window.location.href = "secret-menu.html";
-    });
+    document
+      .getElementById("secretLink")
+      .addEventListener("click", function () {
+        window.location.href = "secret-menu.html";
+      });
   </script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -1606,13 +1651,17 @@
       const modal = document.getElementById("popupModal");
       const closeModal = document.getElementById("closeModal");
 
-      discordLink.addEventListener("click", function () {
-        modal.style.display = "flex";
-      });
+      if (discordLink) {
+        discordLink.addEventListener("click", function () {
+          modal.style.display = "flex";
+        });
+      }
 
-      closeModal.addEventListener("click", function () {
-        modal.style.display = "none";
-      });
+      if (closeModal) {
+        closeModal.addEventListener("click", function () {
+          modal.style.display = "none";
+        });
+      }
 
       window.addEventListener("click", function (event) {
         if (event.target === modal) {
@@ -1637,11 +1686,12 @@
         }
       }
 
-      // Add event listener to Random Game button
-      randomGameButton.addEventListener("click", function (event) {
-        event.preventDefault();
-        handleRandomGameClick();
-      });
+      if (randomGameButton) {
+        randomGameButton.addEventListener("click", function (event) {
+          event.preventDefault();
+          handleRandomGameClick();
+        });
+      }
     });
   </script>
 </html>
