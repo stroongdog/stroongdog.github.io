@@ -354,9 +354,9 @@
       <div class="categories">
         <a href="../favs.html" class="option-link">Favorites</a>
         <a href="../about.html" class="option-link">About / Report Bugs / Request Games</a>
-        <a href="https://discord.gg/pWjfQ4Sz5c" class="option-link"
-          >Discord Server<span class="new-feature-tag">new</span></a
-        >
+        <a href="https://discord.gg/pWjfQ4Sz5c" class="option-link">
+          Discord Server<span class="new-feature-tag">new</span>
+        </a>
       </div>
     </div>
 
@@ -403,7 +403,8 @@
         class="favorite-icon"
         style="cursor: pointer; font-size: 24px"
         title="Favorite this game"
-      >&#9734;</span>
+        >&#9734;</span
+      >
       <button id="fullscreenButton" class="fullscreen-button">
         Fullscreen
       </button>
@@ -714,25 +715,34 @@
           });
         }
 
-        let lastMouseMoveTime = Date.now();
-        document.addEventListener("mousemove", () => {
-          lastMouseMoveTime = Date.now();
+        // Enhanced Activity Tracking Starts Here
+        let lastActivityTime = Date.now();
+
+        // List of events that indicate user activity
+        const activityEvents = ['mousemove', 'keydown', 'mousedown', 'touchstart', 'scroll'];
+
+        // Update lastActivityTime on any of the above events
+        activityEvents.forEach(event => {
+          document.addEventListener(event, () => {
+            lastActivityTime = Date.now();
+          });
         });
 
         auth.onAuthStateChanged(user => {
           if(user) {
             // Add XP every minute if user is active, and also add 1 point each time XP is added
             setInterval(() => {
-              if(Date.now() - lastMouseMoveTime <= 3 * 60 * 1000) {
+              if(Date.now() - lastActivityTime <= 3 * 60 * 1000) { // 3 minutes
                 const xpRef = rtdb.ref(`xp/${user.uid}`);
                 xpRef.transaction(currentXP => (currentXP || 0) + 10);
 
                 const pointsRef = rtdb.ref(`points/${user.uid}`);
                 pointsRef.transaction(currentPoints => (currentPoints || 0) + 1);
               }
-            }, 60 * 1000);
+            }, 60 * 1000); // Every 1 minute
           }
         });
+        // Enhanced Activity Tracking Ends Here
       });
     </script>
 

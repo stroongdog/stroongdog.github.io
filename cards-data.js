@@ -1,6 +1,6 @@
 export default [
-  { href: './html/big flappy tower tiny square/index.html', imgSrc: 'big flappy tower tiny square.jpg', name: 'big flappy tower tiny square' , 'page': 3, 'id': 716},
-  { href: './html/big tower tiny square 2/index.html', imgSrc: 'big tower tiny square 2.jpg', name: 'big tower tiny square 2' , 'page': 3, 'id': 715},
+  	{ href: './html/big flappy tower tiny square/index.html', imgSrc: 'big flappy tower tiny square.jpg', name: 'big flappy tower tiny square' , 'page': 3, 'id': 716},
+  	{ href: './html/big tower tiny square 2/index.html', imgSrc: 'big tower tiny square 2.jpg', name: 'big tower tiny square 2' , 'page': 3, 'id': 715},
   	{ href: './html/antiban/index.html', imgSrc: 'antiban.png', name: 'antiban' , 'page': 2, 'id': 714},
   	{ href: './html/ARROW/index.html', imgSrc: 'ARROW.jpg', name: 'ARROW' , 'page': 2, 'id': 713},
   	{ href: './html/assembloid/index.html', imgSrc: 'assembloid.png', name: 'assembloid' , 'page': 2, 'id': 712},
