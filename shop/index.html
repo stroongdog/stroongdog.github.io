@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Google AdSense -->
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1609993827735056"
+      crossorigin="anonymous"
+    ></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StrongDog XP Shop</title>
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+
+    <!-- Firebase Configuration -->
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyBh-VnGiP4qZD0r14gfn9dr77GwtslpTqU",
+        authDomain: "strongdog-auth.firebaseapp.com",
+        databaseURL: "https://strongdog-auth-default-rtdb.firebaseio.com",
+        projectId: "strongdog-auth",
+        storageBucket: "strongdog-auth.appspot.com",
+        messagingSenderId: "936276282572",
+        appId: "1:936276282572:web:a802b7f609381ff9428669",
+        measurementId: "G-0YLTCV2MMS",
+      };
+
+      firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth();
+      const db = firebase.firestore();
+      const rtdb = firebase.database(); // Realtime Database
+    </script>
+
+    <style>
+      /* Global Styles */
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #2e2e2e;
+      }
+
+      /* Navbar Styles */
+      .navbar {
+        background-color: #333;
+        color: white;
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        position: relative;
+        justify-content: space-between;
+      }
+
+      .logo {
+        color: white;
+        font-weight: bold;
+        text-decoration: none;
+      }
+
+      .logo .xp {
+        color: orange;
+      }
+
+      .points-display {
+        color: white;
+        font-size: 1.1rem;
+      }
+
+      .menu-icon {
+        font-size: 2rem;
+        cursor: pointer;
+        margin-left: 20px;
+        color: white;
+        position: relative;
+        z-index: 1001;
+      }
+
+      /* Slide Menu Styles */
+      .slide-menu {
+        position: fixed;
+        top: 0;
+        height: 100%;
+        width: 350px;
+        background-color: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+        color: white;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+        z-index: 1003;
+        transition: transform 0.4s ease;
+        overflow-y: auto;
+        transform: translateX(-100%);
+      }
+
+      .profile-picture-container {
+        border-radius: 50%;
+        width: 100px;
+        aspect-ratio: 1;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+      }
+
+      .profile-picture-container:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
+      }
+
+      .profile-picture {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .user-details-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-block: 20px;
+        gap: 10px;
+      }
+
+      .profile-top-container {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .username-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .username-text {
+        font-size: 1.5rem;
+        color: white;
+      }
+
+      .categories {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 20px;
+      }
+
+      .categories > a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 20px;
+        text-decoration: none;
+        color: white;
+        transition: all 0.3s ease;
+        margin-left: 20px;
+        margin-right: 20px;
+        text-align: center;
+        font-size: 1.1rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .categories > a::after {
+        content: "";
+        background: rgba(255, 255, 255, 0.1);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        width: 0;
+        height: 0;
+        transition: 0.4s ease-out;
+      }
+
+      .categories > a:hover::after {
+        width: 400px;
+        height: 400px;
+      }
+
+      .categories > a:hover {
+        transform: scale(0.95);
+      }
+
+      span.new-feature-tag {
+        background: orange;
+        border-radius: 100vw;
+        padding: 0.2rem 0.4rem;
+        margin-left: 1rem;
+        font-size: 0.6rem;
+        color: black;
+        text-transform: uppercase;
+      }
+
+      /* Crate Shop Section Styles */
+      .shop-section {
+        padding: 40px 20px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 30px;
+        background-color: #2e2e2e;
+      }
+
+      .crate-card {
+        background-color: #1e1e1e;
+        border: 2px solid #444;
+        border-radius: 15px;
+        width: 200px;
+        height: 300px; /* Increased height to accommodate price */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px; /* Reduced padding to accommodate larger image */
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .crate-card:hover {
+        transform: translateY(-15px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
+      }
+
+      .crate-card img {
+        width: 180px; /* Increased from 160px */
+        height: 180px; /* Increased from 160px */
+        object-fit: contain;
+        position: relative;
+        z-index: 1;
+      }
+
+      .crate-title {
+        font-size: 1.4rem;
+        color: white;
+        margin-top: 10px;
+        transition: color 0.3s ease;
+      }
+
+      /* Specific Crate Title Styles */
+      .crate-title.common {
+        color: white; /* Remains the same */
+      }
+
+      .crate-title.uncommon {
+        color: #2e8b57; /* Sea Green */
+      }
+
+      .crate-title.rare {
+        color: #1e90ff; /* Dodger Blue */
+      }
+
+      .crate-title.epic {
+        color: #8a2be2; /* Blue Violet */
+        font-weight: bold;
+      }
+
+      .crate-title.legendary {
+        color: #ffd700; /* Gold */
+        font-weight: bold;
+        position: relative;
+      }
+
+      /* Price Styles */
+      .crate-price {
+        font-size: 1.2rem;
+        color: #ffffff;
+        margin-top: 10px;
+        font-weight: bold;
+      }
+
+      /* Item Card Styles */
+      .item-card-container {
+        position: relative;
+        width: 200px;
+        height: 250px;
+        perspective: 1000px; /* Needed for 3D flip */
+      }
+
+      .item-card {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.6s;
+        transform-style: preserve-3d;
+        cursor: pointer;
+        border-radius: 15px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Glow Effect */
+      .glow {
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        width: 220px;
+        height: 270px;
+        border-radius: 20px;
+        z-index: -1;
+        box-shadow: 0 0 20px 10px rgba(0, 0, 0, 0.5);
+        transition: box-shadow 0.3s ease;
+      }
+
+      .glow.common {
+        box-shadow: 0 0 20px 10px #2e8b57;
+      }
+
+      .glow.uncommon {
+        box-shadow: 0 0 20px 10px #1e90ff;
+      }
+
+      .glow.rare {
+        box-shadow: 0 0 20px 10px #8a2be2;
+      }
+
+      .glow.epic {
+        box-shadow: 0 0 20px 10px #ffa500;
+      }
+
+      .glow.legendary {
+        box-shadow: 0 0 20px 10px #ffd700;
+      }
+
+      /* Flip on Hover and Stay Flipped */
+      .item-card.flipped {
+        transform: rotateY(180deg);
+      }
+
+      /* Remove hover-based flip to prevent conflicts */
+      /* Removed:
+      .item-card-container:hover .item-card {
+        transform: rotateY(180deg);
+      }
+      */
+
+      /* Front and Back of Item Card */
+      .item-card-front,
+      .item-card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        border-radius: 15px;
+      }
+
+      .item-card-front {
+        background-color: #1e1e1e;
+        z-index: 2;
+      }
+
+      .item-card-front img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        border-radius: 15px;
+      }
+
+      .item-card-back {
+        background-color: #d3d3d3; /* Light gray */
+        transform: rotateY(180deg);
+        padding: 10px;
+        box-sizing: border-box;
+        z-index: 1;
+        border-radius: 15px;
+      }
+
+      .item-card-back img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        filter: grayscale(100%) brightness(80%);
+        border-radius: 15px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 0;
+      }
+
+      .item-description,
+      .item-rarity,
+      .item-name {
+        background-color: #f8f8f8; /* Even lighter gray */
+        padding: 5px;
+        border-radius: 5px;
+        margin-top: 10px;
+        z-index: 1;
+        position: relative;
+        font-size: 0.9rem;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 800px) {
+        .crate-card,
+        .item-card-container {
+          width: 180px;
+        }
+
+        .crate-card img,
+        .item-card-front img,
+        .item-card-back img {
+          width: 160px;
+          height: 160px;
+        }
+
+        .crate-title {
+          font-size: 1.2rem;
+        }
+
+        .crate-price {
+          font-size: 1rem;
+        }
+
+        .item-description,
+        .item-rarity,
+        .item-name {
+          font-size: 0.8rem;
+        }
+      }
+
+      @media (max-width: 500px) {
+        .crate-card,
+        .item-card-container {
+          width: 150px;
+        }
+
+        .crate-card img,
+        .item-card-front img,
+        .item-card-back img {
+          width: 120px;
+          height: 120px;
+        }
+
+        .crate-title {
+          font-size: 1rem;
+        }
+
+        .crate-price {
+          font-size: 0.9rem;
+        }
+
+        .item-description,
+        .item-rarity,
+        .item-name {
+          font-size: 0.7rem;
+        }
+      }
+
+      /* Hide Removed Sections */
+      .updates-paragraph-text,
+      .news-container,
+      h2 {
+        display: none;
+      }
+
+      /* Modal Styles */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+      }
+
+      .modal-content {
+        background-color: #757575;
+        padding: 20px;
+        border-radius: 10px;
+        width: 90%;
+        max-width: 400px;
+        text-align: center;
+        position: relative;
+      }
+
+      .modal-close {
+        color: #aaa;
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      .modal-close:hover,
+      .modal-close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .modal-button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1rem;
+      }
+
+      .modal-button.confirm {
+        background-color: #28a745;
+        color: white;
+      }
+
+      .modal-button.cancel {
+        background-color: #dc3545;
+        color: white;
+        margin-left: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Secret Link for Secret Menu -->
+    <div
+      id="secretLink"
+      title="Secret Menu"
+      style="
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 15px;
+        height: 15px;
+        cursor: pointer;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        background-color: transparent;
+      "
+    ></div>
+    <script>
+      window.addEventListener("load", function () {
+        const secretLink = document.getElementById("secretLink");
+        secretLink.addEventListener("click", function () {
+          window.location.href = "../secret-menu.html";
+        });
+      });
+    </script>
+
+    <!-- Navbar -->
+    <div class="navbar">
+      <div class="menu-icon" id="menuIcon">&#9776;</div>
+      <a href="../index.html" class="logo">StrongDog<span class="xp">XP</span></a>
+
+      <!-- Points Display -->
+      <div class="points-display" id="pointsDisplay">
+        stroongdoogles: 0
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="popupModal">
+      <div class="modal-content">
+        <span class="modal-close" id="closeModal">&times;</span>
+        <div id="modalBody">
+          <!-- Dynamic content will be inserted here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Shop Section -->
+    <div class="shop-section" id="shopSection">
+      <!-- Crates will be dynamically populated here -->
+      <!-- Example Crate Card -->
+      <div class="crate-card common" data-type="common" data-price="60">
+        <img src="./crate.png" alt="Common Crate" />
+        <div class="crate-title common">Common Crate</div>
+        <div class="crate-price">Price: 60</div>
+      </div>
+
+      <div class="crate-card uncommon" data-type="uncommon" data-price="100">
+        <img src="./crate.png" alt="Uncommon Crate" />
+        <div class="crate-title uncommon">Uncommon Crate</div>
+        <div class="crate-price">Price: 100</div>
+      </div>
+
+      <div class="crate-card rare" data-type="rare" data-price="150">
+        <img src="./crate.png" alt="Rare Crate" />
+        <div class="crate-title rare">Rare Crate</div>
+        <div class="crate-price">Price: 150</div>
+      </div>
+
+      <div class="crate-card epic" data-type="epic" data-price="250">
+        <img src="./crate.png" alt="Epic Crate" />
+        <div class="crate-title epic">Epic Crate</div>
+        <div class="crate-price">Price: 250</div>
+      </div>
+
+      <div class="crate-card legendary" data-type="legendary" data-price="400">
+        <img src="./crate.png" alt="Legendary Crate" />
+        <div class="crate-title legendary">Legendary Crate</div>
+        <div class="crate-price">Price: 400</div>
+      </div>
+    </div>
+
+    <!-- Slide Menu Sidebar -->
+    <div class="slide-menu" id="slideMenu">
+      <div class="categories">
+        <a href="../favs.html" class="option-link">Favorites</a>
+        <!-- Removed Random Game and Block Lanschool -->
+        <a href="../about.html" class="option-link">About / Report Bugs / Request Games</a>
+        <a href="https://discord.gg/pWjfQ4Sz5c" class="option-link">
+          Discord Server<span class="new-feature-tag">new</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Main Scripts -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const menuIcon = document.getElementById("menuIcon");
+        const slideMenu = document.querySelector(".slide-menu");
+        const categories = document.querySelector(".categories");
+
+        // Toggle slide menu
+        menuIcon.addEventListener("click", function (event) {
+          event.stopPropagation();
+          if (slideMenu.style.transform === "translateX(0%)") {
+            slideMenu.style.transform = "translateX(-100%)";
+          } else {
+            slideMenu.style.transform = "translateX(0%)";
+          }
+        });
+
+        window.addEventListener("click", function (event) {
+          if (event.target !== menuIcon && !slideMenu.contains(event.target)) {
+            slideMenu.style.transform = "translateX(-100%)";
+          }
+        });
+
+        // Function to capitalize first letter
+        function capitalize(str) {
+          return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        // Handle user authentication and display points
+        auth.onAuthStateChanged(async (user) => {
+          if (user) {
+            // User is signed in
+            const userDetailsContainer = document.createElement("div");
+            userDetailsContainer.className = "user-details-container";
+
+            const profileTopContainer = document.createElement("div");
+            profileTopContainer.className = "profile-top-container";
+
+            const profilePictureContainer = document.createElement("div");
+            profilePictureContainer.className = "profile-picture-container";
+            const profilePictureElement = document.createElement("img");
+            profilePictureElement.className = "profile-picture";
+            profilePictureContainer.appendChild(profilePictureElement);
+
+            const usernameContainer = document.createElement("div");
+            usernameContainer.className = "username-container";
+            const usernameElement = document.createElement("p");
+            usernameElement.className = "username-text";
+            usernameContainer.appendChild(usernameElement);
+
+            profileTopContainer.appendChild(profilePictureContainer);
+            profileTopContainer.appendChild(usernameContainer);
+
+            userDetailsContainer.appendChild(profileTopContainer);
+
+            if (user.photoURL) {
+              profilePictureElement.src = user.photoURL;
+            } else {
+              profilePictureElement.src = "../img/default-avatar.png";
+            }
+
+            const userId = user.uid;
+            const userDocRef = db.collection("usernames").doc(userId);
+            const userDoc = await userDocRef.get();
+
+            if (userDoc.exists) {
+              const userData = userDoc.data();
+              usernameElement.textContent = userData.username || "Username";
+            } else {
+              usernameElement.textContent = user.displayName || "Username";
+            }
+
+            // Fetch total points from Realtime Database
+            const pointsRef = rtdb.ref(`points/${userId}`);
+            pointsRef.once("value", (snapshot) => {
+              let totalPoints = 0;
+              if (snapshot.exists()) {
+                totalPoints = snapshot.val();
+              } else {
+                totalPoints = 0;
+              }
+
+              // Update points display in navbar
+              const pointsDisplay = document.getElementById("pointsDisplay");
+              pointsDisplay.textContent = `stroongdoogles: ${totalPoints}`;
+            });
+
+            // Event listener for profile picture to go to settings
+            profilePictureContainer.addEventListener("click", () => {
+              window.location.href = "../settings.html";
+            });
+
+            slideMenu.insertBefore(userDetailsContainer, categories);
+
+            // Add logout link
+            const logoutLink = document.createElement("a");
+            logoutLink.href = "#";
+            logoutLink.className = "option-link";
+            logoutLink.textContent = "Log Out";
+            logoutLink.style.backgroundColor = "#dc3545";
+            logoutLink.style.color = "white";
+            logoutLink.style.textAlign = "center";
+            logoutLink.style.marginTop = "10px";
+
+            logoutLink.addEventListener("click", function (e) {
+              e.preventDefault();
+              auth
+                .signOut()
+                .then(() => {
+                  window.location.reload();
+                })
+                .catch((error) => {
+                  console.error("Error signing out:", error);
+                });
+            });
+
+            // Insert logout link before Favorites
+            const favoritesLink = categories.querySelector(
+              'a[href="../favs.html"]'
+            );
+            categories.insertBefore(logoutLink, favoritesLink);
+
+            // Check if user is a tester to add Test Games link
+            try {
+              const accessDocRef = db.collection("access").doc(user.uid);
+              accessDocRef.get().then((accessDoc) => {
+                if (accessDoc.exists) {
+                  const accessData = accessDoc.data();
+                  if (accessData.tester === true) {
+                    const testGamesLink = document.createElement("a");
+                    testGamesLink.href = "../test.html";
+                    testGamesLink.className = "option-link";
+                    testGamesLink.textContent = "Test Games";
+                    testGamesLink.style.backgroundColor = "#28a745";
+                    testGamesLink.style.color = "white";
+                    testGamesLink.style.textAlign = "center";
+                    testGamesLink.style.marginTop = "10px";
+
+                    testGamesLink.addEventListener("mouseover", function () {
+                      testGamesLink.style.backgroundColor = "#218838";
+                    });
+                    testGamesLink.addEventListener("mouseout", function () {
+                      testGamesLink.style.backgroundColor = "#28a745";
+                    });
+
+                    categories.insertBefore(testGamesLink, favoritesLink);
+                  }
+                }
+              });
+            } catch (error) {
+              console.error("Error fetching access data:", error);
+            }
+          } else {
+            // User is signed out
+            const userDetailsContainer = document.createElement("div");
+            userDetailsContainer.className = "user-details-container";
+
+            const notLoggedInContainer = document.createElement("div");
+            notLoggedInContainer.className = "username-container";
+
+            const notLoggedInText = document.createElement("p");
+            notLoggedInText.className = "username-text";
+            notLoggedInText.textContent = "Not logged in";
+
+            notLoggedInContainer.appendChild(notLoggedInText);
+
+            const loginButton = document.createElement("button");
+            loginButton.textContent = "Log In";
+            loginButton.style.backgroundColor = "#007bff";
+            loginButton.style.color = "white";
+            loginButton.style.border = "none";
+            loginButton.style.padding = "10px 20px";
+            loginButton.style.fontSize = "16px";
+            loginButton.style.borderRadius = "5px";
+            loginButton.style.cursor = "pointer";
+            loginButton.style.marginTop = "5px";
+
+            loginButton.addEventListener("click", function () {
+              window.location.href = "../login.html";
+            });
+
+            userDetailsContainer.style.display = "flex";
+            userDetailsContainer.style.flexDirection = "column";
+            userDetailsContainer.style.alignItems = "center";
+            userDetailsContainer.style.paddingBlock = "20px";
+
+            userDetailsContainer.appendChild(notLoggedInContainer);
+            userDetailsContainer.appendChild(loginButton);
+            slideMenu.insertBefore(userDetailsContainer, categories);
+          }
+        });
+
+        // Function to generate random rarity based on crate type
+        function getRandomRarity(crateType) {
+          let rand = Math.random() * 100;
+          let cumulative = 0;
+          let rarity;
+
+          switch (crateType) {
+            case "common":
+              cumulative += 60;
+              if (rand < cumulative) {
+                rarity = "common";
+                break;
+              }
+              cumulative += 20;
+              if (rand < cumulative) {
+                rarity = "uncommon";
+                break;
+              }
+              cumulative += 10;
+              if (rand < cumulative) {
+                rarity = "rare";
+                break;
+              }
+              cumulative += 8;
+              if (rand < cumulative) {
+                rarity = "epic";
+                break;
+              }
+              rarity = "legendary";
+              break;
+
+            case "uncommon":
+              cumulative += 40;
+              if (rand < cumulative) {
+                rarity = "common";
+                break;
+              }
+              cumulative += 30;
+              if (rand < cumulative) {
+                rarity = "uncommon";
+                break;
+              }
+              cumulative += 15;
+              if (rand < cumulative) {
+                rarity = "rare";
+                break;
+              }
+              cumulative += 10;
+              if (rand < cumulative) {
+                rarity = "epic";
+                break;
+              }
+              rarity = "legendary";
+              break;
+
+            case "rare":
+              cumulative += 20;
+              if (rand < cumulative) {
+                rarity = "common";
+                break;
+              }
+              cumulative += 30;
+              if (rand < cumulative) {
+                rarity = "uncommon";
+                break;
+              }
+              cumulative += 25;
+              if (rand < cumulative) {
+                rarity = "rare";
+                break;
+              }
+              cumulative += 15;
+              if (rand < cumulative) {
+                rarity = "epic";
+                break;
+              }
+              rarity = "legendary";
+              break;
+
+            case "epic":
+              cumulative += 10;
+              if (rand < cumulative) {
+                rarity = "common";
+                break;
+              }
+              cumulative += 20;
+              if (rand < cumulative) {
+                rarity = "uncommon";
+                break;
+              }
+              cumulative += 30;
+              if (rand < cumulative) {
+                rarity = "rare";
+                break;
+              }
+              cumulative += 25;
+              if (rand < cumulative) {
+                rarity = "epic";
+                break;
+              }
+              rarity = "legendary";
+              break;
+
+            case "legendary":
+              cumulative += 0;
+              if (rand < cumulative) {
+                rarity = "common";
+                break;
+              }
+              cumulative += 5;
+              if (rand < cumulative) {
+                rarity = "uncommon";
+                break;
+              }
+              cumulative += 20;
+              if (rand < cumulative) {
+                rarity = "rare";
+                break;
+              }
+              cumulative += 55;
+              if (rand < cumulative) {
+                rarity = "epic";
+                break;
+              }
+              rarity = "legendary";
+              break;
+
+            default:
+              rarity = "common";
+          }
+
+          console.log(`Crate Type: ${crateType}, Random Number: ${rand.toFixed(
+            2
+          )}, Assigned Rarity: ${rarity}`); // Debugging line
+          return rarity;
+        }
+
+        // Function to show modal with specific content
+        function showModal(contentHTML) {
+          const modal = document.getElementById("popupModal");
+          const modalBody = document.getElementById("modalBody");
+          modalBody.innerHTML = contentHTML;
+          modal.style.display = "flex";
+        }
+
+        // Function to close modal
+        function closeModal() {
+          const modal = document.getElementById("popupModal");
+          modal.style.display = "none";
+        }
+
+        // Add event listener to modal close button
+        document
+          .getElementById("closeModal")
+          .addEventListener("click", closeModal);
+
+        // Function to get user inventory from localStorage
+        function getUserInventory(userId) {
+          const inventory = localStorage.getItem(`inventory_${userId}`);
+          return inventory ? JSON.parse(inventory) : [];
+        }
+
+        // Function to add items to user inventory in localStorage
+        function addToUserInventory(userId, items) {
+          let inventory = getUserInventory(userId);
+          inventory = inventory.concat(items);
+          localStorage.setItem(`inventory_${userId}`, JSON.stringify(inventory));
+        }
+
+        // Function to check if an item is already in inventory
+        function isItemInInventory(userId, itemName) {
+          const inventory = getUserInventory(userId);
+          return inventory.some((item) => item.name === itemName);
+        }
+
+        // Event delegation for crate card clicks
+        const shopSection = document.getElementById("shopSection");
+
+        shopSection.addEventListener("click", function (event) {
+          const crateCard = event.target.closest(".crate-card");
+          if (!crateCard) return; // Clicked outside a crate card
+
+          const crateType = crateCard.getAttribute("data-type");
+          const cratePrice = parseInt(crateCard.getAttribute("data-price"), 10);
+
+          // Prepare confirmation content
+          const confirmationHTML = `
+            <p>Do you want to buy a <strong>${capitalize(
+              crateType
+            )} Crate</strong> for <strong>${cratePrice} stroongdoogles</strong>?</p>
+            <button class="modal-button confirm" id="confirmPurchase">Yes</button>
+            <button class="modal-button cancel" id="cancelPurchase">No</button>
+          `;
+
+          showModal(confirmationHTML);
+
+          // Add event listeners for confirm and cancel buttons
+          document
+            .getElementById("confirmPurchase")
+            .addEventListener("click", function () {
+              handlePurchase(crateCard, crateType, cratePrice);
+              closeModal();
+            });
+
+          document
+            .getElementById("cancelPurchase")
+            .addEventListener("click", function () {
+              closeModal();
+            });
+        });
+
+        // Function to handle purchase
+        async function handlePurchase(crateCard, crateType, cratePrice) {
+          const user = auth.currentUser;
+          if (!user) {
+            alert("You must be logged in to make a purchase.");
+            return;
+          }
+
+          const userId = user.uid;
+          const pointsRef = rtdb.ref(`points/${userId}`);
+          const snapshot = await pointsRef.once("value");
+          let totalPoints = 0;
+          if (snapshot.exists()) {
+            totalPoints = snapshot.val();
+          }
+
+          if (totalPoints < cratePrice) {
+            // Not enough points
+            const errorHTML = `<p>You do not have enough stroongdoogles to buy this.</p>
+                               <button class="modal-button confirm" id="closeError">OK</button>`;
+            showModal(errorHTML);
+            document
+              .getElementById("closeError")
+              .addEventListener("click", closeModal);
+            return;
+          }
+
+          // Deduct points
+          const newPoints = totalPoints - cratePrice;
+          pointsRef.set(newPoints);
+
+          // Update points display
+          const pointsDisplay = document.getElementById("pointsDisplay");
+          pointsDisplay.textContent = `stroongdoogles: ${newPoints}`;
+
+          // Remove the purchased crate card
+          crateCard.remove();
+
+          // Generate 3 unique items based on crate type's distribution
+          const generatedItems = [];
+          const userInventory = getUserInventory(userId);
+          const maxAttempts = 100; // Increased to allow more attempts for unique items
+
+          for (let i = 0; i < 3; i++) {
+            let attempts = 0;
+            let rarity;
+            let prize;
+
+            do {
+              rarity = getRandomRarity(crateType);
+              prize = generatePrize(rarity);
+              attempts++;
+              if (attempts > maxAttempts) break;
+            } while (isItemInInventory(userId, prize.name));
+
+            if (!isItemInInventory(userId, prize.name)) {
+              generatedItems.push(prize);
+            } else {
+              // If unable to find a unique item after max attempts, skip
+              console.warn(
+                `Unable to generate a unique item after ${maxAttempts} attempts.`
+              );
+            }
+          }
+
+          // Check if enough unique items were generated
+          if (generatedItems.length < 3) {
+            alert(
+              "Not enough unique items available. Please try again later."
+            );
+            return;
+          }
+
+          // Add generated items to inventory
+          addToUserInventory(userId, generatedItems);
+
+          // Display the generated items
+          displayGeneratedItems(generatedItems);
+        }
+
+        // Function to generate a prize based on rarity
+        function generatePrize(rarity) {
+          // Predefined test items for each rarity
+          const testItems = {
+            common: [
+              {
+                name: "Common Sword",
+                description: "A basic sword with standard damage.",
+              },
+              {
+                name: "Common Shield",
+                description: "Provides minimal protection.",
+              },
+              {
+                name: "Common Potion",
+                description: "Restores a small amount of health.",
+              },
+            ],
+            uncommon: [
+              {
+                name: "Uncommon Bow",
+                description: "A bow with improved range.",
+              },
+              {
+                name: "Uncommon Helmet",
+                description: "Offers better head protection.",
+              },
+              {
+                name: "Uncommon Gloves",
+                description: "Increases dexterity slightly.",
+              },
+            ],
+            rare: [
+              {
+                name: "Rare Staff",
+                description: "A staff with enhanced magical power.",
+              },
+              {
+                name: "Rare Armor",
+                description: "Provides superior defense.",
+              },
+              {
+                name: "Rare Boots",
+                description: "Enhances movement speed significantly.",
+              },
+            ],
+            epic: [
+              {
+                name: "Epic Dagger",
+                description: "A dagger with high critical strike chance.",
+              },
+              {
+                name: "Epic Boots",
+                description: "Enhances movement speed significantly.",
+              },
+              {
+                name: "Epic Ring",
+                description: "Increases magical resistance.",
+              },
+            ],
+            legendary: [
+              {
+                name: "Legendary Axe",
+                description: "An axe with unmatched damage.",
+              },
+              {
+                name: "Legendary Cloak",
+                description: "Grants invisibility for short durations.",
+              },
+              {
+                name: "Legendary Staff",
+                description: "Unleashes devastating magical attacks.",
+              },
+            ],
+          };
+
+          // Select a random item from the corresponding rarity
+          const items = testItems[rarity];
+          if (!items || items.length === 0) {
+            return {
+              name: "Unknown Item",
+              rarity: "common",
+              description: "An item of unknown origin.",
+            };
+          }
+          const randomIndex = Math.floor(Math.random() * items.length);
+          const selectedItem = items[randomIndex];
+
+          const prize = {
+            name: selectedItem.name,
+            rarity: rarity,
+            description: selectedItem.description,
+          };
+
+          return prize;
+        }
+
+        // Function to display generated items
+        function displayGeneratedItems(items) {
+          items.forEach((item) => {
+            const itemCardContainer = document.createElement("div");
+            itemCardContainer.className = "item-card-container";
+
+            const glowDiv = document.createElement("div");
+            glowDiv.className = `glow ${item.rarity}`;
+
+            const itemCard = document.createElement("div");
+            itemCard.className = "item-card";
+
+            const itemCardFront = document.createElement("div");
+            itemCardFront.className = "item-card-front";
+            const frontImg = document.createElement("img");
+            frontImg.src = "./game-card.png";
+            frontImg.alt = `${item.rarity} Prize`;
+            itemCardFront.appendChild(frontImg);
+
+            const itemCardBack = document.createElement("div");
+            itemCardBack.className = "item-card-back";
+            const backImg = document.createElement("img");
+            backImg.src = "./game-card.png";
+            backImg.alt = `${item.rarity} Prize`;
+            itemCardBack.appendChild(backImg);
+
+            // Prize details containers
+            const prizeNameContainer = document.createElement("div");
+            prizeNameContainer.className = "item-name";
+            prizeNameContainer.textContent = item.name;
+
+            const prizeRarityContainer = document.createElement("div");
+            prizeRarityContainer.className = "item-rarity";
+            prizeRarityContainer.textContent = `Rarity: ${capitalize(
+              item.rarity
+            )}`;
+
+            const prizeDescriptionContainer = document.createElement("div");
+            prizeDescriptionContainer.className = "item-description";
+            prizeDescriptionContainer.textContent = item.description;
+
+            itemCardBack.appendChild(prizeNameContainer);
+            itemCardBack.appendChild(prizeRarityContainer);
+            itemCardBack.appendChild(prizeDescriptionContainer);
+
+            // Assemble the card
+            itemCard.appendChild(itemCardFront);
+            itemCard.appendChild(itemCardBack);
+            itemCardContainer.appendChild(glowDiv);
+            itemCardContainer.appendChild(itemCard);
+
+            // Add hover event to keep the card flipped after hover
+            itemCardContainer.addEventListener("mouseenter", function () {
+              itemCard.classList.add("flipped");
+            });
+
+            // Do not remove the 'flipped' class on mouseleave to keep it flipped
+
+            // Append to shopSection
+            shopSection.appendChild(itemCardContainer);
+          });
+        }
+
+        // Function to handle Import Save Data button
+        const importSaveDataBtn = document.getElementById("import-save-data-btn");
+        if (importSaveDataBtn) {
+          importSaveDataBtn.addEventListener("click", () => {
+            const confirmMessage = confirm(
+              `IMPORTANT: note that by confirming this message, you will REWRITE ALL current save data (only on this page) for the game you chose to transfer the data from. If you have records on this page that you don't want to be overridden by records on the site you're transferring data from, cancel this message.\n\nAfter you dismiss this browser alert message, there may be a pop-up asking you to allow this page to "see text copied to the clipboard".\n\nTo be able to transfer your save data and continue, you MUST click ALLOW.`
+            );
+            if (!confirmMessage) return;
+            navigator.clipboard
+              .readText()
+              .then((text) => {
+                if (!text) {
+                  throw new Error(
+                    "Clipboard is empty. Please copy the data to the clipboard and try again."
+                  );
+                }
+
+                let parsedData;
+                try {
+                  parsedData = JSON.parse(text);
+                } catch (err) {
+                  throw new Error(
+                    "Failed to parse clipboard content as JSON. Ensure the data is in valid JSON format."
+                  );
+                }
+
+                if (typeof parsedData !== "object") {
+                  throw new Error(
+                    "Invalid data format. The clipboard content must be a JSON object."
+                  );
+                }
+
+                // Assuming setDataInObject is defined
+                setDataInObject(parsedData);
+                alert(
+                  "Your data was successfully transferred! If there are any issues, please contact support."
+                );
+              })
+              .catch((err) => alert(`Failed to read clipboard contents: ${err}`));
+          });
+
+          // Define setDataInObject
+          function setDataInObject(dataObj) {
+            Object.entries(dataObj).forEach(([key, value]) => {
+              if (value !== null) {
+                const finalValue =
+                  typeof value === "string" ? value : JSON.stringify(value);
+                localStorage.setItem(key, finalValue);
+              }
+            });
+          }
+        }
+
+        // Handle slide menu close on clicking outside
+        document.addEventListener("click", function (event) {
+          const menuIcon = document.getElementById("menuIcon");
+          const slideMenu = document.getElementById("slideMenu");
+          if (
+            !menuIcon.contains(event.target) &&
+            !slideMenu.contains(event.target)
+          ) {
+            slideMenu.style.transform = "translateX(-100%)";
+          }
+        });
+      });
+    </script>
+
+    <!-- Modal Handling Script -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const modal = document.getElementById("popupModal");
+        const closeModalBtn = document.getElementById("closeModal");
+
+        // Close modal when clicking the close button
+        if (closeModalBtn) {
+          closeModalBtn.addEventListener("click", function () {
+            modal.style.display = "none";
+          });
+        }
+
+        // Close modal when clicking outside the modal content
+        window.addEventListener("click", function (event) {
+          if (event.target === modal) {
+            modal.style.display = "none";
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
