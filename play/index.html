@@ -321,6 +321,46 @@
         font-size: 16px;
         color: #ff8c00;
       }
+
+      /* Redirect Message Styles */
+      #redirectMessage {
+        display: none;
+        text-align: center;
+        margin-top: 50px;
+      }
+
+      #redirectMessage h2 {
+        color: #ff8c00;
+      }
+
+      #redirectMessage p {
+        color: #e0e0e0;
+      }
+
+      #redirectMessage a {
+        color: #ff8c00;
+        text-decoration: underline;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .content {
+          flex-direction: column;
+        }
+
+        .ad {
+          margin: 20px 0;
+        }
+
+        .game-container {
+          width: 95%;
+          height: 500px;
+        }
+
+        .game-bar {
+          width: 95%;
+        }
+      }
     </style>
   </head>
   <body>
@@ -351,9 +391,12 @@
     </div>
 
     <div class="slide-menu" id="slideMenu">
+      <!-- User Details and Menu Options will be dynamically inserted here -->
       <div class="categories">
         <a href="../favs.html" class="option-link">Favorites</a>
-        <a href="../about.html" class="option-link">About / Report Bugs / Request Games</a>
+        <a href="../about.html" class="option-link"
+          >About / Report Bugs / Request Games</a
+        >
         <a href="https://discord.gg/pWjfQ4Sz5c" class="option-link">
           Discord Server<span class="new-feature-tag">new</span>
         </a>
@@ -415,6 +458,15 @@
       <div class="card-container" id="cardContainer"></div>
     </div>
 
+    <!-- Redirect Message (Optional) -->
+    <div id="redirectMessage">
+      <h2>Redirecting to the game...</h2>
+      <p>
+        If you are not redirected automatically,
+        <a href="#" id="manualRedirectLink">click here</a>.
+      </p>
+    </div>
+
     <script
       async
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1609993827735056"
@@ -468,6 +520,12 @@
         const gameTitleElement = document.getElementById("gameTitle");
         const favoriteIcon = document.getElementById("favoriteIcon");
         const fullscreenButton = document.getElementById("fullscreenButton");
+        const redirectMessage = document.getElementById("redirectMessage");
+        const manualRedirectLink =
+          document.getElementById("manualRedirectLink");
+
+        // Define normal game IDs (replace with actual game IDs)
+        const normalGameIds = [250];
 
         async function fileExists(url) {
           try {
@@ -518,30 +576,51 @@
           return finalPath;
         }
 
-        async function getEmbedPath(adjustedHref, originalHref, page) {
-          let cleanHref = adjustedHref
-            .replace(/index\.html$/, "")
-            .replace(/base\.html$/, "")
-            .replace(/\.html$/, "");
-          if (!cleanHref.endsWith("/")) cleanHref += "/";
+// Modify getEmbedPath function to add new logic
+async function getEmbedPath(adjustedHref, originalHref, page) {
+    let cleanHref = adjustedHref
+        .replace(/index\.html$/, "")
+        .replace(/base\.html$/, "")
+        .replace(/\.html$/, "");
+    if (!cleanHref.endsWith("/")) cleanHref += "/";
 
-          const pathsToTry = [
-            cleanHref + "game/index.html",
-            cleanHref + "game/base.html",
-            cleanHref + "gamereal/index.html",
-            cleanHref + "gamereal/base.html",
-            cleanHref + "index.html",
-            cleanHref + "base.html"
-          ];
+    const pathsToTry = [
+        cleanHref + "game/index.html",
+        cleanHref + "game/base.html",
+        cleanHref + "gamereal/index.html",
+        cleanHref + "gamereal/base.html",
+        cleanHref + "index.html",
+        cleanHref + "base.html",
+    ];
 
-          for (const path of pathsToTry) {
-            if (await fileExists(path)) {
-              return path;
+    // New logic: Check the file referenced by the cards-data.js embedding logic
+    try {
+        const response = await fetch(adjustedHref, { method: "GET" });
+        if (response.ok) {
+            const text = await response.text();
+            const match = text.match(/embedGame\((['"])(.*?)\1,\s*(['"])(.*?)\3\)/);
+            if (match) {
+                const [, , embedPath, , title] = match;
+                const resolvedPath = new URL(embedPath, adjustedHref).href;
+                if (await fileExists(resolvedPath)) {
+                    return resolvedPath;
+                }
             }
-          }
-
-          return adjustHrefPath(originalHref, page);
         }
+    } catch (error) {
+        console.warn("Failed to parse embed path from cards-data.js", error);
+    }
+
+    // Original paths to try
+    for (const path of pathsToTry) {
+        if (await fileExists(path)) {
+            return path;
+        }
+    }
+
+    // Fallback: Return the original href
+    return adjustHrefPath(originalHref, page);
+}
 
         function embedGame(gamePath, title) {
           const iframe = document.createElement("iframe");
@@ -551,7 +630,7 @@
           gameTitleElement.textContent = title;
           document.title = title + " - StrongDog XP";
 
-          iframe.onload = function() {
+          iframe.onload = function () {
             fetch(
               "https://script.google.com/macros/s/AKfycbx1xYwL2QqkOQHyeCWIVSMVLP_XXts5zpb0M-vbvlRl1MpRYYcv4NI-i8OaGc0YP0wpsg/exec?title=" +
                 encodeURIComponent(title),
@@ -561,14 +640,16 @@
             )
               .then((response) => response.text())
               .then((result) => console.log("[DEBUG] View recorded:", result))
-              .catch((error) => console.error("[DEBUG] Error recording view:", error));
+              .catch((error) =>
+                console.error("[DEBUG] Error recording view:", error)
+              );
           };
         }
 
         let selectedGame = null;
         if (gameId) {
           const idNum = parseInt(gameId, 10);
-          selectedGame = games.find(g => g.id === idNum);
+          selectedGame = games.find((g) => g.id === idNum);
         }
 
         gameTitleElement.textContent = "Loading...";
@@ -577,6 +658,17 @@
         if (!selectedGame) {
           embedGame("../404.html", "Not Found");
         } else {
+          if (normalGameIds.includes(selectedGame.id)) {
+            document.title = "Redirecting... - StrongDog XP";
+            // Show the redirect message
+            redirectMessage.style.display = "block";
+            // Set the manual redirect link with one additional ../
+            manualRedirectLink.href = "../" + selectedGame.href;
+            // Redirect to the game's original page with one additional ../
+            window.location.href = "../" + selectedGame.href;
+            return; // Stop further execution
+          }
+
           const page = selectedGame.page;
           const baseURL = getBaseURLForPage(page);
 
@@ -587,7 +679,11 @@
             adjustedHref = baseURL + adjustedHref;
           }
 
-          const embedPath = await getEmbedPath(adjustedHref, selectedGame.href, page);
+          const embedPath = await getEmbedPath(
+            adjustedHref,
+            selectedGame.href,
+            page
+          );
           embedGame(embedPath, selectedGame.name);
 
           // Initialize favorites
@@ -616,14 +712,14 @@
             if (userFavorites.has(selectedGame.id)) {
               // Remove from favorites
               await favRef.update({
-                [selectedGame.id]: firebase.firestore.FieldValue.delete()
+                [selectedGame.id]: firebase.firestore.FieldValue.delete(),
               });
               userFavorites.delete(selectedGame.id);
             } else {
               // Add to favorites
               await favRef.set(
                 {
-                  [selectedGame.id]: true
+                  [selectedGame.id]: true,
                 },
                 { merge: true }
               );
@@ -639,7 +735,9 @@
               const favDoc = await db.collection("favs").doc(user.uid).get();
               if (favDoc.exists) {
                 const data = favDoc.data();
-                userFavorites = new Set(Object.keys(data).map(id => parseInt(id, 10)));
+                userFavorites = new Set(
+                  Object.keys(data).map((id) => parseInt(id, 10))
+                );
               } else {
                 userFavorites = new Set();
               }
@@ -651,7 +749,7 @@
           }
 
           // Listen for authentication state changes to load favorites accordingly
-          auth.onAuthStateChanged(user => {
+          auth.onAuthStateChanged((user) => {
             loadFavorites();
           });
 
@@ -673,7 +771,10 @@
           const cardContainer = document.getElementById("cardContainer");
 
           function adjustImgPath(path, page) {
-            path = path.replace(/^\.\//, "").replace(/^\//, "").replace(/^img\//, "");
+            path = path
+              .replace(/^\.\//, "")
+              .replace(/^\//, "")
+              .replace(/^img\//, "");
             const baseURL = getBaseURLForPage(page);
 
             let finalImgPath;
@@ -719,30 +820,47 @@
         let lastActivityTime = Date.now();
 
         // List of events that indicate user activity
-        const activityEvents = ['mousemove', 'keydown', 'mousedown', 'touchstart', 'scroll'];
+        const activityEvents = [
+          "mousemove",
+          "keydown",
+          "mousedown",
+          "touchstart",
+          "scroll",
+        ];
 
         // Update lastActivityTime on any of the above events
-        activityEvents.forEach(event => {
+        activityEvents.forEach((event) => {
           document.addEventListener(event, () => {
             lastActivityTime = Date.now();
           });
         });
 
-        auth.onAuthStateChanged(user => {
-          if(user) {
+        auth.onAuthStateChanged((user) => {
+          if (user) {
             // Add XP every minute if user is active, and also add 1 point each time XP is added
             setInterval(() => {
-              if(Date.now() - lastActivityTime <= 3 * 60 * 1000) { // 3 minutes
+              if (Date.now() - lastActivityTime <= 3 * 60 * 1000) {
+                // 3 minutes
                 const xpRef = rtdb.ref(`xp/${user.uid}`);
-                xpRef.transaction(currentXP => (currentXP || 0) + 10);
+                xpRef.transaction((currentXP) => (currentXP || 0) + 10);
 
                 const pointsRef = rtdb.ref(`points/${user.uid}`);
-                pointsRef.transaction(currentPoints => (currentPoints || 0) + 1);
+                pointsRef.transaction(
+                  (currentPoints) => (currentPoints || 0) + 1
+                );
               }
             }, 60 * 1000); // Every 1 minute
           }
         });
         // Enhanced Activity Tracking Ends Here
+
+        // Optional: Handle manual redirect if automatic redirection fails
+        manualRedirectLink.addEventListener("click", function (e) {
+          e.preventDefault();
+          if (selectedGame && selectedGame.href) {
+            window.location.href = "../" + selectedGame.href;
+          }
+        });
       });
     </script>
 
@@ -768,7 +886,7 @@
           }
         });
 
-        auth.onAuthStateChanged(async user => {
+        auth.onAuthStateChanged(async (user) => {
           const userDetailsContainer = document.createElement("div");
           userDetailsContainer.className = "user-details-container";
 
@@ -827,9 +945,10 @@
 
             // Listen for XP changes in real-time
             const xpRef = rtdb.ref(`xp/${userId}`);
-            xpRef.on('value', snapshot => {
+            xpRef.on("value", (snapshot) => {
               let totalXP = snapshot.exists() ? snapshot.val() : 0;
-              const { level, currentXP, xpNeededForNext } = getLevelAndProgressFromXP(totalXP);
+              const { level, currentXP, xpNeededForNext } =
+                getLevelAndProgressFromXP(totalXP);
 
               xpLevelText.textContent = `Level ${level}`;
 
@@ -860,7 +979,7 @@
                 .then(() => {
                   window.location.reload();
                 })
-                .catch(error => {
+                .catch((error) => {
                   console.error("Error signing out:", error);
                 });
             });
@@ -870,7 +989,7 @@
 
             try {
               const accessDocRef = db.collection("access").doc(user.uid);
-              accessDocRef.get().then(accessDoc => {
+              accessDocRef.get().then((accessDoc) => {
                 if (accessDoc.exists) {
                   const accessData = accessDoc.data();
                   if (accessData.tester === true) {
@@ -896,7 +1015,6 @@
             } catch (error) {
               console.error(error);
             }
-
           } else {
             const notLoggedInContainer = document.createElement("div");
             notLoggedInContainer.className = "username-container";
@@ -933,9 +1051,11 @@
           }
         });
 
-        document.getElementById("secretLink").addEventListener("click", function () {
-          window.location.href = "../secret-menu.html";
-        });
+        document
+          .getElementById("secretLink")
+          .addEventListener("click", function () {
+            window.location.href = "../secret-menu.html";
+          });
       });
     </script>
   </body>
