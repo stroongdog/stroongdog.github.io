@@ -4,7 +4,7 @@
   <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1609993827735056" crossorigin="anonymous"></script>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>StrongDog XP Shop</title>
   <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
 
@@ -199,7 +199,7 @@
       text-transform: uppercase;
     }
 
-    /* Crate Shop Section Styles */
+    /* Shop Section Styles */
     .shop-section {
       padding: 40px 20px;
       display: flex;
@@ -214,12 +214,12 @@
       border: 2px solid #444;
       border-radius: 15px;
       width: 200px;
-      height: 300px; /* Increased height to accommodate price */
+      height: 300px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      padding: 10px; /* Reduced padding to accommodate larger image */
+      padding: 10px;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       cursor: pointer;
       position: relative;
@@ -232,8 +232,8 @@
     }
 
     .crate-card img {
-      width: 180px; /* Increased from 160px */
-      height: 180px; /* Increased from 160px */
+      width: 180px;
+      height: 180px;
       object-fit: contain;
       position: relative;
       z-index: 1;
@@ -246,31 +246,29 @@
       transition: color 0.3s ease;
     }
 
-    /* Specific Crate Title Styles */
     .crate-title.common {
-      color: white; /* Remains the same */
+      color: white;
     }
 
     .crate-title.uncommon {
-      color: #2e8b57; /* Sea Green */
+      color: #2e8b57;
     }
 
     .crate-title.rare {
-      color: #1e90ff; /* Dodger Blue */
+      color: #1e90ff;
     }
 
     .crate-title.epic {
-      color: #8a2be2; /* Blue Violet */
+      color: #8a2be2;
       font-weight: bold;
     }
 
     .crate-title.legendary {
-      color: #ffd700; /* Gold */
+      color: #ffd700;
       font-weight: bold;
       position: relative;
     }
 
-    /* Price Styles */
     .crate-price {
       font-size: 1.2rem;
       color: #ffffff;
@@ -278,29 +276,12 @@
       font-weight: bold;
     }
 
-    /* Obtained Items Section Styles */
-    .obtained-items-section {
-      padding: 40px 20px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 30px;
-      background-color: #1c1c1c;
-    }
-
-    .obtained-items-section h2 {
-      width: 100%;
-      text-align: center;
-      color: white;
-      margin-bottom: 20px;
-    }
-
     /* Item Card Styles */
     .item-card-container {
       position: relative;
       width: 200px;
-      height: 300px; /* Adjusted height for better display */
-      perspective: 1000px; /* Needed for 3D flip */
+      height: 300px;
+      perspective: 1000px;
     }
 
     .item-card {
@@ -315,45 +296,42 @@
       background-color: #1e1e1e;
     }
 
-    /* Glow Effect */
-    .glow {
+    /* Add glow via pseudo-element to .item-card */
+    .item-card::before {
+      content: "";
       position: absolute;
-      top: -10px;
-      left: -10px;
-      width: 220px;
-      height: 320px; /* Adjusted height */
-      border-radius: 20px;
-      z-index: -1;
-      box-shadow: 0 0 20px 10px rgba(0, 0, 0, 0.5);
-      transition: box-shadow 0.3s ease;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 15px;
+      pointer-events: none;
     }
 
-    .glow.common {
+    .item-card.common::before {
       box-shadow: 0 0 20px 10px #2e8b57;
     }
 
-    .glow.uncommon {
+    .item-card.uncommon::before {
       box-shadow: 0 0 20px 10px #1e90ff;
     }
 
-    .glow.rare {
+    .item-card.rare::before {
       box-shadow: 0 0 20px 10px #8a2be2;
     }
 
-    .glow.epic {
+    .item-card.epic::before {
       box-shadow: 0 0 20px 10px #ffa500;
     }
 
-    .glow.legendary {
+    .item-card.legendary::before {
       box-shadow: 0 0 20px 10px #ffd700;
     }
 
-    /* Flip on Hover and Stay Flipped */
     .item-card.flipped {
       transform: rotateY(180deg);
     }
 
-    /* Front and Back of Item Card */
     .item-card-front,
     .item-card-back {
       position: absolute;
@@ -376,7 +354,7 @@
     }
 
     .item-card-back {
-      background-color: #d3d3d3; /* Light gray */
+      background-color: #d3d3d3;
       transform: rotateY(180deg);
       padding: 10px;
       box-sizing: border-box;
@@ -400,7 +378,7 @@
     .item-description,
     .item-rarity,
     .item-name {
-      background-color: #f8f8f8; /* Even lighter gray */
+      background-color: #f8f8f8;
       padding: 5px;
       border-radius: 5px;
       margin-top: 10px;
@@ -409,28 +387,23 @@
       font-size: 0.9rem;
     }
 
-    /* Responsive Design */
     @media (max-width: 800px) {
       .crate-card,
       .item-card-container {
         width: 180px;
       }
-
       .crate-card img,
       .item-card-front img,
       .item-card-back img {
         width: 160px;
         height: 160px;
       }
-
       .crate-title {
         font-size: 1.2rem;
       }
-
       .crate-price {
         font-size: 1rem;
       }
-
       .item-description,
       .item-rarity,
       .item-name {
@@ -443,22 +416,18 @@
       .item-card-container {
         width: 150px;
       }
-
       .crate-card img,
       .item-card-front img,
       .item-card-back img {
         width: 120px;
         height: 120px;
       }
-
       .crate-title {
         font-size: 1rem;
       }
-
       .crate-price {
         font-size: 0.9rem;
       }
-
       .item-description,
       .item-rarity,
       .item-name {
@@ -466,14 +435,12 @@
       }
     }
 
-    /* Hide Removed Sections */
     .updates-paragraph-text,
     .news-container,
     h2 {
       display: none;
     }
 
-    /* Modal Styles */
     .modal {
       display: none;
       position: fixed;
@@ -568,27 +535,19 @@
   <div class="navbar">
     <div class="menu-icon" id="menuIcon">&#9776;</div>
     <a href="../index.html" class="logo">StrongDog<span class="xp">XP</span></a>
-
-    <!-- Points Display -->
-    <div class="points-display" id="pointsDisplay">
-      stroongdoogles: 0
-    </div>
+    <div class="points-display" id="pointsDisplay">stroongdoogles: 0</div>
   </div>
 
   <!-- Modal -->
   <div class="modal" id="popupModal">
     <div class="modal-content">
       <span class="modal-close" id="closeModal">&times;</span>
-      <div id="modalBody">
-        <!-- Dynamic content will be inserted here -->
-      </div>
+      <div id="modalBody"></div>
     </div>
   </div>
 
   <!-- Shop Section -->
   <div class="shop-section" id="shopSection">
-    <!-- Crates will be dynamically populated here -->
-    <!-- Example Crate Card -->
     <div class="crate-card common" data-type="common" data-price="60">
       <img src="./crate.png" alt="Common Crate" />
       <div class="crate-title common">Common Crate</div>
@@ -620,17 +579,10 @@
     </div>
   </div>
 
-  <!-- Obtained Items Section -->
-  <div class="obtained-items-section" id="obtainedItemsSection" style="display: none;">
-    <h2>Obtained Items</h2>
-    <!-- Obtained item cards will be dynamically populated here -->
-  </div>
-
   <!-- Slide Menu Sidebar -->
   <div class="slide-menu" id="slideMenu">
     <div class="categories">
       <a href="../favs.html" class="option-link">Favorites</a>
-      <!-- Removed Random Game and Block Lanschool -->
       <a href="../about.html" class="option-link">About / Report Bugs / Request Games</a>
       <a href="https://discord.gg/pWjfQ4Sz5c" class="option-link">
         Discord Server<span class="new-feature-tag">new</span>
@@ -644,7 +596,7 @@
       const menuIcon = document.getElementById("menuIcon");
       const slideMenu = document.querySelector(".slide-menu");
       const categories = document.querySelector(".categories");
-      const obtainedItemsSection = document.getElementById("obtainedItemsSection");
+      const shopSection = document.getElementById("shopSection");
 
       // Toggle slide menu
       menuIcon.addEventListener("click", function (event) {
@@ -663,15 +615,12 @@
         }
       });
 
-      // Function to capitalize first letter
       function capitalize(str) {
         return str.charAt(0).toUpperCase() + str.slice(1);
       }
 
-      // Handle user authentication and display points
       auth.onAuthStateChanged(async (user) => {
         if (user) {
-          // User is signed in
           const userDetailsContainer = document.createElement("div");
           userDetailsContainer.className = "user-details-container";
 
@@ -712,7 +661,6 @@
             usernameElement.textContent = user.displayName || "Username";
           }
 
-          // Fetch total points from Realtime Database
           const pointsRef = rtdb.ref(`points/${userId}`);
           pointsRef.once("value", (snapshot) => {
             let totalPoints = 0;
@@ -721,20 +669,16 @@
             } else {
               totalPoints = 0;
             }
-
-            // Update points display in navbar
             const pointsDisplay = document.getElementById("pointsDisplay");
             pointsDisplay.textContent = `stroongdoogles: ${totalPoints}`;
           });
 
-          // Event listener for profile picture to go to settings
           profilePictureContainer.addEventListener("click", () => {
             window.location.href = "../settings.html";
           });
 
           slideMenu.insertBefore(userDetailsContainer, categories);
 
-          // Add logout link
           const logoutLink = document.createElement("a");
           logoutLink.href = "#";
           logoutLink.className = "option-link";
@@ -756,11 +700,9 @@
               });
           });
 
-          // Insert logout link before Favorites
           const favoritesLink = categories.querySelector('a[href="../favs.html"]');
           categories.insertBefore(logoutLink, favoritesLink);
 
-          // Check if user is a tester to add Test Games link
           try {
             const accessDocRef = db.collection("access").doc(user.uid);
             accessDocRef.get().then((accessDoc) => {
@@ -791,7 +733,6 @@
             console.error("Error fetching access data:", error);
           }
         } else {
-          // User is signed out
           const userDetailsContainer = document.createElement("div");
           userDetailsContainer.className = "user-details-container";
 
@@ -830,7 +771,6 @@
         }
       });
 
-      // Function to generate all test items
       function generateAllTestItems() {
         return [
           // Common Items
@@ -839,223 +779,155 @@
           { name: "Common Potion", rarity: "common", description: "Restores a small amount of health." },
           { name: "Common Helmet", rarity: "common", description: "Offers basic head protection." },
           { name: "Common Boots", rarity: "common", description: "Standard boots for everyday use." },
+          { name: "Common Gloves", rarity: "common", description: "Basic gloves to keep your hands warm." },
+          { name: "Common Ring", rarity: "common", description: "A simple ring with no special properties." },
+
           // Uncommon Items
           { name: "Uncommon Bow", rarity: "uncommon", description: "A bow with improved range." },
           { name: "Uncommon Gloves", rarity: "uncommon", description: "Increases dexterity slightly." },
           { name: "Uncommon Armor", rarity: "uncommon", description: "Provides better defense." },
           { name: "Uncommon Ring", rarity: "uncommon", description: "Boosts magical power." },
           { name: "Uncommon Staff", rarity: "uncommon", description: "Enhances magical attacks." },
+          { name: "Uncommon Cloak", rarity: "uncommon", description: "A cloak that muffles your footsteps." },
+          { name: "Uncommon Bracelet", rarity: "uncommon", description: "Slightly increases stamina." },
+
           // Rare Items
           { name: "Rare Staff", rarity: "rare", description: "A staff with enhanced magical power." },
           { name: "Rare Armor", rarity: "rare", description: "Provides superior defense." },
           { name: "Rare Boots", rarity: "rare", description: "Enhances movement speed significantly." },
           { name: "Rare Cloak", rarity: "rare", description: "Grants limited invisibility." },
           { name: "Rare Dagger", rarity: "rare", description: "A dagger with high critical strike chance." },
+          { name: "Rare Amulet", rarity: "rare", description: "Boosts all attributes slightly." },
+          { name: "Rare Helm", rarity: "rare", description: "Offers advanced head protection." },
+
           // Epic Items
-          { name: "Epic Dagger", rarity: "epic", description: "A dagger with high critical strike chance." },
-          { name: "Epic Boots", rarity: "epic", description: "Enhances movement speed significantly." },
+          { name: "Epic Dagger", rarity: "epic", description: "A dagger with very high crit chance." },
+          { name: "Epic Boots", rarity: "epic", description: "Greatly enhances movement speed." },
           { name: "Epic Ring", rarity: "epic", description: "Increases magical resistance." },
           { name: "Epic Axe", rarity: "epic", description: "An axe with unmatched damage." },
           { name: "Epic Staff", rarity: "epic", description: "Unleashes devastating magical attacks." },
+          { name: "Epic Shield", rarity: "epic", description: "Blocks most attacks effortlessly." },
+          { name: "Epic Spear", rarity: "epic", description: "A spear that can pierce most armors." },
+
           // Legendary Items
-          { name: "Legendary Axe", rarity: "legendary", description: "An axe with unmatched damage." },
+          { name: "Legendary Axe", rarity: "legendary", description: "An axe of legendary might." },
           { name: "Legendary Cloak", rarity: "legendary", description: "Grants invisibility for short durations." },
           { name: "Legendary Staff", rarity: "legendary", description: "Unleashes devastating magical attacks." },
-          { name: "Legendary Sword", rarity: "legendary", description: "A sword of legendary status with immense power." },
+          { name: "Legendary Sword", rarity: "legendary", description: "A sword with immense, legendary power." },
           { name: "Legendary Shield", rarity: "legendary", description: "A shield that can withstand any attack." },
-          // Add more items as needed
+          { name: "Legendary Bow", rarity: "legendary", description: "Arrows always find their target." },
+          { name: "Legendary Helm", rarity: "legendary", description: "Unbreakable protection for your head." },
         ];
       }
 
-      // Function to generate all items by rarity
-      function generateItemsByRarity() {
-        const allItems = generateAllTestItems();
-        const itemsByRarity = {};
+      const allItems = generateAllTestItems();
+      const allItemsByRarity = allItems.reduce((acc, item) => {
+        if (!acc[item.rarity]) acc[item.rarity] = [];
+        acc[item.rarity].push(item);
+        return acc;
+      }, {});
 
-        allItems.forEach((item) => {
-          if (!itemsByRarity[item.rarity]) {
-            itemsByRarity[item.rarity] = [];
-          }
-          itemsByRarity[item.rarity].push(item);
-        });
-
-        return itemsByRarity;
-      }
-
-      const allItemsByRarity = generateItemsByRarity();
-
-      // Function to get user inventory from localStorage
       function getUserInventory(userId) {
         const inventory = localStorage.getItem(`inventory_${userId}`);
         return inventory ? JSON.parse(inventory) : [];
       }
 
-      // Function to add items to user inventory in localStorage
       function addToUserInventory(userId, items) {
         let inventory = getUserInventory(userId);
         inventory = inventory.concat(items);
         localStorage.setItem(`inventory_${userId}`, JSON.stringify(inventory));
       }
 
-      // Function to check if an item is already in inventory
       function isItemInInventory(userId, itemName) {
         const inventory = getUserInventory(userId);
         return inventory.some((item) => item.name === itemName);
       }
 
-      // Function to get available rarities based on user's inventory
-      function getAvailableRarities(userId) {
-        const inventory = getUserInventory(userId);
-        const allItems = generateAllTestItems();
-        const rarities = {};
-
-        allItems.forEach((item) => {
-          if (!rarities[item.rarity]) rarities[item.rarity] = new Set();
-          rarities[item.rarity].add(item.name);
-        });
-
-        const availableRarities = [];
-
-        for (const [rarity, itemsSet] of Object.entries(rarities)) {
-          const userItems = inventory.filter(item => item.rarity === rarity).map(item => item.name);
-          if (userItems.length < itemsSet.size) {
-            availableRarities.push(rarity);
-          }
-        }
-
-        // If all rarities have all items, allow all
-        if (availableRarities.length === 0) {
-          return Object.keys(rarities);
-        }
-
-        return availableRarities;
-      }
-
-      // Function to generate random rarity based on crate type and available rarities
-      function getRandomRarity(crateType, availableRarities) {
-        let rand = Math.random() * 100;
-        let cumulative = 0;
-        let rarity;
-
-        // Define base probabilities based on crate type
-        const baseProbabilities = {
-          common: 0,
-          uncommon: 0,
-          rare: 0,
-          epic: 0,
-          legendary: 0,
-        };
-
+      function getRarityProbabilities(crateType) {
         switch (crateType) {
           case "common":
-            baseProbabilities.common = 60;
-            baseProbabilities.uncommon = 20;
-            baseProbabilities.rare = 10;
-            baseProbabilities.epic = 8;
-            baseProbabilities.legendary = 2;
-            break;
-
+            return [
+              { rarity: "common", prob: 60 },
+              { rarity: "uncommon", prob: 20 },
+              { rarity: "rare", prob: 10 },
+              { rarity: "epic", prob: 8 },
+              { rarity: "legendary", prob: 2 },
+            ];
           case "uncommon":
-            baseProbabilities.common = 40;
-            baseProbabilities.uncommon = 30;
-            baseProbabilities.rare = 15;
-            baseProbabilities.epic = 10;
-            baseProbabilities.legendary = 5;
-            break;
-
+            return [
+              { rarity: "common", prob: 40 },
+              { rarity: "uncommon", prob: 30 },
+              { rarity: "rare", prob: 15 },
+              { rarity: "epic", prob: 10 },
+              { rarity: "legendary", prob: 5 },
+            ];
           case "rare":
-            baseProbabilities.common = 20;
-            baseProbabilities.uncommon = 30;
-            baseProbabilities.rare = 25;
-            baseProbabilities.epic = 15;
-            baseProbabilities.legendary = 10;
-            break;
-
+            return [
+              { rarity: "common", prob: 20 },
+              { rarity: "uncommon", prob: 30 },
+              { rarity: "rare", prob: 25 },
+              { rarity: "epic", prob: 15 },
+              { rarity: "legendary", prob: 10 },
+            ];
           case "epic":
-            baseProbabilities.common = 10;
-            baseProbabilities.uncommon = 20;
-            baseProbabilities.rare = 30;
-            baseProbabilities.epic = 25;
-            baseProbabilities.legendary = 15;
-            break;
-
+            return [
+              { rarity: "common", prob: 10 },
+              { rarity: "uncommon", prob: 20 },
+              { rarity: "rare", prob: 30 },
+              { rarity: "epic", prob: 25 },
+              { rarity: "legendary", prob: 15 },
+            ];
           case "legendary":
-            baseProbabilities.common = 0;
-            baseProbabilities.uncommon = 5;
-            baseProbabilities.rare = 20;
-            baseProbabilities.epic = 55;
-            baseProbabilities.legendary = 20;
-            break;
-
+            return [
+              { rarity: "common", prob: 0 },
+              { rarity: "uncommon", prob: 5 },
+              { rarity: "rare", prob: 20 },
+              { rarity: "epic", prob: 55 },
+              { rarity: "legendary", prob: 20 },
+            ];
           default:
-            baseProbabilities.common = 100;
+            return [{ rarity: "common", prob: 100 }];
         }
+      }
 
-        // Filter out rarities that have no available items
-        let filteredRarities = Object.keys(baseProbabilities).filter(
-          (rarity) => baseProbabilities[rarity] > 0 && availableRarities.includes(rarity)
-        );
-
-        if (filteredRarities.length === 0) {
-          // Fallback to common if no rarities are available
-          return "common";
-        }
-
-        // Recalculate probabilities based on filtered rarities
-        let totalProbability = 0;
-        filteredRarities.forEach((rarity) => {
-          totalProbability += baseProbabilities[rarity];
-        });
-
-        // Adjust probabilities to sum up to 100
-        const adjustedProbabilities = filteredRarities.map((rarity) => ({
-          rarity: rarity,
-          probability: (baseProbabilities[rarity] / totalProbability) * 100,
-        }));
-
-        // Select rarity based on adjusted probabilities
-        for (let i = 0; i < adjustedProbabilities.length; i++) {
-          cumulative += adjustedProbabilities[i].probability;
+      function getRandomRarity(crateType) {
+        const probabilities = getRarityProbabilities(crateType);
+        const rand = Math.random() * 100;
+        let cumulative = 0;
+        for (let i = 0; i < probabilities.length; i++) {
+          cumulative += probabilities[i].prob;
           if (rand < cumulative) {
-            rarity = adjustedProbabilities[i].rarity;
-            break;
+            return probabilities[i].rarity;
+          }
+        }
+        return probabilities[probabilities.length - 1].rarity;
+      }
+
+      // Function to pick an item from a rarity without repeating items in this purchase
+      function pickItemFromRarity(rarity, userId, chosenNames) {
+        const itemsOfRarity = allItemsByRarity[rarity];
+        const userInventory = getUserInventory(userId);
+        const notOwned = itemsOfRarity.filter(item => !isItemInInventory(userId, item.name));
+        
+        // Try not-owned first if any available
+        let candidates;
+        if (notOwned.length > 0) {
+          candidates = notOwned.filter(item => !chosenNames.includes(item.name));
+          if (candidates.length > 0) {
+            return candidates[Math.floor(Math.random() * candidates.length)];
           }
         }
 
-        // Fallback in case of rounding errors
-        if (!rarity) {
-          rarity = adjustedProbabilities[adjustedProbabilities.length - 1].rarity;
+        // If user owns them all or no suitable not-owned items found, pick any that isn't chosen yet
+        const ownedCandidates = itemsOfRarity.filter(item => !chosenNames.includes(item.name));
+        if (ownedCandidates.length > 0) {
+          return ownedCandidates[Math.floor(Math.random() * ownedCandidates.length)];
         }
 
-        console.log(`Crate Type: ${crateType}, Random Number: ${rand.toFixed(2)}, Assigned Rarity: ${rarity}`);
-        return rarity;
+        // No items available that aren't chosen yet
+        return null;
       }
 
-      // Function to generate a prize based on rarity and inventory
-      function generatePrize(rarity, userId) {
-        const availableItems = allItemsByRarity[rarity].filter(
-          (item) => !isItemInInventory(userId, item.name)
-        );
-
-        let selectedItem;
-
-        if (availableItems.length === 0) {
-          // If no available items, allow duplicates
-          selectedItem = allItemsByRarity[rarity][Math.floor(Math.random() * allItemsByRarity[rarity].length)];
-        } else {
-          selectedItem = availableItems[Math.floor(Math.random() * availableItems.length)];
-        }
-
-        const prize = {
-          name: selectedItem.name,
-          rarity: rarity,
-          description: selectedItem.description,
-        };
-
-        return prize;
-      }
-
-      // Function to show modal with specific content
       function showModal(contentHTML) {
         const modal = document.getElementById("popupModal");
         const modalBody = document.getElementById("modalBody");
@@ -1063,46 +935,37 @@
         modal.style.display = "flex";
       }
 
-      // Function to close modal
       function closeModal() {
         const modal = document.getElementById("popupModal");
         modal.style.display = "none";
       }
 
-      // Function to display generated items in the Obtained Items Section
+      // Display generated items (replace the shop section with these cards)
       function displayGeneratedItems(items) {
-        if (items.length === 0) return;
-
-        // Show the Obtained Items Section if hidden
-        if (obtainedItemsSection.style.display === "none") {
-          obtainedItemsSection.style.display = "flex";
-        }
+        // Clear the shop section first
+        shopSection.innerHTML = "";
 
         items.forEach((item) => {
           const itemCardContainer = document.createElement("div");
           itemCardContainer.className = "item-card-container";
 
-          const glowDiv = document.createElement("div");
-          glowDiv.className = `glow ${item.rarity}`;
-
           const itemCard = document.createElement("div");
-          itemCard.className = "item-card";
+          itemCard.className = `item-card ${item.rarity}`;
 
           const itemCardFront = document.createElement("div");
           itemCardFront.className = "item-card-front";
           const frontImg = document.createElement("img");
-          frontImg.src = "./game-card.png"; // Replace with actual image path
+          frontImg.src = "./game-card.png";
           frontImg.alt = `${item.rarity} Prize`;
           itemCardFront.appendChild(frontImg);
 
           const itemCardBack = document.createElement("div");
           itemCardBack.className = "item-card-back";
           const backImg = document.createElement("img");
-          backImg.src = "./game-card.png"; // Replace with actual image path
+          backImg.src = "./game-card.png";
           backImg.alt = `${item.rarity} Prize`;
           itemCardBack.appendChild(backImg);
 
-          // Prize details containers
           const prizeNameContainer = document.createElement("div");
           prizeNameContainer.className = "item-name";
           prizeNameContainer.textContent = item.name;
@@ -1119,38 +982,29 @@
           itemCardBack.appendChild(prizeRarityContainer);
           itemCardBack.appendChild(prizeDescriptionContainer);
 
-          // Assemble the card
           itemCard.appendChild(itemCardFront);
           itemCard.appendChild(itemCardBack);
-          itemCardContainer.appendChild(glowDiv);
           itemCardContainer.appendChild(itemCard);
 
-          // Add hover event to keep the card flipped after hover
           itemCardContainer.addEventListener("mouseenter", function () {
             itemCard.classList.add("flipped");
           });
 
-          // Optional: Remove flipped class when clicking again
           itemCardContainer.addEventListener("click", function () {
             itemCard.classList.toggle("flipped");
           });
 
-          // Append to Obtained Items Section
-          obtainedItemsSection.appendChild(itemCardContainer);
+          shopSection.appendChild(itemCardContainer);
         });
       }
 
-      // Event delegation for crate card clicks
-      const shopSection = document.getElementById("shopSection");
-
       shopSection.addEventListener("click", function (event) {
         const crateCard = event.target.closest(".crate-card");
-        if (!crateCard) return; // Clicked outside a crate card
+        if (!crateCard) return;
 
         const crateType = crateCard.getAttribute("data-type");
         const cratePrice = parseInt(crateCard.getAttribute("data-price"), 10);
 
-        // Prepare confirmation content
         const confirmationHTML = `
           <p>Do you want to buy a <strong>${capitalize(crateType)} Crate</strong> for <strong>${cratePrice} stroongdoogles</strong>?</p>
           <button class="modal-button confirm" id="confirmPurchase">Yes</button>
@@ -1159,9 +1013,8 @@
 
         showModal(confirmationHTML);
 
-        // Add event listeners for confirm and cancel buttons
         document.getElementById("confirmPurchase").addEventListener("click", function () {
-          handlePurchase(crateCard, crateType, cratePrice);
+          handlePurchase(crateType, cratePrice);
           closeModal();
         });
 
@@ -1170,8 +1023,7 @@
         });
       });
 
-      // Function to handle purchase
-      async function handlePurchase(crateCard, crateType, cratePrice) {
+      async function handlePurchase(crateType, cratePrice) {
         const user = auth.currentUser;
         if (!user) {
           alert("You must be logged in to make a purchase.");
@@ -1181,13 +1033,9 @@
         const userId = user.uid;
         const pointsRef = rtdb.ref(`points/${userId}`);
         const snapshot = await pointsRef.once("value");
-        let totalPoints = 0;
-        if (snapshot.exists()) {
-          totalPoints = snapshot.val();
-        }
+        let totalPoints = snapshot.exists() ? snapshot.val() : 0;
 
         if (totalPoints < cratePrice) {
-          // Not enough points
           const errorHTML = `<p>You do not have enough stroongdoogles to buy this.</p>
                              <button class="modal-button confirm" id="closeError">OK</button>`;
           showModal(errorHTML);
@@ -1199,97 +1047,73 @@
         const newPoints = totalPoints - cratePrice;
         pointsRef.set(newPoints);
 
-        // Update points display
         const pointsDisplay = document.getElementById("pointsDisplay");
         pointsDisplay.textContent = `stroongdoogles: ${newPoints}`;
 
-        // Remove the purchased crate card
-        crateCard.remove();
-
-        // Fetch user's inventory
-        const userInventory = getUserInventory(userId);
-
-        // Determine available rarities based on inventory
-        const availableRarities = getAvailableRarities(userId);
-
-        // Generate 3 unique items based on crate type's distribution and availability
+        // Generate 3 distinct items
         const generatedItems = [];
-        const maxAttempts = 100; // To prevent infinite loops
+        const chosenNames = [];
+        let attempts = 0;
+        const maxAttempts = 100;
 
-        for (let i = 0; i < 3; i++) {
-          let attempts = 0;
-          let rarity;
-          let prize;
-
-          do {
-            rarity = getRandomRarity(crateType, availableRarities);
-            prize = generatePrize(rarity, userId);
-            attempts++;
-            if (attempts > maxAttempts) break;
-          } while (isItemInInventory(userId, prize.name));
-
-          if (!isItemInInventory(userId, prize.name) || availableRarities.length === 0) {
-            generatedItems.push(prize);
+        while (generatedItems.length < 3 && attempts < maxAttempts) {
+          const rarity = getRandomRarity(crateType);
+          const item = pickItemFromRarity(rarity, userId, chosenNames);
+          if (item) {
+            generatedItems.push({
+              name: item.name,
+              rarity: item.rarity,
+              description: item.description
+            });
+            chosenNames.push(item.name);
           } else {
-            console.warn(`Unable to generate a unique item after ${maxAttempts} attempts.`);
+            // If no item found for that rarity, just try again with another rarity
+            // do nothing here except increment attempts
           }
+          attempts++;
         }
 
-        // Check if enough unique items were generated
         if (generatedItems.length < 3) {
-          alert("Not enough unique items available. Please try again later.");
+          alert("Unable to find 3 unique items at this time. Please try again later.");
           return;
         }
 
         // Add generated items to inventory
         addToUserInventory(userId, generatedItems);
 
-        // Display the generated items
+        // Display the generated items (replacing the shop section)
         displayGeneratedItems(generatedItems);
       }
 
-      // Function to handle Import Save Data button
+      // Handle Import Save Data button if present
       const importSaveDataBtn = document.getElementById("import-save-data-btn");
       if (importSaveDataBtn) {
         importSaveDataBtn.addEventListener("click", () => {
           const confirmMessage = confirm(
-            `IMPORTANT: note that by confirming this message, you will REWRITE ALL current save data (only on this page) for the game you chose to transfer the data from. If you have records on this page that you don't want to be overridden by records on the site you're transferring data from, cancel this message.\n\nAfter you dismiss this browser alert message, there may be a pop-up asking you to allow this page to "see text copied to the clipboard".\n\nTo be able to transfer your save data and continue, you MUST click ALLOW.`
+            `IMPORTANT: note that by confirming this message, you will REWRITE ALL current save data (only on this page). If you have records you don't want overridden, cancel.\n\nAfter this, a pop-up may ask to allow reading the clipboard. Click ALLOW.`
           );
           if (!confirmMessage) return;
           navigator.clipboard
             .readText()
             .then((text) => {
               if (!text) {
-                throw new Error(
-                  "Clipboard is empty. Please copy the data to the clipboard and try again."
-                );
+                throw new Error("Clipboard is empty. Please copy the data first.");
               }
-
               let parsedData;
               try {
                 parsedData = JSON.parse(text);
               } catch (err) {
-                throw new Error(
-                  "Failed to parse clipboard content as JSON. Ensure the data is in valid JSON format."
-                );
+                throw new Error("Clipboard content is not valid JSON.");
               }
-
               if (typeof parsedData !== "object") {
-                throw new Error(
-                  "Invalid data format. The clipboard content must be a JSON object."
-                );
+                throw new Error("Invalid data format. Must be a JSON object.");
               }
-
-              // Assuming setDataInObject is defined
               setDataInObject(parsedData);
-              alert(
-                "Your data was successfully transferred! If there are any issues, please contact support."
-              );
+              alert("Your data was successfully transferred!");
             })
             .catch((err) => alert(`Failed to read clipboard contents: ${err}`));
         });
 
-        // Define setDataInObject
         function setDataInObject(dataObj) {
           Object.entries(dataObj).forEach(([key, value]) => {
             if (value !== null) {
@@ -1301,14 +1125,10 @@
         }
       }
 
-      // Handle slide menu close on clicking outside
       document.addEventListener("click", function (event) {
         const menuIcon = document.getElementById("menuIcon");
         const slideMenu = document.getElementById("slideMenu");
-        if (
-          !menuIcon.contains(event.target) &&
-          !slideMenu.contains(event.target)
-        ) {
+        if (!menuIcon.contains(event.target) && !slideMenu.contains(event.target)) {
           slideMenu.style.transform = "translateX(-100%)";
         }
       });
@@ -1321,14 +1141,12 @@
       const modal = document.getElementById("popupModal");
       const closeModalBtn = document.getElementById("closeModal");
 
-      // Close modal when clicking the close button
       if (closeModalBtn) {
         closeModalBtn.addEventListener("click", function () {
           modal.style.display = "none";
         });
       }
 
-      // Close modal when clicking outside the modal content
       window.addEventListener("click", function (event) {
         if (event.target === modal) {
           modal.style.display = "none";

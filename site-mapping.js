@@ -5,6 +5,7 @@ export const siteMapping = {
   "strongdog-1.vercel.app": ["https://strongdog2.vercel.app", "https://strongdog3.vercel.app"],
   "strongdog2.vercel.app": ["https://strongdog-1.vercel.app", "https://strongdog3.vercel.app"],
   "strongdog3.vercel.app": ["https://strongdog-1.vercel.app", "https://strongdog2.vercel.app"],
+  "127.0.0.1": ["http://127.0.0.1:8080/strongdog2", "http://127.0.0.1:8080/strongdog3"],
   "127.0.0.1:8080": ["http://127.0.0.1:8080/strongdog2", "http://127.0.0.1:8080/strongdog3"],
   "127.0.0.1:8080/strongdog2": ["127.0.0.1:8080", "http://127.0.0.1:8080/strongdog3"],
   "127.0.0.1:8080/strongdog3": ["127.0.0.1:8080", "http://127.0.0.1:8080/strongdog2"],

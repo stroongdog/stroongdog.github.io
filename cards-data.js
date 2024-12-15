@@ -517,7 +517,6 @@ export default [
 	{ href: "./html/among-us/index.html", imgSrc: "amongus.png", name: "Among Us" , 'id': 206},
 	{ href: "./html/bob-the-robber-2/index.html", imgSrc: "bob.jpeg", name: "Bob the Robber 2" , 'id': 205},
 	{ href: "./html/tiny-fishing/index.html", imgSrc: "fishing.jpeg", name: "Tiny Fishing" , 'id': 204},
-	{ href: "./html/2048-master/2048-master/index.html", imgSrc: "2048.png", name: "2048" , 'id': 203},
 	{ href: "./html/adarkroom/index.html", imgSrc: "adarkroom.png", name: "A Dark Room" , 'id': 202},
 	{ href: "./html/algaes-escapade/index.html", imgSrc: "apple-touch-icon-114x114.png", name: "Algaes Escapade" , 'id': 201},
 	{ href: "./html/Alien Invasion/Alien Invasion/index.html", imgSrc: "alien.png", name: "Alien Invasion" , 'id': 200},
