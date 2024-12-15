@@ -477,7 +477,7 @@ export default [
 	{ href: "./html/google-snake/index.html", imgSrc: "googlesnake.jpg", name: "Google Snake" , 'id': 247},
 	{ href: "./html/stickman-hook/index.html", imgSrc: "stickmanhook.jpg", name: "Stickman Hook" , 'id': 246},
 	{ href: "./html/slope2/index.html", imgSrc: "slope2.jpg", name: "Slope 2" , 'id': 245},
-	{ href: "./html/slope/index.html", imgSrc: "slope.webp", name: "Slope" , 'id': 244},
+	{ href: "./html/slope/game/index.html", imgSrc: "slope.webp", name: "Slope" , 'id': 244},
 	{ href: "./html/bitlife/index.html", imgSrc: "bitlife.jpg", name: "Bitlife" , 'id': 243},
 	{ href: "./html/drift-boss/index.html", imgSrc: "drift-boss.png", name: "Drift Boss" , 'id': 242},
 	{ href: "./html/snow-rider-3d/index.html", imgSrc: "snow-rider-3d-unblocked.png", name: "Snow Rider 3D" , 'id': 241},
