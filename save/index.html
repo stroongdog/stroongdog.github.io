@@ -351,13 +351,9 @@
         This will NOT save every game's data. Some games use different methods to save progress. This should save most games data, but not all.
     </p>
 
-    <div class="saves-container" id="savesContainer" style="display:none;">
-        <!-- Will show only if user is logged in -->
-    </div>
+    <div class="saves-container" id="savesContainer" style="display:none;"></div>
 
-    <div class="bottom-buttons" id="bottomButtonsContainer">
-        <!-- Import/Export buttons here -->
-    </div>
+    <div class="bottom-buttons" id="bottomButtonsContainer"></div>
 
     <!-- MODALS -->
     <div class="modal" id="modalPrompt">
@@ -414,7 +410,6 @@
       let currentUser = null;
       let userId = null;
 
-      // Attempt to determine current site key from siteMapping
       function getCurrentSiteKey() {
         const currentURL = window.location.href;
         const keys = Object.keys(siteMapping);
@@ -422,13 +417,11 @@
         // Sort by length to match the longest possible key first
         keys.sort((a, b) => b.length - a.length);
         for (const key of keys) {
-          // Normalize key and URL (remove http/https)
           const normalizedKey = key.replace(/^https?:\/\//, '');
           if (currentURL.includes(normalizedKey)) {
             return normalizedKey;
           }
         }
-        // If not found, fallback to just hostname
         return window.location.host + window.location.pathname.replace(/\/$/, '');
       }
 
@@ -449,7 +442,6 @@
           }
       });
 
-      // Modal handling
       function openModal(text, buttons = []) {
           modalText.textContent = text;
           modalButtons.innerHTML = "";
@@ -472,7 +464,6 @@
           }
       });
 
-      // Loading Overlay
       function showLoading(text = "Loading...") {
           loadingText.textContent = text;
           loadingOverlay.classList.add("active");
@@ -520,6 +511,84 @@
           } else {
               return null;
           }
+      }
+
+      function normalizeDomainKey(str) {
+        return str.replace(/^https?:\/\//, '').replace(/\/$/, '');
+      }
+
+      function replaceDomainsInData(dataObj, currentDomain) {
+        const keysToCheck = Object.keys(siteMapping).map(k => normalizeDomainKey(k));
+        const normalizedCurrentDomain = normalizeDomainKey(currentDomain);
+
+        function replaceInString(str) {
+          for (const oldDomain of keysToCheck) {
+            if (str.includes(oldDomain)) {
+              const idx = str.indexOf(oldDomain);
+              if (idx === 0) {
+                return normalizedCurrentDomain + str.substring(oldDomain.length);
+              } else {
+                return str.replace(oldDomain, normalizedCurrentDomain);
+              }
+            }
+          }
+          return str;
+        }
+
+        for (const slotId in dataObj) {
+          if (slotId === "localStorageBackup") {
+            const localObj = dataObj[slotId];
+            if (localObj && typeof localObj === 'object') {
+              for (const k in localObj) {
+                const newKey = replaceInString(k);
+                let newVal = localObj[k];
+                if (typeof newVal === 'string') {
+                  newVal = replaceInString(newVal);
+                }
+                if (newKey !== k) {
+                  delete localObj[k];
+                  localObj[newKey] = newVal;
+                } else {
+                  localObj[k] = newVal;
+                }
+              }
+            }
+          } else {
+            const saveData = dataObj[slotId];
+            if (saveData && saveData.localStorageData) {
+              const lsData = saveData.localStorageData;
+              for (const k in lsData) {
+                const newKey = replaceInString(k);
+                let newVal = lsData[k];
+                if (typeof newVal === 'string') {
+                  newVal = replaceInString(newVal);
+                }
+                if (newKey !== k) {
+                  delete lsData[k];
+                  lsData[newKey] = newVal;
+                } else {
+                  lsData[k] = newVal;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // After loading from Firebase, also do domain replacement before setting localStorage
+      async function handleLoadSave(slotKey) {
+        showLoading("Loading save...");
+        const data = await loadSlotFromFirebase(slotKey);
+        if (data && data.localStorageData) {
+          // Construct a temporary object to run replaceDomainsInData on
+          const tempObj = { someSlot: data };
+          replaceDomainsInData(tempObj, currentDomainKey);
+
+          // After replacement, tempObj.someSlot.localStorageData is updated
+          setAllLocalStorageData(tempObj.someSlot.localStorageData);
+        }
+        hideLoading();
+        alert("Load complete!");
       }
 
       function renderSlots(slotsData) {
@@ -603,13 +672,7 @@
                                           text: "Yes",
                                           onclick: async () => {
                                               modal.style.display = "none";
-                                              showLoading("Loading save...");
-                                              const data = await loadSlotFromFirebase(slotKey);
-                                              if (data) {
-                                                  setAllLocalStorageData(data.localStorageData);
-                                              }
-                                              hideLoading();
-                                              alert("Load complete!");
+                                              await handleLoadSave(slotKey);
                                           }
                                       },
                                       {
@@ -654,7 +717,6 @@
 
       async function loadUserSaves() {
           if (!currentUser) {
-              // Not logged in: no saves shown
               savesContainer.style.display = "none";
               return;
           }
@@ -697,196 +759,62 @@
           URL.revokeObjectURL(url);
       }
 
-      // Replace domains in data (on upload)
-      function normalizeDomainKey(str) {
-        return str.replace(/^https?:\/\//, '').replace(/\/$/, '');
-      }
-
-      function replaceDomainsInData(dataObj, currentDomain) {
-        const keysToCheck = Object.keys(siteMapping).map(k => normalizeDomainKey(k));
-        // currentDomain is already normalized
-        const normalizedCurrentDomain = normalizeDomainKey(currentDomain);
-
-        function replaceInString(str) {
-          for (const oldDomain of keysToCheck) {
-            if (str.includes(oldDomain)) {
-              // If the string starts with oldDomain
-              const idx = str.indexOf(oldDomain);
-              if (idx === 0) {
-                // Replace the prefix
-                // Example: oldDomain = "strongdog.com/strongdog2"
-                // str = "strongdog.com/strongdog2/game"
-                // result = "mathcord.com/game" if currentDomain = "mathcord.com"
-                return normalizedCurrentDomain + str.substring(oldDomain.length);
-              } else {
-                // If oldDomain appears in the middle somewhere, we might want to leave it as is,
-                // but user instructions say to replace occurrences.
-                // We'll replace every occurrence where oldDomain appears.
-                // This might affect partial matches, but we trust user input only uses full domains as prefixes.
-                return str.replace(oldDomain, normalizedCurrentDomain);
-              }
-            }
-          }
-          return str;
-        }
-
-        // Replace in localStorageData keys and values
-        for (const slotId in dataObj) {
-          if (slotId === "localStorageBackup") {
-            const localObj = dataObj[slotId];
-            if (localObj && localObj instanceof Object) {
-              for (const k in localObj) {
-                const newKey = replaceInString(k);
-                let newVal = localObj[k];
-                if (typeof newVal === 'string') {
-                  newVal = replaceInString(newVal);
+      // Updated upload logic: No firebase upload. Always localStorage only.
+      function handleFileUpload() {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = ".json";
+        input.onchange = async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = async (evt) => {
+                const content = evt.target.result;
+                let parsed;
+                try {
+                    parsed = JSON.parse(content);
+                } catch (err) {
+                    alert("Invalid file format");
+                    return;
                 }
-                // If the key changed, we must handle that
-                if (newKey !== k) {
-                  delete localObj[k];
-                  localObj[newKey] = newVal;
-                } else {
-                  localObj[k] = newVal;
-                }
-              }
-            }
-          } else {
-            const saveData = dataObj[slotId];
-            if (saveData && saveData.localStorageData) {
-              const lsData = saveData.localStorageData;
-              for (const k in lsData) {
-                const newKey = replaceInString(k);
-                let newVal = lsData[k];
-                if (typeof newVal === 'string') {
-                  newVal = replaceInString(newVal);
-                }
-                if (newKey !== k) {
-                  delete lsData[k];
-                  lsData[newKey] = newVal;
-                } else {
-                  lsData[k] = newVal;
-                }
-              }
-            }
-          }
-        }
-      }
 
-      function uploadFileSave() {
-          const input = document.createElement("input");
-          input.type = "file";
-          input.accept = ".json";
-          input.onchange = async (e) => {
-              const file = e.target.files[0];
-              if (!file) return;
-              const reader = new FileReader();
-              reader.onload = async (evt) => {
-                  const content = evt.target.result;
-                  let parsed;
-                  try {
-                      parsed = JSON.parse(content);
-                  } catch (err) {
-                      alert("Invalid file format");
-                      return;
-                  }
+                replaceDomainsInData(parsed, currentDomainKey);
 
-                  // Replace any old domain with current domain key
-                  replaceDomainsInData(parsed, currentDomainKey);
+                openModal("Are you sure you would like to upload a save? It will wipe all current data on strongdog.", [
+                    {
+                        text: "Yes",
+                        onclick: async () => {
+                            modal.style.display = "none";
+                            showLoading("Uploading save...");
+                            localStorage.clear();
 
-                  openModal("Are you sure you would like to upload a save? It will wipe all current unsaved data on strongdog.", [
-                      {
-                          text: "Yes",
-                          onclick: async () => {
-                              modal.style.display = "none";
-                              showLoading("Uploading save...");
-                              localStorage.clear();
+                            let loadedData = null;
+                            if (parsed.localStorageBackup && typeof parsed.localStorageBackup === 'object') {
+                                loadedData = parsed.localStorageBackup;
+                            } else {
+                                // fallback: find any slot with localStorageData
+                                for (const [slotId, slotData] of Object.entries(parsed)) {
+                                    if (slotData && slotData.localStorageData) {
+                                        loadedData = slotData.localStorageData;
+                                        break;
+                                    }
+                                }
+                            }
 
-                              const savesColl = db.collection("users").doc(userId).collection("saves");
-                              const snapshot = await savesColl.get();
-                              const batch = db.batch();
-                              snapshot.forEach(doc => {
-                                  batch.delete(doc.ref);
-                              });
-                              await batch.commit();
-
-                              for (const [slotId, slotData] of Object.entries(parsed)) {
-                                  if (slotId !== "localStorageBackup" && slotData && slotData.localStorageData) {
-                                      await saveSlotToFirebase(slotId, slotData.title || "No Title", slotData.description || "No Description", slotData.localStorageData);
-                                  }
-                              }
-
-                              await loadUserSaves();
-                              hideLoading();
-                              alert("Upload complete!");
-                          }
-                      },
-                      {
-                          text: "No",
-                          onclick: () => { modal.style.display = "none"; }
-                      }
-                  ]);
-              };
-              reader.readAsText(file);
-          };
-          input.click();
-      }
-
-      function uploadFileSaveNotLoggedIn() {
-          const input = document.createElement("input");
-          input.type = "file";
-          input.accept = ".json";
-          input.onchange = async (e) => {
-              const file = e.target.files[0];
-              if (!file) return;
-              const reader = new FileReader();
-              reader.onload = async (evt) => {
-                  const content = evt.target.result;
-                  let parsed;
-                  try {
-                      parsed = JSON.parse(content);
-                  } catch (err) {
-                      alert("Invalid file format");
-                      return;
-                  }
-
-                  // Replace old domains with current domain in localStorage only scenario
-                  replaceDomainsInData(parsed, currentDomainKey);
-
-                  openModal("Are you sure you would like to upload a save? It will wipe all current data on strongdog.", [
-                      {
-                          text: "Yes",
-                          onclick: async () => {
-                              modal.style.display = "none";
-                              showLoading("Uploading save...");
-                              localStorage.clear();
-
-                              let loadedData = null;
-                              if (parsed.localStorageBackup && typeof parsed.localStorageBackup === 'object') {
-                                  loadedData = parsed.localStorageBackup;
-                              } else {
-                                  // fallback: find any slot with localStorageData
-                                  for (const [slotId, slotData] of Object.entries(parsed)) {
-                                      if (slotData && slotData.localStorageData) {
-                                          loadedData = slotData.localStorageData;
-                                          break;
-                                      }
-                                  }
-                              }
-
-                              if (loadedData) setAllLocalStorageData(loadedData);
-                              hideLoading();
-                              alert("Upload complete!");
-                          }
-                      },
-                      {
-                          text: "No",
-                          onclick: () => { modal.style.display = "none"; }
-                      }
-                  ]);
-              };
-              reader.readAsText(file);
-          };
-          input.click();
+                            if (loadedData) setAllLocalStorageData(loadedData);
+                            hideLoading();
+                            alert("Upload complete!");
+                        }
+                    },
+                    {
+                        text: "No",
+                        onclick: () => { modal.style.display = "none"; }
+                    }
+                ]);
+            };
+            reader.readAsText(file);
+        };
+        input.click();
       }
 
       auth.onAuthStateChanged(async (user) => {
@@ -961,11 +889,7 @@
               const uploadButton = document.createElement("button");
               uploadButton.textContent = "Upload save file";
               uploadButton.addEventListener("click", () => {
-                  if (!currentUser) {
-                      alert("You must be logged in to upload!");
-                      return;
-                  }
-                  uploadFileSave();
+                  handleFileUpload();
               });
 
               bottomButtonsContainer.appendChild(downloadButton);
@@ -975,7 +899,6 @@
           } else {
               userId = null;
               // Not logged in
-              // Show "Not logged in" and login button in sidebar
               const userDetailsContainer = document.createElement("div");
               userDetailsContainer.className = "user-details-container";
 
@@ -1032,13 +955,12 @@
               const uploadButton = document.createElement("button");
               uploadButton.textContent = "Upload save file";
               uploadButton.addEventListener("click", () => {
-                  uploadFileSaveNotLoggedIn();
+                  handleFileUpload();
               });
 
               bottomButtonsContainer.appendChild(downloadButton);
               bottomButtonsContainer.appendChild(uploadButton);
 
-              // Don't show saves when not logged in
               savesContainer.style.display = "none";
           }
       });
