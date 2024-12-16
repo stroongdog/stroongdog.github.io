@@ -493,17 +493,40 @@
       const db = firebase.firestore();
       const rtdb = firebase.database();
 
-      function getLevelAndProgressFromXP(xp) {
+      function getTierAndProgressFromXP(xp) {
+        const baseXPNeeded = 50; // Starting XP needed
+        const increasePerTier = 200; // Fixed increase after cap
+        const exponentialMultiplier = 1.2; // Multiplier for exponential increase
+        const levelsPerTier = 5; // Levels per tier
+        const capTier = 10; // Cap after this many tiers (50 levels total)
+
         let level = 1;
-        let xpNeeded = 50;
-        const multiplier = 1.2;
+        let tier = 1;
+        let xpNeeded = baseXPNeeded; // Initial XP needed for the first tier
 
         while (xp >= xpNeeded) {
           xp -= xpNeeded;
-          xpNeeded = Math.round(xpNeeded * multiplier);
+
+          if (tier < capTier) {
+            if (level % levelsPerTier === 0) {
+              tier++;
+              xpNeeded = Math.round(xpNeeded * exponentialMultiplier);
+            }
+          } else {
+            if (level % levelsPerTier === 0) {
+              xpNeeded += increasePerTier;
+            }
+          }
+
           level++;
         }
-        return { level, currentXP: xp, xpNeededForNext: xpNeeded };
+
+        return {
+          level,
+          tier,
+          currentXP: xp,
+          xpNeededForNext: xpNeeded,
+        };
       }
     </script>
 
@@ -576,51 +599,56 @@
           return finalPath;
         }
 
-// Modify getEmbedPath function to add new logic
-async function getEmbedPath(adjustedHref, originalHref, page) {
-    let cleanHref = adjustedHref
-        .replace(/index\.html$/, "")
-        .replace(/base\.html$/, "")
-        .replace(/\.html$/, "");
-    if (!cleanHref.endsWith("/")) cleanHref += "/";
+        // Modify getEmbedPath function to add new logic
+        async function getEmbedPath(adjustedHref, originalHref, page) {
+          let cleanHref = adjustedHref
+            .replace(/index\.html$/, "")
+            .replace(/base\.html$/, "")
+            .replace(/\.html$/, "");
+          if (!cleanHref.endsWith("/")) cleanHref += "/";
 
-    const pathsToTry = [
-        cleanHref + "game/index.html",
-        cleanHref + "game/base.html",
-        cleanHref + "gamereal/index.html",
-        cleanHref + "gamereal/base.html",
-        cleanHref + "index.html",
-        cleanHref + "base.html",
-    ];
+          const pathsToTry = [
+            cleanHref + "game/index.html",
+            cleanHref + "game/base.html",
+            cleanHref + "gamereal/index.html",
+            cleanHref + "gamereal/base.html",
+            cleanHref + "index.html",
+            cleanHref + "base.html",
+          ];
 
-    // New logic: Check the file referenced by the cards-data.js embedding logic
-    try {
-        const response = await fetch(adjustedHref, { method: "GET" });
-        if (response.ok) {
-            const text = await response.text();
-            const match = text.match(/embedGame\((['"])(.*?)\1,\s*(['"])(.*?)\3\)/);
-            if (match) {
+          // New logic: Check the file referenced by the cards-data.js embedding logic
+          try {
+            const response = await fetch(adjustedHref, { method: "GET" });
+            if (response.ok) {
+              const text = await response.text();
+              const match = text.match(
+                /embedGame\((['"])(.*?)\1,\s*(['"])(.*?)\3\)/
+              );
+              if (match) {
                 const [, , embedPath, , title] = match;
                 const resolvedPath = new URL(embedPath, adjustedHref).href;
                 if (await fileExists(resolvedPath)) {
-                    return resolvedPath;
+                  return resolvedPath;
                 }
+              }
             }
-        }
-    } catch (error) {
-        console.warn("Failed to parse embed path from cards-data.js", error);
-    }
+          } catch (error) {
+            console.warn(
+              "Failed to parse embed path from cards-data.js",
+              error
+            );
+          }
 
-    // Original paths to try
-    for (const path of pathsToTry) {
-        if (await fileExists(path)) {
-            return path;
-        }
-    }
+          // Original paths to try
+          for (const path of pathsToTry) {
+            if (await fileExists(path)) {
+              return path;
+            }
+          }
 
-    // Fallback: Return the original href
-    return adjustHrefPath(originalHref, page);
-}
+          // Fallback: Return the original href
+          return adjustHrefPath(originalHref, page);
+        }
 
         function embedGame(gamePath, title) {
           const iframe = document.createElement("iframe");
@@ -943,12 +971,11 @@ async function getEmbedPath(adjustedHref, originalHref, page) {
               usernameElement.textContent = user.displayName || "Username";
             }
 
-            // Listen for XP changes in real-time
             const xpRef = rtdb.ref(`xp/${userId}`);
             xpRef.on("value", (snapshot) => {
               let totalXP = snapshot.exists() ? snapshot.val() : 0;
-              const { level, currentXP, xpNeededForNext } =
-                getLevelAndProgressFromXP(totalXP);
+              const { level, tier, currentXP, xpNeededForNext } =
+                getTierAndProgressFromXP(totalXP);
 
               xpLevelText.textContent = `Level ${level}`;
 

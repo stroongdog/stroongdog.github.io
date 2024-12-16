@@ -267,22 +267,21 @@
       }
 
       function getCardHTML(gameObject) {
-    const { href, imgSrc, name, page } = gameObject;
-    const { adjustedHref, adjustedImgSrc } = getAdjustedUrls(
-      href,
-      imgSrc,
-      page
-    ); // Use original logic for image paths
-    const gameLink = `./play/?id=${gameObject.id}`; // Adjusted to use game ID
-    const normalizedName = normalizeGameName(name); // Normalize the game name
-    return `
+        const { href, imgSrc, name, page } = gameObject;
+        const { adjustedHref, adjustedImgSrc } = getAdjustedUrls(
+          href,
+          imgSrc,
+          page
+        ); // Use original logic for image paths
+        const gameLink = `./play/?id=${gameObject.id}`; // Adjusted to use game ID
+        const normalizedName = normalizeGameName(name); // Normalize the game name
+        return `
     <a href="${gameLink}" class="card" data-game-id="${normalizedName}" data-page="${page}">
         <img src="${adjustedImgSrc}" alt="${name}">
         <figcaption>${name}</figcaption>
     </a>
 `;
-}
-
+      }
 
       let cardsHTMLArr = [];
       for (let i = 0; i < games.length; ++i) {
@@ -374,23 +373,40 @@
           .replace(/\s+/g, "")
           .replace(/[^a-z0-9]/g, "");
       }
+      function getTierAndProgressFromXP(xp) {
+        const baseXPNeeded = 50; // Starting XP needed
+        const increasePerTier = 200; // Fixed increase after cap
+        const exponentialMultiplier = 1.2; // Multiplier for exponential increase
+        const levelsPerTier = 5; // Levels per tier
+        const capTier = 10; // Cap after this many tiers (50 levels total)
 
-      // Function to determine level and progress from total XP
-      function getLevelAndProgressFromXP(xp) {
         let level = 1;
-        let xpNeeded = 50; // XP needed to reach next level from current
-        const multiplier = 1.2;
+        let tier = 1;
+        let xpNeeded = baseXPNeeded; // Initial XP needed for the first tier
 
-        // Deduct xp to find current level
         while (xp >= xpNeeded) {
           xp -= xpNeeded;
-          xpNeeded = Math.round(xpNeeded * multiplier);
+
+          if (tier < capTier) {
+            if (level % levelsPerTier === 0) {
+              tier++;
+              xpNeeded = Math.round(xpNeeded * exponentialMultiplier);
+            }
+          } else {
+            if (level % levelsPerTier === 0) {
+              xpNeeded += increasePerTier;
+            }
+          }
+
           level++;
         }
 
-        // xp is now how far into this level they are
-        // xpNeeded is how much more they need for the next level
-        return { level, currentXP: xp, xpNeededForNext: xpNeeded };
+        return {
+          level,
+          tier,
+          currentXP: xp,
+          xpNeededForNext: xpNeeded,
+        };
       }
 
       document.addEventListener("DOMContentLoaded", function () {
@@ -436,42 +452,41 @@
             });
         }
         function displayTopGames(games) {
-    const topGameList = document.getElementById("topGameList");
-    if (!topGameList) {
-        console.error("Required element not found.");
-        return;
-    }
+          const topGameList = document.getElementById("topGameList");
+          if (!topGameList) {
+            console.error("Required element not found.");
+            return;
+          }
 
-    topGameList.innerHTML = ""; // Clear existing content
+          topGameList.innerHTML = ""; // Clear existing content
 
-    games.slice(1).forEach((game) => {
-        const gameName = game[0]; // Get game name from Top 10 data
-        const matchingCard = findMatchingCard(gameName); // Find the matching card
-        if (matchingCard) {
-            topGameList.appendChild(matchingCard.cloneNode(true)); // Append a clone of the card
-        } else {
-            console.warn(`No matching card found for game: ${gameName}`);
+          games.slice(1).forEach((game) => {
+            const gameName = game[0]; // Get game name from Top 10 data
+            const matchingCard = findMatchingCard(gameName); // Find the matching card
+            if (matchingCard) {
+              topGameList.appendChild(matchingCard.cloneNode(true)); // Append a clone of the card
+            } else {
+              console.warn(`No matching card found for game: ${gameName}`);
+            }
+          });
         }
-    });
-}
 
         function findMatchingCard(gameName) {
-    const formattedGameName = normalizeGameName(gameName); // Normalize the gameName from Top 10
-    const cards = document.querySelectorAll("#allGameList .card"); // Select all cards
-    
-    for (let card of cards) {
-        const cardGameId = card.getAttribute("data-game-id"); // Get the data-game-id from the card
-        if (cardGameId === formattedGameName) {
-            return card; // Return the matching card
-        }
-    }
-    
-    console.warn(
-        `Card not found for game: ${gameName} (Normalized ID: ${formattedGameName})`
-    );
-    return null;
-}
+          const formattedGameName = normalizeGameName(gameName); // Normalize the gameName from Top 10
+          const cards = document.querySelectorAll("#allGameList .card"); // Select all cards
 
+          for (let card of cards) {
+            const cardGameId = card.getAttribute("data-game-id"); // Get the data-game-id from the card
+            if (cardGameId === formattedGameName) {
+              return card; // Return the matching card
+            }
+          }
+
+          console.warn(
+            `Card not found for game: ${gameName} (Normalized ID: ${formattedGameName})`
+          );
+          return null;
+        }
 
         (function () {
           loadingContainerEl.style.display = "flex";
@@ -1061,7 +1076,13 @@
       </div>
     </div>
     <div class="updates-text-container">
-      <p class="updates-paragraph-text">You can now gain xp and level up on strongdog if you log in and play games! Every minute you play is 10 xp, but each level is harder to beat! Currently they don't do anything, but who knows, maybe they will soon.<br><br>We also improved the favoriting system, you need to be logged in to favorite a game, but it will show in favorites on all your signed in devices!
+      <p class="updates-paragraph-text">
+        You can now gain xp and level up on strongdog if you log in and play
+        games! Every minute you play is 10 xp, but each level is harder to beat!
+        Currently they don't do anything, but who knows, maybe they will
+        soon.<br /><br />We also improved the favoriting system, you need to be
+        logged in to favorite a game, but it will show in favorites on all your
+        signed in devices!
         <button
           id="import-save-data-btn"
           style="
@@ -1146,24 +1167,25 @@
               class="credits-link"
               >Joshua Pettit</a
             >
-          <span>|</span>
-          <a
-            href="https://maxwellstevenson.com"
-            target="_blank"
-            class="credits-link"
-            >Maxwell Stevenson</a
-          >
-        </div>
+            <span>|</span>
+            <a
+              href="https://maxwellstevenson.com"
+              target="_blank"
+              class="credits-link"
+              >Maxwell Stevenson</a
+            >
+          </div>
         </div>
         <div class="credits-item">
           <div class="credits-role">Other Links</div>
           <div class="credits-names">
             <a
-            href="https://strongdogxp.github.io"
-            target="_blank"
-            class="credits-link"
-            >mathcordxp.github.io</a>
-          <span>|</span>
+              href="https://strongdogxp.github.io"
+              target="_blank"
+              class="credits-link"
+              >mathcordxp.github.io</a
+            >
+            <span>|</span>
             <a
               href="https://strongdogxp.github.io"
               target="_blank"
@@ -1276,7 +1298,6 @@
             } else {
               usernameElement.textContent = user.displayName || "Username";
             }
-
             // Fetch total XP from Realtime Database
             const xpRef = rtdb.ref(`xp/${userId}`);
             xpRef.once("value", (snapshot) => {
@@ -1287,9 +1308,9 @@
                 totalXP = 0;
               }
 
-              // Calculate level and progress
-              const { level, currentXP, xpNeededForNext } =
-                getLevelAndProgressFromXP(totalXP);
+              // Calculate level, tier, and progress
+              const { level, tier, currentXP, xpNeededForNext } =
+                getTierAndProgressFromXP(totalXP);
 
               const xpContainer = document.createElement("div");
               xpContainer.className = "xp-container";
