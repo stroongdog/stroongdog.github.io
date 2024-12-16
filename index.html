@@ -460,15 +460,32 @@
 
           topGameList.innerHTML = ""; // Clear existing content
 
-          games.slice(1).forEach((game) => {
-            const gameName = game[0]; // Get game name from Top 10 data
-            const matchingCard = findMatchingCard(gameName); // Find the matching card
+          let foundCount = 0;
+          let index = 1; // Start after the first row if it's a header or special row
+          // We need 10 games, but we have extra data from top 20 now
+          while (foundCount < 10 && index < games.length) {
+            const game = games[index];
+            const gameName = game[0];
+            const matchingCard = findMatchingCard(gameName);
+
             if (matchingCard) {
-              topGameList.appendChild(matchingCard.cloneNode(true)); // Append a clone of the card
+              topGameList.appendChild(matchingCard.cloneNode(true));
+              foundCount++;
             } else {
-              console.warn(`No matching card found for game: ${gameName}`);
+              console.warn(
+                `No matching card found for game: ${gameName} (Skipping this one)`
+              );
+              // Do not increment foundCount
             }
-          });
+
+            index++;
+          }
+
+          if (foundCount < 10) {
+            console.warn(
+              "Could not fill all 10 top slots, not enough matching cards found."
+            );
+          }
         }
 
         function findMatchingCard(gameName) {
