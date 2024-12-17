@@ -452,6 +452,9 @@
         Fullscreen
       </button>
     </div>
+    <div style="text-align: center; margin: 20px 0; color: white">
+      <h3 id="connectionsCount">Players Online: 0</h3>
+    </div>
 
     <div class="cards-section">
       <h2>Recommended Games</h2>
@@ -784,6 +787,29 @@
           // Event listener for favorite icon click
           favoriteIcon.addEventListener("click", function () {
             toggleFavorite();
+          });
+          // Track connections dynamically based on game title
+          const gameTitle = selectedGame ? selectedGame.name : "unknown";
+          const connectionsRef = rtdb.ref(`connections/${gameTitle}`); // Dynamic path per game
+          const connectedRef = rtdb.ref(".info/connected");
+
+          // Detect when a user is connected
+          connectedRef.on("value", (snap) => {
+            if (snap.val() === true) {
+              const userConnectionRef = connectionsRef.push(); // Add a connection
+              userConnectionRef.onDisconnect().remove(); // Remove on disconnect
+              userConnectionRef.set({
+                timestamp: firebase.database.ServerValue.TIMESTAMP,
+              });
+            }
+          });
+
+          // Listen for the number of connected users
+          connectionsRef.on("value", (snapshot) => {
+            const onlineUsers = snapshot.numChildren(); // Count connected users
+            document.getElementById(
+              "connectionsCount"
+            ).innerText = `Players Online ${gameTitle}: ${onlineUsers} (WIP)`;
           });
 
           fullscreenButton.addEventListener("click", function () {

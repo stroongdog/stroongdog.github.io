@@ -461,36 +461,123 @@
           topGameList.innerHTML = ""; // Clear existing content
 
           let foundCount = 0;
-          let index = 1; // Start after any header row, if present
-          const displayedGameNames = new Set(); // Keep track of which games have been displayed
+          let index = 1;
+          const displayedGameNames = new Set();
 
-          // Attempt to list up to 20 unique games
           while (foundCount < 20 && index < games.length) {
             const game = games[index];
             const gameName = game[0];
             const matchingCard = findMatchingCard(gameName);
 
-            if (matchingCard) {
-              if (!displayedGameNames.has(gameName)) {
-                // If we haven't displayed this game yet, display it now
-                topGameList.appendChild(matchingCard.cloneNode(true));
-                displayedGameNames.add(gameName);
-                foundCount++;
-              } else {
-                // This is a duplicate of a previously displayed game
-                // We do nothing here, effectively ignoring this duplicate
-              }
-            } else {
-              console.warn(`Card for "${gameName}" not found, skipping.`);
-              // Do not increment foundCount since we didn't display anything
-            }
+            if (matchingCard && !displayedGameNames.has(gameName)) {
+              // Extract original card info
+              const originalImg = matchingCard.querySelector("img");
+              const originalName =
+                matchingCard.querySelector("figcaption").textContent;
+              const originalHref = matchingCard.getAttribute("href");
 
+              // Create a new card identical in structure to the "All" cards
+              const cardAnchor = document.createElement("a");
+              cardAnchor.href = originalHref;
+              cardAnchor.className = "card";
+
+              const imgEl = document.createElement("img");
+              imgEl.src = originalImg.src;
+              imgEl.alt = originalName;
+              cardAnchor.appendChild(imgEl);
+
+              const figcaptionEl = document.createElement("figcaption");
+              figcaptionEl.textContent = originalName;
+              cardAnchor.appendChild(figcaptionEl);
+
+              // Add the player count overlay
+              const playerCountElement = document.createElement("div");
+              playerCountElement.className = "player-count";
+              playerCountElement.textContent = "Loading players...";
+              cardAnchor.appendChild(playerCountElement);
+
+              // Append the card to the top 20 list
+              topGameList.appendChild(cardAnchor);
+
+              // Update player count asynchronously
+              updatePlayerCount(gameName, playerCountElement);
+
+              displayedGameNames.add(gameName);
+              foundCount++;
+            }
             index++;
           }
 
           if (foundCount < 20) {
             console.warn("Could not fill all 20 top slots with unique games.");
           }
+        }
+        function updatePlayerCount(gameName, playerCountElement) {
+          // Use the exact game name without any normalization
+          const path = `connections/${gameName}`;
+
+          // Log the game name and Firebase path for debugging
+          console.log(`[updatePlayerCount] Using gameName: "${gameName}"`);
+          console.log(`[updatePlayerCount] Firebase path: "${path}"`);
+
+          // Reference the specific path in Firebase Realtime Database
+          const connectionsRef = rtdb.ref(path);
+
+          // Listen for changes at the specified path
+          connectionsRef.on(
+            "value",
+            (snapshot) => {
+              if (snapshot.exists()) {
+                const playersOnline = snapshot.numChildren();
+                console.log(
+                  `[updatePlayerCount] Snapshot exists at "${path}". Players online: ${playersOnline}`
+                );
+                playerCountElement.textContent = `${playersOnline} Players Online`;
+              } else {
+                console.log(
+                  `[updatePlayerCount] No snapshot found at "${path}". Setting player count to 0.`
+                );
+                playerCountElement.textContent = "0 Players Online";
+              }
+            },
+            (error) => {
+              console.error(`Error fetching data for "${gameName}":`, error);
+              playerCountElement.textContent = "0 Players Online";
+            }
+          );
+        }
+        function appendPlayerCount(gameName, gameCard) {
+          const formattedGameName = gameName.replace(/\s+/g, "_").toLowerCase();
+          console.log(`Fetching player count for: ${formattedGameName}`);
+
+          const connectionsRef = rtdb.ref(`connections/${formattedGameName}`);
+
+          const playerCountElement = document.createElement("div");
+          playerCountElement.style.color = "black";
+          playerCountElement.style.textAlign = "center";
+          playerCountElement.style.fontSize = "0.9rem";
+          playerCountElement.textContent = "Loading players...";
+
+          // Append this element immediately so it shows up
+          gameCard.appendChild(playerCountElement);
+
+          connectionsRef.on(
+            "value",
+            (snapshot) => {
+              const playersOnline = snapshot.exists()
+                ? snapshot.numChildren()
+                : 0;
+              console.log(`Players for ${formattedGameName}: ${playersOnline}`);
+              playerCountElement.textContent = `${playersOnline} Players Online`;
+            },
+            (error) => {
+              console.error(
+                `Error fetching data for ${formattedGameName}:`,
+                error
+              );
+              playerCountElement.textContent = "0 Players Online";
+            }
+          );
         }
 
         function findMatchingCard(gameName) {
@@ -1050,6 +1137,18 @@
         top: 50%;
         transform: translateY(-50%);
         pointer-events: none;
+      }
+      .player-count {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: rgba(95, 95, 95, 0.8);
+        color: black;
+        text-align: center;
+        padding: 3px 0;
+        font-size: 0.8rem;
+        z-index: 2; /* Ensure it appears above the image */
       }
     </style>
   </head>
