@@ -463,7 +463,7 @@
           let foundCount = 0;
           let index = 1; // Start after the first row if it's a header or special row
           // We need 10 games, but we have extra data from top 20 now
-          while (foundCount < 10 && index < games.length) {
+          while (foundCount < 20 && index < games.length) {
             const game = games[index];
             const gameName = game[0];
             const matchingCard = findMatchingCard(gameName);
@@ -481,7 +481,7 @@
             index++;
           }
 
-          if (foundCount < 10) {
+          if (foundCount < 20) {
             console.warn(
               "Could not fill all 10 top slots, not enough matching cards found."
             );
@@ -489,7 +489,7 @@
         }
 
         function findMatchingCard(gameName) {
-          const formattedGameName = normalizeGameName(gameName); // Normalize the gameName from Top 10
+          const formattedGameName = normalizeGameName(gameName); // Normalize the gameName from Top 20
           const cards = document.querySelectorAll("#allGameList .card"); // Select all cards
 
           for (let card of cards) {
@@ -1136,7 +1136,7 @@
         </p>
       </div>
     </div>
-    <h2 style="text-align: center"><strong>Top 10</strong></h2>
+    <h2 style="text-align: center"><strong>Top 20</strong></h2>
     <div class="games-grid" id="topGameList"></div>
 
     <h2 style="text-align: center"><strong>All</strong></h2>
