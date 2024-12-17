@@ -473,7 +473,7 @@
               foundCount++;
             } else {
               console.warn(
-                `No matching card found for game: ${gameName} (Skipping this one)`
+                `One of the game cards missing, skipping this one.`
               );
               // Do not increment foundCount
             }
@@ -500,7 +500,7 @@
           }
 
           console.warn(
-            `Card not found for game: ${gameName} (Normalized ID: ${formattedGameName})`
+            `Card not found one of the games.`
           );
           return null;
         }
