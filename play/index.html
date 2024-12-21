@@ -656,6 +656,9 @@
         function embedGame(gamePath, title) {
           const iframe = document.createElement("iframe");
           iframe.src = gamePath;
+          iframe.onload = function () {
+            iframe.contentWindow.focus(); // Automatically focus on the iframe after loading
+          };
           gameContainer.innerHTML = "";
           gameContainer.appendChild(iframe);
           gameTitleElement.textContent = title;
@@ -1109,6 +1112,16 @@
           .addEventListener("click", function () {
             window.location.href = "../secret-menu.html";
           });
+      });
+
+      document.addEventListener("keydown", function (event) {
+        if (
+          ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(
+            event.key
+          )
+        ) {
+          event.preventDefault();
+        }
       });
     </script>
   </body>
