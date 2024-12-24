@@ -12,3 +12,4 @@
 * https://weakcatxp.github.io
 
 #### If you want to host it yourself, contact me and tell me the link you want to make it, and I will get your site hooked up to the strongdog database! YOUR SITE WILL NOT WORK IF YOU DO NOT ASK ME FIRST!
+#### If you want to take the games, PLEASE tell me and credit me, I have spent hours downloding all of theese games so a little credit would be nice.

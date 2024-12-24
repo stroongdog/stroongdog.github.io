@@ -1124,5 +1124,37 @@
         }
       });
     </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", async function() {
+        const specialGameIds = [739];
+    
+        const urlParams = new URLSearchParams(window.location.search);
+        const gameId = urlParams.get("id");
+    
+        if (specialGameIds.includes(parseInt(gameId, 10))) {
+
+          const jsPath = `./${gameId}.js`;
+    
+          try {
+            const response = await fetch(jsPath);
+            if (!response.ok) {
+              console.error(`Could not load extra JS for gameId=${gameId} from: ${jsPath}`);
+              return;
+            }
+    
+            const scriptContent = await response.text();
+    
+            const scriptElement = document.createElement("script");
+            scriptElement.type = "text/javascript";
+            scriptElement.text = scriptContent;
+    
+            document.body.appendChild(scriptElement);
+    
+          } catch (error) {
+            console.error(`Error while loading extra JS for gameId=${gameId}:`, error);
+          }
+        }
+      });
+    </script>    
   </body>
 </html>
