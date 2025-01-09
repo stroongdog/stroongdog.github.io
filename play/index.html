@@ -833,6 +833,10 @@
             }
           });
 
+          document.addEventListener("keydown", e => {
+            if (e.key === "f") fullscreenButton.click();
+          });
+
           const cardContainer = document.getElementById("cardContainer");
 
           function adjustImgPath(path, page) {
