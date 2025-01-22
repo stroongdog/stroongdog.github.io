@@ -1,4 +1,6 @@
 export default [
+  { href: './html/Dinogen arena/index.html', imgSrc: 'Dinogen arena.jpg', name: 'Dinogen arena' , 'page': 3, 'id': 741 },
+  { href: './html/five nights at winstons/index.html', imgSrc: 'five nights at winstons.jpg', name: 'five nights at winstons' , 'page': 3, 'id': 742 },
   { href: './html/amazing strange rope police/index.html', imgSrc: 'amazing strange rope police.jpg', name: 'amazing strange rope police' , 'page': 3, 'id': 733 },
   { href: './html/Death Run/index.html', imgSrc: 'Death Run.png', name: 'Death Run' , 'page': 3, 'id': 734 },
   { href: './html/Mirror Madness/index.html', imgSrc: 'Mirror Madness.png', name: 'Mirror Madness' , 'page': 3, 'id': 735 },
