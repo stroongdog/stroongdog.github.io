@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0YLTCV2MMS"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0YLTCV2MMS"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
 
-  gtag('config', 'G-0YLTCV2MMS');
-</script>
+      gtag("config", "G-0YLTCV2MMS");
+    </script>
     <title>Loading... - StrongDog XP</title>
     <style>
       body {
@@ -555,7 +560,7 @@
         const manualRedirectLink =
           document.getElementById("manualRedirectLink");
 
-        const normalGameIds = [250, 244, 605, 130, 729];
+        const normalGameIds = [250, 244, 605, 130, 729, 609, 742];
 
         async function fileExists(url) {
           try {
@@ -698,13 +703,24 @@
         } else {
           if (normalGameIds.includes(selectedGame.id)) {
             document.title = "Redirecting... - StrongDog XP";
-            // Show the redirect message
             redirectMessage.style.display = "block";
-            // Set the manual redirect link with one additional ../
-            manualRedirectLink.href = "../" + selectedGame.href;
-            // Redirect to the game's original page with one additional ../
-            window.location.href = "../" + selectedGame.href;
-            return; // Stop further execution
+
+            const page = selectedGame.page;
+            const baseURL = getBaseURLForPage(page);
+
+            let adjustedHref = selectedGame.href.replace(/^\.\//, "");
+            let finalRedirectURL;
+
+            if (!baseURL.endsWith("/")) {
+              finalRedirectURL = baseURL + "/" + adjustedHref;
+            } else {
+              finalRedirectURL = baseURL + adjustedHref;
+            }
+
+            manualRedirectLink.href = finalRedirectURL;
+            window.location.href = finalRedirectURL;
+
+            return;
           }
 
           const page = selectedGame.page;
@@ -811,7 +827,6 @@
             }
           });
 
-
           fullscreenButton.addEventListener("click", function () {
             if (gameContainer.requestFullscreen) {
               gameContainer.requestFullscreen();
@@ -822,7 +837,7 @@
             }
           });
 
-          document.addEventListener("keydown", e => {
+          document.addEventListener("keydown", (e) => {
             if (e.key === "f") fullscreenButton.click();
           });
 
@@ -1126,44 +1141,39 @@
       });
     </script>
     <script>
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get("id") === "742") {
-          const script = document.createElement("script");
-          script.src = "742.js";
-          document.body.appendChild(script);
-      }
-  </script>  
-    <script>
-      document.addEventListener("DOMContentLoaded", async function() {
+      document.addEventListener("DOMContentLoaded", async function () {
         const specialGameIds = [739];
-    
+
         const urlParams = new URLSearchParams(window.location.search);
         const gameId = urlParams.get("id");
-    
-        if (specialGameIds.includes(parseInt(gameId, 10))) {
 
+        if (specialGameIds.includes(parseInt(gameId, 10))) {
           const jsPath = `./${gameId}.js`;
-    
+
           try {
             const response = await fetch(jsPath);
             if (!response.ok) {
-              console.error(`Could not load extra JS for gameId=${gameId} from: ${jsPath}`);
+              console.error(
+                `Could not load extra JS for gameId=${gameId} from: ${jsPath}`
+              );
               return;
             }
-    
+
             const scriptContent = await response.text();
-    
+
             const scriptElement = document.createElement("script");
             scriptElement.type = "text/javascript";
             scriptElement.text = scriptContent;
-    
+
             document.body.appendChild(scriptElement);
-    
           } catch (error) {
-            console.error(`Error while loading extra JS for gameId=${gameId}:`, error);
+            console.error(
+              `Error while loading extra JS for gameId=${gameId}:`,
+              error
+            );
           }
         }
       });
-    </script>    
+    </script>
   </body>
 </html>
