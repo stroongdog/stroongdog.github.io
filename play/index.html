@@ -560,7 +560,7 @@
         const manualRedirectLink =
           document.getElementById("manualRedirectLink");
 
-        const normalGameIds = [250, 244, 605, 130, 729, 609, 742];
+        const normalGameIds = [250, 244, 605, 130, 729, 609, 742, 743];
 
         async function fileExists(url) {
           try {
@@ -1143,18 +1143,18 @@
     <script>
       document.addEventListener("DOMContentLoaded", async function () {
         const specialGameIds = [739];
-
         const urlParams = new URLSearchParams(window.location.search);
-        const gameId = urlParams.get("id");
+        const gameIdParam = urlParams.get("id");
+        const gameIdNum = Number(gameIdParam);
 
-        if (specialGameIds.includes(parseInt(gameId, 10))) {
-          const jsPath = `./${gameId}.js`;
+        if (gameIdParam && specialGameIds.includes(gameIdNum)) {
+          const jsPath = `./${gameIdNum}.js`;
 
           try {
             const response = await fetch(jsPath);
             if (!response.ok) {
               console.error(
-                `Could not load extra JS for gameId=${gameId} from: ${jsPath}`
+                `Could not load extra JS for gameId=${gameIdParam} from: ${jsPath}`
               );
               return;
             }
@@ -1168,7 +1168,7 @@
             document.body.appendChild(scriptElement);
           } catch (error) {
             console.error(
-              `Error while loading extra JS for gameId=${gameId}:`,
+              `Error while loading extra JS for gameId=${gameIdParam}:`,
               error
             );
           }
