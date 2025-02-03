@@ -560,8 +560,6 @@
         const manualRedirectLink =
           document.getElementById("manualRedirectLink");
 
-        const normalGameIds = [250, 244, 605, 130, 729, 609, 742, 743];
-
         async function fileExists(url) {
           try {
             const response = await fetch(url, { method: "HEAD" });
@@ -701,6 +699,7 @@
         if (!selectedGame) {
           embedGame("../404.html", "Not Found");
         } else {
+          const normalGameIds = [250, 244, 605, 130, 729, 742, 743, 744, 745];
           if (normalGameIds.includes(selectedGame.id)) {
             document.title = "Redirecting... - StrongDog XP";
             redirectMessage.style.display = "block";
@@ -710,7 +709,6 @@
 
             let adjustedHref = selectedGame.href.replace(/^\.\//, "");
             let finalRedirectURL;
-
             if (!baseURL.endsWith("/")) {
               finalRedirectURL = baseURL + "/" + adjustedHref;
             } else {
@@ -719,7 +717,6 @@
 
             manualRedirectLink.href = finalRedirectURL;
             window.location.href = finalRedirectURL;
-
             return;
           }
 
@@ -811,9 +808,13 @@
           favoriteIcon.addEventListener("click", function () {
             toggleFavorite();
           });
-          // Track connections dynamically based on game title
+
+          function safeKey(key) {
+            return key.replace(/[.#$\[\]]/g, "_");
+          }
           const gameTitle = selectedGame ? selectedGame.name : "unknown";
-          const connectionsRef = rtdb.ref(`connections/${gameTitle}`); // Dynamic path per game
+          const safeGameTitle = safeKey(gameTitle);
+          const connectionsRef = rtdb.ref(`connections/${safeGameTitle}`);
           const connectedRef = rtdb.ref(".info/connected");
 
           // Detect when a user is connected
