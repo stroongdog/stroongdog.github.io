@@ -1,7 +1,7 @@
 export default [
   { href: './html/kour.io/index.html', imgSrc: 'kour.io.jpg', name: 'kour.io' , 'page': 3, 'id': 758 },
-  { href: './html/thats not my neighbor/index.html', imgSrc: 'thats not my neighbor.jpg', name: 'thats not my neighbor' , 'page': 3, 'id': 759 },
-  { href: './html/buckshot roulette/index.html', imgSrc: 'buckshot roulette.jpg', name: 'buckshot roulette' , 'page': 3, 'id': 757 },
+  { href: './html/thats not my neighbor/game/index.html', imgSrc: 'thats not my neighbor.jpg', name: 'thats not my neighbor' , 'page': 3, 'id': 759 },
+  { href: './html/buckshot roulette/game/index.html', imgSrc: 'buckshot roulette.jpg', name: 'buckshot roulette' , 'page': 3, 'id': 757 },
   { href: './html/abandoned/index.html', imgSrc: 'abandonedgame.jfif', name: 'abandoned' , 'id': 756 },
   { href: './html/run billy run/index.html', imgSrc: 'run billy run.png', name: 'run billy run' , 'id': 755 },
   { href: './html/death by ai/index.html', imgSrc: 'death by ai.jpg', name: 'death by ai' , 'page': 3, 'id': 754 },
